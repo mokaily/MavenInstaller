@@ -37,33 +37,69 @@ public class CloneRepository {
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() throws Exception {
-                try {
-                    ProcessBuilder builder = new ProcessBuilder("git", "clone", "--branch", branch, repoUrl);
-                    builder.directory(new File(targetPath));
-                    builder.redirectErrorStream(true);
-                    Process process = builder.start();
+                if(repoUrl.contains("gitlab.")) {
+                    try {
+                        outputConsole.append("gitlab.\n");
+                        String userName = String.valueOf(gitLabUserNameField);
+                        String pwd = String.valueOf(gitLabPasswordFieldPassword);
+                        String repoUrlEncoded = "https://" + userName + ":" + pwd + "@" + repoUrl.substring(8, repoUrl.length());
 
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        publish(line);
+                        ProcessBuilder builder = new ProcessBuilder("git", "clone", repoUrlEncoded);
+                        builder.directory(new File(targetPath));
+                        builder.redirectErrorStream(true);
+                        Process process = builder.start();
+
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            publish(line);
+                        }
+                        process.waitFor();
+
+                        // Check if pom.xml exists and run Maven build if necessary
+                        File pomFile = new File(targetPath + "/" + getRepoName(repoUrl) + "/pom.xml");
+                        if (pomFile.exists()) {
+                            outputConsole.append("Maven project detected.\n");
+                            runMavenBuild(targetPath, repoUrl);
+                        } else {
+                            outputConsole.append("No Maven project found.\n");
+                        }
+
+                        // Create shortcut after cloning
+                        createShortcut(targetPath);
+
+                    } catch (Exception e) {
+                        publish("Error cloning repository!\n" + e.getMessage());
                     }
-                    process.waitFor();
+                }else {
+                    try {
+                        ProcessBuilder builder = new ProcessBuilder("git", "clone", "--branch", branch, repoUrl);
+                        builder.directory(new File(targetPath));
+                        builder.redirectErrorStream(true);
+                        Process process = builder.start();
 
-                    // Check if pom.xml exists and run Maven build if necessary
-                    File pomFile = new File(targetPath + "/" + getRepoName(repoUrl) + "/pom.xml");
-                    if (pomFile.exists()) {
-                        outputConsole.append("Maven project detected.\n");
-                        runMavenBuild(targetPath, repoUrl);
-                    } else {
-                        outputConsole.append("No Maven project found.\n");
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            publish(line);
+                        }
+                        process.waitFor();
+
+                        // Check if pom.xml exists and run Maven build if necessary
+                        File pomFile = new File(targetPath + "/" + getRepoName(repoUrl) + "/pom.xml");
+                        if (pomFile.exists()) {
+                            outputConsole.append("Maven project detected.\n");
+                            runMavenBuild(targetPath, repoUrl);
+                        } else {
+                            outputConsole.append("No Maven project found.\n");
+                        }
+
+                        // Create shortcut after cloning
+                        createShortcut(targetPath);
+
+                    } catch (Exception e) {
+                        publish("Error cloning repository!\n" + e.getMessage());
                     }
-
-                    // Create shortcut after cloning
-                    createShortcut(targetPath);
-
-                } catch (Exception e) {
-                    publish("Error cloning repository!\n" + e.getMessage());
                 }
                 return null;
             }

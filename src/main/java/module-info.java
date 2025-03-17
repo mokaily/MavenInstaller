@@ -4,6 +4,7 @@ module com.example.maveninstaller {
     requires com.fasterxml.jackson.databind;
     requires java.desktop;
     requires org.json;
+    requires org.eclipse.jgit;
 
 
     opens com.example.maveninstaller to javafx.fxml;

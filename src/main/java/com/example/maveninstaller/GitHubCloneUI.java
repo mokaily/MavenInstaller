@@ -13,6 +13,7 @@ import static com.example.maveninstaller.RepositoryUtils.getRepoName;
 class GitHubCloneUI {
     public static JFrame frame;
     public static JTextField repoUrlField, targetPathField;
+    public static JTextField gitLabUserNameField, gitLabPasswordFieldPassword;
     public static JTextArea outputConsole;
     public static JTextArea aboutConsole;
     public static JComboBox<String> branchSelector;
@@ -31,9 +32,25 @@ class GitHubCloneUI {
         JLabel label = new JLabel("GitMaven Installer v1.0", JLabel.CENTER);
         frame.add(label);
 
-        JPanel panel = new JPanel(new GridLayout(10, 1));
 
-        repoUrlField = new JTextField("Enter GitLab/GitHub Repository URL");
+        JPanel panel = new JPanel(new GridLayout(12, 1)); // Increase grid rows for additional fields
+
+        // GitLab credentials
+        JPanel gitLabPanel = new JPanel(new GridLayout(2, 2));  // Panel for username and password fields
+        JLabel gitLabUserLabel = new JLabel("GitLab Username:");
+        gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
+
+        JLabel gitLabPasswordLabel = new JLabel("GitLab AccessCode:");
+        gitLabPasswordFieldPassword = new JPasswordField("XRnAg_GmgLinFk_vPrsT");
+        gitLabPanel.add(gitLabUserLabel);
+        gitLabPanel.add(gitLabUserNameField);
+        gitLabPanel.add(gitLabPasswordLabel);
+        gitLabPanel.add(gitLabPasswordFieldPassword);
+
+        // Add GitLab credentials panel at the beginning of the form
+        panel.add(gitLabPanel);
+
+        repoUrlField = new JTextField("https://gitlab.uni-marburg.de/kertels/erma.git");
         targetPathField = new JTextField();
         JButton browseButton = new JButton("Browse Target Folder");
         fetchBranchesButton = new JButton("Fetch Branches");
