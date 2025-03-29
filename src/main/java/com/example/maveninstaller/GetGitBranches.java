@@ -26,10 +26,10 @@ public class GetGitBranches {
 
         // Check if the URL is a valid GitHub or GitLab repository
         if (repoUrl.contains("github.")) {
-            fetchGitHubOwnerContact(repoUrl);
+//            fetchGitHubOwnerContact(repoUrl);
             fetchGitHubBranches(repoUrl);
         } else if (repoUrl.contains("gitlab.")) {
-            fetchGitLabOwnerContact(repoUrl);
+//            fetchGitLabOwnerContact(repoUrl);
             fetchGitLabBranches(repoUrl);
         } else {
             outputConsole.setText("Invalid repository URL!\n");
@@ -55,6 +55,7 @@ public class GetGitBranches {
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
+                fetchGitHubOwnerContact(repoUrl);
                     try {
                         ProcessBuilder builder = new ProcessBuilder("git", "ls-remote", "--heads", repoUrl);
                         Process process = builder.start();
@@ -92,6 +93,7 @@ public class GetGitBranches {
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
+                fetchGitLabOwnerContact(repoUrl);
                 try {
                     URI uri = new URI(repoUrl);
                     String host = uri.getHost();
