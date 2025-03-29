@@ -1,6 +1,7 @@
 package com.example.maveninstaller;
 
 import javax.swing.*;
+import javax.swing.plaf.ProgressBarUI;
 import java.awt.*;
 import java.io.*;
 import java.util.List;
@@ -15,7 +16,8 @@ class GitHubCloneUI {
     public static JTextField repoUrlField, targetPathField;
     public static JTextField gitLabUserNameField, gitLabPasswordFieldPassword;
     public static JTextArea outputConsole;
-    public static JTextArea aboutConsole;
+    public static JTextArea ownerInfoArea;
+    public static JTextArea readmeArea;
     public static JComboBox<String> branchSelector;
     public static JButton fetchBranchesButton, cloneButton;
     public static JProgressBar progressBar;
@@ -23,50 +25,77 @@ class GitHubCloneUI {
     public void createAndShowGUI() {
         frame = new JFrame("GitMaven Installer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 600);
-        // Load the logo (icon) image
+        frame.setSize(900, 900);
+        frame.setLocationRelativeTo(null);
+
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/GitMavenLogoSmall.png")));
         frame.setIconImage(icon.getImage());
 
-        // Add some basic components
-        JLabel label = new JLabel("GitMaven Installer v1.0", JLabel.CENTER);
-        frame.add(label);
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
+        // User Info Section (full width)
+        JPanel userInfoPanel = new JPanel(new GridBagLayout());
+        userInfoPanel.setBorder(BorderFactory.createTitledBorder("User Information"));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.weightx = 1.0;
 
-        JPanel panel = new JPanel(new GridLayout(12, 1)); // Increase grid rows for additional fields
-
-        // GitLab credentials
-        JPanel gitLabPanel = new JPanel(new GridLayout(2, 2));  // Panel for username and password fields
-        JLabel gitLabUserLabel = new JLabel("GitLab Username:");
+        gbc.gridx = 0; gbc.gridy = 0;
+        userInfoPanel.add(new JLabel("GitLab Username:"), gbc);
+        gbc.gridx = 1;
         gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
+        userInfoPanel.add(gitLabUserNameField, gbc);
 
-        JLabel gitLabPasswordLabel = new JLabel("GitLab AccessCode:");
+        gbc.gridx = 0; gbc.gridy = 1;
+        userInfoPanel.add(new JLabel("Access Token:"), gbc);
+        gbc.gridx = 1;
+        gitLabPasswordFieldPassword = new JPasswordField();
         gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
-        gitLabPanel.add(gitLabUserLabel);
-        gitLabPanel.add(gitLabUserNameField);
-        gitLabPanel.add(gitLabPasswordLabel);
-        gitLabPanel.add(gitLabPasswordFieldPassword);
+        userInfoPanel.add(gitLabPasswordFieldPassword, gbc);
 
-        // Add GitLab credentials panel at the beginning of the form
-        panel.add(gitLabPanel);
+        userInfoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, userInfoPanel.getPreferredSize().height));
+        mainPanel.add(userInfoPanel);
 
+        // Repo Info
+        JPanel repoPanel = new JPanel(new BorderLayout(5, 5));
+        repoPanel.setBorder(BorderFactory.createTitledBorder("Repository Info"));
         repoUrlField = new JTextField("https://gitlab.uni-marburg.de/kertels/erma.git");
-        targetPathField = new JTextField();
-        JButton browseButton = new JButton("Browse Target Folder");
-        fetchBranchesButton = new JButton("Fetch Branches");
-        cloneButton = new JButton("Clone Repository");
-        progressBar = new JProgressBar(0, 100);
+        repoPanel.add(repoUrlField, BorderLayout.CENTER);
+        mainPanel.add(repoPanel);
 
-        outputConsole = new JTextArea("Logs: \n");
-        aboutConsole = new JTextArea("About: This application clones GitHub repositories.");
-        outputConsole.setEditable(false);
-        aboutConsole.setEditable(false);
+        // Branch Selector (full width)
+        JPanel branchPanel = new JPanel(new GridBagLayout());
+        branchPanel.setBorder(BorderFactory.createTitledBorder("Branch Selection"));
+        GridBagConstraints branchGbc = new GridBagConstraints();
+        branchGbc.insets = new Insets(5, 5, 5, 5);
+        branchGbc.fill = GridBagConstraints.HORIZONTAL;
+        branchGbc.weightx = 1.0;
 
+        branchGbc.gridx = 0;
+        branchGbc.gridy = 0;
+        branchPanel.add(new JLabel("Branch:"), branchGbc);
+
+        branchGbc.gridx = 1;
         branchSelector = new JComboBox<>();
         branchSelector.setEnabled(false);
+        branchPanel.add(branchSelector, branchGbc);
 
+        branchGbc.gridx = 2;
+        fetchBranchesButton = new JButton("Fetch Branches");
         fetchBranchesButton.addActionListener(e -> fetchBranches());
+        branchPanel.add(fetchBranchesButton, branchGbc);
 
+        branchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, branchPanel.getPreferredSize().height));
+        mainPanel.add(branchPanel);
+
+        // Target Path
+        JPanel targetPanel = new JPanel(new BorderLayout(5, 5));
+        targetPanel.setBorder(BorderFactory.createTitledBorder("Target Folder"));
+        targetPathField = new JTextField();
+        JButton browseButton = new JButton("Browse");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         browseButton.addActionListener(e -> {
@@ -74,27 +103,68 @@ class GitHubCloneUI {
                 targetPathField.setText(fileChooser.getSelectedFile().getAbsolutePath());
             }
         });
+        targetPanel.add(targetPathField, BorderLayout.CENTER);
+        targetPanel.add(browseButton, BorderLayout.EAST);
+        mainPanel.add(targetPanel);
 
+        // Clone + Build Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        cloneButton = new JButton("Clone Repository");
         cloneButton.addActionListener(e -> cloneRepository());
+        buttonPanel.add(cloneButton);
 
-        panel.add(repoUrlField);
-        panel.add(fetchBranchesButton);
-        panel.add(branchSelector);
-        panel.add(browseButton);
-        panel.add(targetPathField);
-        panel.add(cloneButton);
-        panel.add(progressBar);
-        panel.add(new JScrollPane(outputConsole));
-        panel.add(new JScrollPane(aboutConsole));
+        JButton buildButton = new JButton("Build Executable");
+        buildButton.setEnabled(false);
+        buildButton.addActionListener(e -> {
+            outputConsole.append("Building project into executable JAR...\n");
+            // TODO: implement build logic here
+        });
+        buttonPanel.add(buildButton);
 
-        // Adding About Section at Bottom
-        JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling maven projects from GitHub and GitLab.");
+        // Action Panel with progress bar
+        JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
+        progressBar = new JProgressBar(0, 100);
+        progressBar.setUI((ProgressBarUI) UIManager.getUI(progressBar));
+
+        actionPanel.add(buttonPanel, BorderLayout.WEST);
+        actionPanel.add(progressBar, BorderLayout.CENTER);
+
+        mainPanel.add(actionPanel);
+
+        // Owner Info
+        ownerInfoArea = new JTextArea(4, 40);
+        ownerInfoArea.setEditable(false);
+        ownerInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        ownerInfoArea.setBorder(BorderFactory.createTitledBorder("Project Owner Info"));
+        mainPanel.add(ownerInfoArea);
+
+        // README Area
+        readmeArea = new JTextArea(8, 40);
+        readmeArea.setEditable(false);
+        readmeArea.setLineWrap(true);
+        readmeArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        JScrollPane readmeScrollPane = new JScrollPane(readmeArea);
+        readmeScrollPane.setBorder(BorderFactory.createTitledBorder("README.md Content"));
+        mainPanel.add(readmeScrollPane);
+
+        // Output Console
+        outputConsole = new JTextArea(10, 100);
+        outputConsole.setEditable(false);
+        outputConsole.setAutoscrolls(true);
+        outputConsole.setLineWrap(true);
+        outputConsole.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        JScrollPane outputScrollPane = new JScrollPane(outputConsole);
+        outputScrollPane.setBorder(BorderFactory.createTitledBorder("Console Output"));
+        mainPanel.add(outputScrollPane);
+
+        // Footer
+        JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
         appInfo.setEditable(false);
         appInfo.setBackground(new Color(240, 240, 240));
         appInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        panel.add(new JScrollPane(appInfo));
+        mainPanel.add(appInfo);
 
-        frame.add(panel);
+        frame.add(new JScrollPane(mainPanel));
         frame.setVisible(true);
     }
 
