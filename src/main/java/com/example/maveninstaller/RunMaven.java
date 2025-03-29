@@ -5,17 +5,13 @@ import java.io.File;
 import java.io.InputStreamReader;
 
 import static com.example.maveninstaller.GitHubCloneUI.*;
-import static com.example.maveninstaller.RepositoryUtils.getRepoName;
 
 public class RunMaven {
-
-    public static void runMavenBuild(String targetPath, String repoUrl) {
-        String projectDir = targetPath + "/" + getRepoName(repoUrl);
-
+    public static void runMavenBuild(String targetPath) {
         try {
-            // Run Maven to build the project
-            ProcessBuilder builder = new ProcessBuilder("mvn", "clean", "install");
-            builder.directory(new File(projectDir));
+            // Run Maven to build the project mvn clean package -DskipTests
+            ProcessBuilder builder = new ProcessBuilder("mvn.cmd", "clean", "package", "-DskipTests");
+            builder.directory(new File(targetPath + "/"));
             builder.redirectErrorStream(true);
             Process process = builder.start();
 
