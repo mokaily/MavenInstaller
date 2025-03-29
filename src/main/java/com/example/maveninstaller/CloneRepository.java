@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import static com.example.maveninstaller.GitHubCloneUI.*;
+import static com.example.maveninstaller.PomFinder.findPomXml;
 import static com.example.maveninstaller.RepositoryUtils.getRepoName;
 import static com.example.maveninstaller.RunMaven.runMavenBuild;
 import static com.example.maveninstaller.ShortcutManager.createShortcut;
@@ -57,10 +58,13 @@ public class CloneRepository {
                         process.waitFor();
 
                         // Check if pom.xml exists and run Maven build if necessary
-                        File pomFile = new File(targetPath + "/" + getRepoName(repoUrl) + "/pom.xml");
-                        if (pomFile.exists()) {
+                        String findPomXml = findPomXml(targetPath + "/" + getRepoName(repoUrl));
+//                        File pomFile = new File(targetPath + "/" + getRepoName(repoUrl) + "/pom.xml");
+                        if (findPomXml != null) {
                             outputConsole.append("Maven project detected.\n");
-                            runMavenBuild(targetPath, repoUrl);
+
+                            outputConsole.append(findPomXml);
+                            runMavenBuild(findPomXml);
                         } else {
                             outputConsole.append("No Maven project found.\n");
                         }
@@ -86,10 +90,12 @@ public class CloneRepository {
                         process.waitFor();
 
                         // Check if pom.xml exists and run Maven build if necessary
-                        File pomFile = new File(targetPath + "/" + getRepoName(repoUrl) + "/pom.xml");
-                        if (pomFile.exists()) {
+                        String findPomXml = findPomXml(targetPath + "/" + getRepoName(repoUrl));
+//                        File pomFile = new File(targetPath + "/" + getRepoName(repoUrl) + "/pom.xml");
+                        if (findPomXml != null) {
                             outputConsole.append("Maven project detected.\n");
-                            runMavenBuild(targetPath, repoUrl);
+                            outputConsole.append(findPomXml);
+                            runMavenBuild(findPomXml);
                         } else {
                             outputConsole.append("No Maven project found.\n");
                         }
