@@ -16,7 +16,11 @@ public class CloneRepository {
      public static void cloneRepository() {
         String repoUrl = repoUrlField.getText().trim();
         String targetPath = targetPathField.getText().trim();
-        String branch = (String) branchSelector.getSelectedItem();
+        String branch = "";
+        try{
+            branch = (String) branchSelector.getSelectedItem();
+        }catch (Exception ignored){}
+
         outputConsole.append(String.valueOf(repoUrl.isEmpty()));
         outputConsole.append(String.valueOf(!repoUrl.contains("github.")));
         outputConsole.append(String.valueOf(!repoUrl.contains("gitlab.")));
@@ -35,16 +39,28 @@ public class CloneRepository {
         progressBar.setIndeterminate(true);
 
         // Use SwingWorker to handle the cloning process in the background
-        new SwingWorker<Void, String>() {
+         String finalBranch = branch;
+         new SwingWorker<Void, String>() {
             @Override
-            protected Void doInBackground() throws Exception {
+            protected Void doInBackground() {
                 if(repoUrl.contains("gitlab.")) {
                     try {
                         outputConsole.append("gitlab.\n");
-                        String userName = String.valueOf(gitLabUserNameField);
-                        String pwd = String.valueOf(gitLabPasswordFieldPassword);
+                        String userName = gitLabUserNameField.getText().trim();
+                        userName = userName.replace("@", "%40");
+                        String pwd = gitLabPasswordFieldPassword.getText().trim();
                         String repoUrlEncoded = "https://" + userName + ":" + pwd + "@" + repoUrl.substring(8, repoUrl.length());
-
+                        outputConsole.append(repoUrl + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
+                        outputConsole.append(repoUrlEncoded + "\n");
                         ProcessBuilder builder = new ProcessBuilder("git", "clone", repoUrlEncoded);
                         builder.directory(new File(targetPath));
                         builder.redirectErrorStream(true);
@@ -77,7 +93,15 @@ public class CloneRepository {
                     }
                 }else {
                     try {
-                        ProcessBuilder builder = new ProcessBuilder("git", "clone", "--branch", branch, repoUrl);
+                        ProcessBuilder builder ;
+                        outputConsole.append(finalBranch + "\n");
+
+                        if(finalBranch == "") {
+                            builder = new ProcessBuilder("git", "clone", repoUrl);
+                        }else{
+                            builder = new ProcessBuilder("git", "clone", "--branch", finalBranch, repoUrl);
+                        }
+
                         builder.directory(new File(targetPath));
                         builder.redirectErrorStream(true);
                         Process process = builder.start();

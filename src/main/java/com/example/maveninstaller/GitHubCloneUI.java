@@ -41,7 +41,7 @@ class GitHubCloneUI {
         gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
 
         JLabel gitLabPasswordLabel = new JLabel("GitLab AccessCode:");
-        gitLabPasswordFieldPassword = new JPasswordField("XRnAg_GmgLinFk_vPrsT");
+        gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
         gitLabPanel.add(gitLabUserLabel);
         gitLabPanel.add(gitLabUserNameField);
         gitLabPanel.add(gitLabPasswordLabel);
