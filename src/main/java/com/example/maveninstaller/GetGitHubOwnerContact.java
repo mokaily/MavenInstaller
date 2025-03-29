@@ -14,7 +14,12 @@ import static com.example.maveninstaller.GitHubCloneUI.*;
 public class GetGitHubOwnerContact {
     public static void fetchGitHubOwnerContact(String repoUrl) {
         progressBar.setIndeterminate(true);
-        aboutConsole.setText("Fetching Github owner contact info...");
+        SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching Github owner contact info...\n"));
+//        if(repoUrl.startsWith("git@")) {
+//            repoUrl = repoUrl.replace("git@", "https://");
+//            repoUrl = repoUrl.replace(":", "/");
+//        }
+        if(repoUrl.endsWith(".git")) { repoUrl = repoUrl.substring(0, repoUrl.length() - 4); }
         // Extract the owner and repo name from the GitHub URL
         String[] urlParts = repoUrl.split("/");
         String owner = urlParts[3]; // GitHub username (owner)
@@ -35,7 +40,7 @@ public class GetGitHubOwnerContact {
 
                     // Check for a successful response
                     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                        aboutConsole.append("Failed to fetch GitHub owner info!\n");
+                        SwingUtilities.invokeLater(() -> ownerInfoArea.append("Failed to fetch GitHub owner info!\n"));
                         return null;
                     }
 
@@ -57,11 +62,11 @@ public class GetGitHubOwnerContact {
                     String ownerUrl = ownerInfo.optString("url", "url not available");
 
                     // Display the owner's contact information (or "not available" message)
-                    aboutConsole.append("Owner: " + ownerName + "\n");
-                    aboutConsole.append("Email: " + ownerEmail + "\n");
-                    aboutConsole.append("URL: " + ownerUrl + "\n");
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("Owner: " + ownerName + "\n"));
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("Email: " + ownerEmail + "\n"));
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("URL: " + ownerUrl + "\n"));
                 } catch (Exception e) {
-                    aboutConsole.append("Error fetching GitHub owner contact info: \n");
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("Error fetching GitHub owner contact info: \n"));
                 }
 
                 return null;

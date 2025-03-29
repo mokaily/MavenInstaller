@@ -16,7 +16,8 @@ import static com.example.maveninstaller.GitHubCloneUI.*;
 public class GetGitLabOwnerContact {
     public static void fetchGitLabOwnerContact(String repoUrl) {
         progressBar.setIndeterminate(true);
-        aboutConsole.setText("Fetching GitLab owner contact info...\n");
+        SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching GitLab owner contact info...\n"));
+
         // Extract the project ID from the GitLab URL
         String projectPath = repoUrl.replace("https://gitlab.com/", "").replace(".git", "");
 
@@ -36,7 +37,7 @@ public class GetGitLabOwnerContact {
 
                     // Check for a successful response
                     if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                        aboutConsole.append("Failed to fetch GitLab owner info!\n");
+                        SwingUtilities.invokeLater(() -> ownerInfoArea.append("Failed to fetch GitLab owner info!\n"));
                         return null;
                     }
 
@@ -57,12 +58,12 @@ public class GetGitLabOwnerContact {
                     String ownerUrl = ownerInfo.getString("web_url");
 
                     // Display the owner's contact information
-                    aboutConsole.append("Username: " + ownerUsername + "\n");
-                    aboutConsole.append("URL: " + ownerUrl + "\n");
+                    SwingUtilities.invokeLater(() ->  ownerInfoArea.append("Username: " + ownerUsername + "\n"));
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("URL: " + ownerUrl + "\n"));
 
                     // GitLab does not provide email directly through API for privacy reasons.
                 } catch (Exception e) {
-                    aboutConsole.append("Error fetching GitLab owner contact info: \n" + jsonResponse[0]);
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("Error fetching GitLab owner contact info: \n" + jsonResponse[0]));
                 }
 
                 return null;
