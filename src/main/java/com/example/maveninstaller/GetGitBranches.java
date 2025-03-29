@@ -3,6 +3,7 @@ package com.example.maveninstaller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -36,69 +37,109 @@ public class GetGitBranches {
     }
 
     public static void fetchGitHubBranches(String repoUrl) {
-        try {
-            ProcessBuilder builder = new ProcessBuilder("git", "ls-remote", "--heads", repoUrl);
-            Process process = builder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            List<String> branches = new ArrayList<>();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String branch = line.substring(line.lastIndexOf('/') + 1);
-                branches.add(branch);
+        progressBar.setIndeterminate(true);
+        new SwingWorker<Void, String>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                    try {
+                        ProcessBuilder builder = new ProcessBuilder("git", "ls-remote", "--heads", repoUrl);
+                        Process process = builder.start();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                        List<String> branches = new ArrayList<>();
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            String branch = line.substring(line.lastIndexOf('/') + 1);
+                            branches.add(branch);
+                        }
+                        updateBranchSelector(branches);
+                    } catch (Exception e) {
+                        outputConsole.append("Failed to fetch GitHub branches!\n" + e.getMessage());
+                    }
+
+                return null;
             }
-            updateBranchSelector(branches);
-        } catch (Exception e) {
-            outputConsole.append("Failed to fetch GitHub branches!\n" + e.getMessage());
-        }
+
+            @Override
+            protected void process(List<String> chunks) {
+                for (String chunk : chunks) {
+                    outputConsole.append(chunk + "\n");
+                }
+            }
+
+            @Override
+            protected void done() {
+                progressBar.setIndeterminate(false);
+            }
+        }.execute();
     }
 
     public static void fetchGitLabBranches(String repoUrl) {
-        try {
-            // Convert the GitLab URL to the project ID
-            String projectId = getGitLabProjectId(repoUrl);
+        progressBar.setIndeterminate(true);
+        new SwingWorker<Void, String>() {
+            @Override
+            protected Void doInBackground() throws Exception {
+                try {
+                    // Convert the GitLab URL to the project ID
+                    String projectId = getGitLabProjectId(repoUrl);
 
-            if (projectId == null) {
-                outputConsole.append("Could not get project ID for GitLab repository!\n");
-                return;
+                    if (projectId == null) {
+                        outputConsole.append("Could not get project ID for GitLab repository!\n");
+                        return null;
+                    }
+
+                    // API URL to fetch branches
+                    String apiUrl = "https://gitlab.com/api/v4/projects/" + projectId + "/repository/branches";
+
+                    // Send HTTP request to fetch branches
+                    URL url = new URL(apiUrl);
+                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    connection.setRequestMethod("GET");
+                    connection.setRequestProperty("Accept", "application/json");
+
+                    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                        outputConsole.append("Failed to fetch branches from GitLab repository!\n");
+                        return null;
+                    }
+
+                    // Read the response
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                    StringBuilder response = new StringBuilder();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        response.append(line);
+                    }
+
+                    // Parse the JSON response using Jackson
+                    ObjectMapper objectMapper = new ObjectMapper();
+                    JsonNode branchesJson = objectMapper.readTree(response.toString());
+                    List<String> branches = new ArrayList<>();
+
+                    // Extract branch names
+                    for (JsonNode branch : branchesJson) {
+                        branches.add(branch.get("name").asText());
+                    }
+
+                    updateBranchSelector(branches);
+
+                } catch (Exception e) {
+                    outputConsole.append("Failed to fetch GitLab branches!\n" + e.getMessage());
+                }
+
+                return null;
             }
 
-            // API URL to fetch branches
-            String apiUrl = "https://gitlab.com/api/v4/projects/" + projectId + "/repository/branches";
-
-            // Send HTTP request to fetch branches
-            URL url = new URL(apiUrl);
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Accept", "application/json");
-
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                outputConsole.append("Failed to fetch branches from GitLab repository!\n");
-                return;
+            @Override
+            protected void process(List<String> chunks) {
+                for (String chunk : chunks) {
+                    outputConsole.append(chunk + "\n");
+                }
             }
 
-            // Read the response
-            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            StringBuilder response = new StringBuilder();
-            String line;
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
+            @Override
+            protected void done() {
+                progressBar.setIndeterminate(false);
             }
-
-            // Parse the JSON response using Jackson
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode branchesJson = objectMapper.readTree(response.toString());
-            List<String> branches = new ArrayList<>();
-
-            // Extract branch names
-            for (JsonNode branch : branchesJson) {
-                branches.add(branch.get("name").asText());
-            }
-
-            updateBranchSelector(branches);
-
-        } catch (Exception e) {
-            outputConsole.append("Failed to fetch GitLab branches!\n" + e.getMessage());
-        }
+        }.execute();
     }
 
 
