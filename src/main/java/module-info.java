@@ -5,6 +5,7 @@ module com.example.maveninstaller {
     requires java.desktop;
     requires org.json;
     requires org.eclipse.jgit;
+    requires org.apache.commons.io;
 
 
     opens com.example.maveninstaller to javafx.fxml;
