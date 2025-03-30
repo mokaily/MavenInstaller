@@ -18,6 +18,8 @@ public class GetGitLabOwnerContact {
         progressBar.setIndeterminate(true);
         SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching GitLab owner contact info...\n"));
 
+        //todo: repoUrl get hosturl from it and replace it with target below
+
         // Extract the project ID from the GitLab URL
         String projectPath = repoUrl.replace("https://gitlab.com/", "").replace(".git", "");
 
