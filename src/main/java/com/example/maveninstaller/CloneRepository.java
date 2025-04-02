@@ -6,7 +6,8 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import static com.example.maveninstaller.GitHubCloneUI.*;
+import static com.example.maveninstaller.GUI.DisplayProjectInfo.displayProjectInfo;
+import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.PomFinder.findPomXml;
 import static com.example.maveninstaller.RepositoryUtils.getRepoName;
 import static com.example.maveninstaller.RunMaven.runMavenBuild;
@@ -37,6 +38,8 @@ public class CloneRepository {
 
          outputConsole.setText("⏳ Cloning repository...\n");
          progressBar.setIndeterminate(true);
+         progressBar.setVisible(true);
+         progressBar.repaint();
 
          String finalBranch = branch;
          String finalRepoUrl = repoUrl;

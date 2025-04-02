@@ -9,11 +9,13 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-import static com.example.maveninstaller.GitHubCloneUI.*;
+import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 
 public class GetGitHubOwnerContact {
     public static void fetchGitHubOwnerContact(String repoUrl) {
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        progressBar.repaint();
         SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching Github owner contact info...\n"));
 //        if(repoUrl.startsWith("git@")) {
 //            repoUrl = repoUrl.replace("git@", "https://");
@@ -82,6 +84,8 @@ public class GetGitHubOwnerContact {
             @Override
             protected void done() {
                 progressBar.setIndeterminate(false);
+                progressBar.setVisible(true);
+                progressBar.repaint();
             }
         }.execute();
     }

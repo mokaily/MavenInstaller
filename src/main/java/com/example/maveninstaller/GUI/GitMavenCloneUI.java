@@ -1,17 +1,14 @@
-package com.example.maveninstaller;
+package com.example.maveninstaller.GUI;
 
 import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
 import java.awt.*;
-import java.io.*;
-import java.util.List;
 import java.util.Objects;
 
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
 import static com.example.maveninstaller.GetGitBranches.fetchBranches;
-import static com.example.maveninstaller.RepositoryUtils.getRepoName;
 
-class GitHubCloneUI {
+public class GitMavenCloneUI {
     public static JFrame frame;
     public static JTextField repoUrlField, targetPathField;
     public static JTextField gitLabUserNameField, gitLabPasswordFieldPassword;
@@ -114,7 +111,7 @@ class GitHubCloneUI {
         buttonPanel.add(cloneButton);
 
         JButton buildButton = new JButton("Build Executable");
-        buildButton.setEnabled(false);
+        buildButton.setEnabled(true);
         buildButton.addActionListener(e -> {
             outputConsole.append("Building project into executable JAR...\n");
             // TODO: implement build logic here
@@ -158,7 +155,7 @@ class GitHubCloneUI {
         mainPanel.add(outputScrollPane);
 
         // Footer
-        JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
+        JTextArea appInfo = new JTextArea("GitMaven Installer v2.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
         appInfo.setEditable(false);
         appInfo.setBackground(new Color(240, 240, 240));
         appInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
@@ -166,35 +163,5 @@ class GitHubCloneUI {
 
         frame.add(new JScrollPane(mainPanel));
         frame.setVisible(true);
-    }
-
-    public static void updateBranchSelector(List<String> branches) {
-        branchSelector.removeAllItems();
-        branches.forEach(branchSelector::addItem);
-        branchSelector.setEnabled(true);
-        outputConsole.append("Branches fetched successfully!\n");
-    }
-
-    public static void displayProjectInfo() {
-        String projectPath = targetPathField.getText() + "/" + getRepoName(repoUrlField.getText());
-
-        StringBuilder projectInfo = new StringBuilder("\nProject Information:\n");
-        projectInfo.append(repoUrlField.getText());
-
-        // Display the README content if it exists
-        File readmeFile = new File(projectPath + "/", "README.md");
-        if (readmeFile.exists()) {
-            projectInfo.append("\nREADME Content:\n");
-            try (BufferedReader reader = new BufferedReader(new FileReader(readmeFile))) {
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    projectInfo.append(line).append("\n");
-                }
-            } catch (IOException e) {
-                projectInfo.append("Could not read README.md\n");
-            }
-        } else {
-            projectInfo.append("README.md not found.\n");
-        }
     }
 }

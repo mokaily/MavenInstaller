@@ -10,4 +10,6 @@ module com.example.maveninstaller {
 
     opens com.example.maveninstaller to javafx.fxml;
     exports com.example.maveninstaller;
+    exports com.example.maveninstaller.GUI.CheckRequirments;
+    opens com.example.maveninstaller.GUI.CheckRequirments to javafx.fxml;
 }

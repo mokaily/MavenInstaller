@@ -12,9 +12,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
 import static com.example.maveninstaller.GetGitHubOwnerContact.fetchGitHubOwnerContact;
 import static com.example.maveninstaller.GetGitLabOwnerContact.fetchGitLabOwnerContact;
-import static com.example.maveninstaller.GitHubCloneUI.*;
+import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 
 public class GetGitBranches {
         public static void fetchBranches() {
@@ -52,6 +53,8 @@ public class GetGitBranches {
 
     public static void fetchGitHubBranches(String repoUrl) {
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        progressBar.repaint();
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
@@ -84,12 +87,16 @@ public class GetGitBranches {
             @Override
             protected void done() {
                 progressBar.setIndeterminate(false);
+                progressBar.setVisible(true);
+                progressBar.repaint();
             }
         }.execute();
     }
 
     public static void fetchGitLabBranches(String repoUrl) {
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        progressBar.repaint();
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
@@ -148,6 +155,8 @@ public class GetGitBranches {
             @Override
             protected void done() {
                 progressBar.setIndeterminate(false);
+                progressBar.setVisible(true);
+                progressBar.repaint();
             }
         }.execute();
     }

@@ -5,8 +5,6 @@ import java.nio.file.*;
 import java.util.stream.Stream;
 import java.util.Optional;
 
-import static com.example.maveninstaller.GitHubCloneUI.outputConsole;
-
 public class PomFinder {
     public static String findPomXml(String rootDir) {
         try (Stream<Path> paths = Files.walk(Paths.get(rootDir))) {

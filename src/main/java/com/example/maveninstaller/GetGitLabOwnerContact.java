@@ -11,64 +11,82 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static com.example.maveninstaller.GitHubCloneUI.*;
+import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 
 public class GetGitLabOwnerContact {
     public static void fetchGitLabOwnerContact(String repoUrl) {
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
+        progressBar.repaint();
         SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching GitLab owner contact info...\n"));
-
-        //todo: repoUrl get hosturl from it and replace it with target below
-
-        // Extract the project ID from the GitLab URL
-        String projectPath = repoUrl.replace("https://gitlab.com/", "").replace(".git", "");
 
         final JSONObject[] jsonResponse = {null};
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
                 try {
-                    // Construct GitLab API URL
-                    String apiUrl = "https://gitlab.com/api/v4/projects/" + URLEncoder.encode(projectPath, StandardCharsets.UTF_8);
+                    URL parsedUrl = new URL(repoUrl);
+                    String host = parsedUrl.getHost();
+                    String path = parsedUrl.getPath().replaceFirst("^/", "").replace(".git", "");
+                    String encodedPath = URLEncoder.encode(path, StandardCharsets.UTF_8);
+                    String apiUrl = "https://" + host + "/api/v4/projects/" + encodedPath;
 
-                    // Open a connection to the GitLab API
-                    URL url = new URL(apiUrl);
-                    HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                    // Try without token first
+                    JSONObject response = tryFetchGitLabInfo(apiUrl, host, null);
+
+                    // If failed, try with token
+                    if (response == null) {
+                        String accessToken = gitLabPasswordFieldPassword.getText().trim();
+                        response = tryFetchGitLabInfo(apiUrl, host, accessToken);
+                    }
+
+                    if (response != null) {
+                        JSONObject ownerInfo = response.getJSONObject("namespace");
+                        String ownerUsername = ownerInfo.getString("name");
+                        String ownerUrl = ownerInfo.getString("web_url");
+
+                        SwingUtilities.invokeLater(() -> ownerInfoArea.append("Username: " + ownerUsername + "\n"));
+                        SwingUtilities.invokeLater(() -> ownerInfoArea.append("URL: " + ownerUrl + "\n"));
+                    } else {
+                        SwingUtilities.invokeLater(() -> ownerInfoArea.append("❌ Failed to fetch GitLab owner info.\n"));
+                    }
+
+                } catch (Exception e) {
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("Error fetching GitLab owner contact info.\n"));
+                }
+                return null;
+            }
+
+            private JSONObject tryFetchGitLabInfo(String apiUrl, String host, String token) {
+                try {
+                    HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl).openConnection();
                     connection.setRequestMethod("GET");
                     connection.setRequestProperty("Accept", "application/json");
 
-                    // Check for a successful response
-                    if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                        SwingUtilities.invokeLater(() -> ownerInfoArea.append("Failed to fetch GitLab owner info!\n"));
-                        return null;
+                    if (token != null && !token.isBlank()) {
+                        if (host.contains("gitlab.com")) {
+                            connection.setRequestProperty("Authorization", "Bearer " + token);
+                        } else {
+                            connection.setRequestProperty("PRIVATE-TOKEN", token);
+                        }
                     }
 
-                    // Read the API response
+                    int status = connection.getResponseCode();
+                    outputConsole.append("🔎 TryFetch (" + (token == null ? "No Token" : "With Token") + ") → HTTP " + status + "\n");
+
+                    if (status != HttpURLConnection.HTTP_OK) return null;
+
                     BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                     StringBuilder response = new StringBuilder();
                     String line;
                     while ((line = reader.readLine()) != null) {
                         response.append(line);
                     }
-
-                    // Parse the JSON response
-                    jsonResponse[0] = new JSONObject(response.toString());
-
-                    // Extract owner information
-                    JSONObject ownerInfo = jsonResponse[0].getJSONObject("namespace");
-                    String ownerUsername = ownerInfo.getString("name");
-                    String ownerUrl = ownerInfo.getString("web_url");
-
-                    // Display the owner's contact information
-                    SwingUtilities.invokeLater(() ->  ownerInfoArea.append("Username: " + ownerUsername + "\n"));
-                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("URL: " + ownerUrl + "\n"));
-
-                    // GitLab does not provide email directly through API for privacy reasons.
+                    return new JSONObject(response.toString());
                 } catch (Exception e) {
-                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("Error fetching GitLab owner contact info: \n" + jsonResponse[0]));
+                    outputConsole.append("Error in tryFetch: " + e.getMessage() + "\n");
+                    return null;
                 }
-
-                return null;
             }
 
             @Override
@@ -81,8 +99,9 @@ public class GetGitLabOwnerContact {
             @Override
             protected void done() {
                 progressBar.setIndeterminate(false);
+                progressBar.setVisible(false);
+                progressBar.repaint();
             }
         }.execute();
     }
-
 }
