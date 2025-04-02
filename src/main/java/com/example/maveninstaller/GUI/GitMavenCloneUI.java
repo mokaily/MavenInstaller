@@ -18,6 +18,8 @@ public class GitMavenCloneUI {
     public static JComboBox<String> branchSelector;
     public static JButton fetchBranchesButton, cloneButton;
     public static JProgressBar progressBar;
+    public static JCheckBox useCustomRepoCheckbox;
+    public static JTextField customRepoPathField;
 
     public void createAndShowGUI() {
         frame = new JFrame("GitMaven Installer");
@@ -49,7 +51,6 @@ public class GitMavenCloneUI {
         gbc.gridx = 0; gbc.gridy = 1;
         userInfoPanel.add(new JLabel("Access Token:"), gbc);
         gbc.gridx = 1;
-        gitLabPasswordFieldPassword = new JPasswordField();
         gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
         userInfoPanel.add(gitLabPasswordFieldPassword, gbc);
 
@@ -60,6 +61,7 @@ public class GitMavenCloneUI {
         JPanel repoPanel = new JPanel(new BorderLayout(5, 5));
         repoPanel.setBorder(BorderFactory.createTitledBorder("Repository Info"));
         repoUrlField = new JTextField("https://gitlab.uni-marburg.de/kertels/erma.git");
+        repoUrlField.setToolTipText("Examples:\n:https://gitlab.uni-marburg.de/kertels/erma.git \nhttps://gitlab.com/gnutools/gcc");
         repoPanel.add(repoUrlField, BorderLayout.CENTER);
         mainPanel.add(repoPanel);
 
@@ -104,6 +106,33 @@ public class GitMavenCloneUI {
         targetPanel.add(browseButton, BorderLayout.EAST);
         mainPanel.add(targetPanel);
 
+        // Custom Maven Repo Options
+        JPanel repoOptionPanel = new JPanel(new BorderLayout(5, 5));
+        useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
+        customRepoPathField = new JTextField();
+        customRepoPathField.setEnabled(false);
+        customRepoPathField.setToolTipText("Examples:\nWindows: C:/Users/Name/custom-m2\nmacOS: /Users/name/maven-repo\nLinux: /home/name/maven-repo");
+        JButton browseRepoButton = new JButton("Browse");
+
+        browseRepoButton.addActionListener(e -> {
+            JFileChooser repoChooser = new JFileChooser();
+            repoChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+            if (repoChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                customRepoPathField.setText(repoChooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+
+        useCustomRepoCheckbox.addActionListener(e -> {
+            boolean enabled = useCustomRepoCheckbox.isSelected();
+            customRepoPathField.setEnabled(enabled);
+            browseRepoButton.setEnabled(enabled);
+        });
+
+        repoOptionPanel.add(useCustomRepoCheckbox, BorderLayout.WEST);
+        repoOptionPanel.add(customRepoPathField, BorderLayout.CENTER);
+        repoOptionPanel.add(browseRepoButton, BorderLayout.EAST);
+        mainPanel.add(repoOptionPanel);
+
         // Clone + Build Buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         cloneButton = new JButton("Clone Repository");
@@ -111,7 +140,7 @@ public class GitMavenCloneUI {
         buttonPanel.add(cloneButton);
 
         JButton buildButton = new JButton("Build Executable");
-        buildButton.setEnabled(true);
+        buildButton.setEnabled(false);
         buildButton.addActionListener(e -> {
             outputConsole.append("Building project into executable JAR...\n");
             // TODO: implement build logic here
@@ -155,7 +184,7 @@ public class GitMavenCloneUI {
         mainPanel.add(outputScrollPane);
 
         // Footer
-        JTextArea appInfo = new JTextArea("GitMaven Installer v2.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
+        JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
         appInfo.setEditable(false);
         appInfo.setBackground(new Color(240, 240, 240));
         appInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));

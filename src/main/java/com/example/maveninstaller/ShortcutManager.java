@@ -4,73 +4,107 @@ import java.io.*;
 import java.nio.file.*;
 import javax.swing.*;
 
+import static com.example.maveninstaller.OperationSystemChecker.*;
+
 public class ShortcutManager {
 
     public static void createShortcut(String targetPath) {
-        String os = System.getProperty("os.name").toLowerCase();
-
-        // Path to the executable (e.g., jar or executable file in the target directory)
-        File execFile = new File(targetPath, "target/app.jar");  // Example for JAR file, can be customized
-
-        // Check if the executable exists
-        if (!execFile.exists()) {
-            JOptionPane.showMessageDialog(null, "Executable file not found!", "Error", JOptionPane.ERROR_MESSAGE);
+        File targetDir = new File(targetPath);
+        if (!targetDir.exists() || !targetDir.isDirectory()) {
+            JOptionPane.showMessageDialog(null, "Target folder not found!", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
+        File[] jarFiles = targetDir.listFiles((dir, name) -> name.toLowerCase().endsWith(".jar"));
+        if (jarFiles == null || jarFiles.length == 0) {
+            JOptionPane.showMessageDialog(null, "No JAR file found in the target directory!", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        File execFile = jarFiles[0]; // Take the first JAR found
+
         try {
-            if (os.contains("win")) {
-                createWindowsShortcut(targetPath, execFile);
-            } else if (os.contains("mac")) {
-                createMacAlias(targetPath, execFile);
+            if (isWindows()) {
+                createWindowsInstaller(targetPath, execFile);
+                JOptionPane.showMessageDialog(null, "Windows shortcut created!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else if (isMac()) {
+                createMacInstaller(targetPath, execFile);
+                JOptionPane.showMessageDialog(null, "macOS installer created!", "Success", JOptionPane.INFORMATION_MESSAGE);
+            } else if (isLinux()) {
+                createLinuxLauncher(targetPath, execFile);
+                JOptionPane.showMessageDialog(null, "Linux launcher script created!", "Success", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(null, "Unsupported OS for creating shortcut!", "Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(null, "Unsupported OS!", "Error", JOptionPane.ERROR_MESSAGE);
             }
-            JOptionPane.showMessageDialog(null, "Shortcut created successfully!", "Success", JOptionPane.INFORMATION_MESSAGE);
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Error creating shortcut: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Error creating shortcut/installer: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // Windows Shortcut Creation
-    private static void createWindowsShortcut(String targetPath, File execFile) throws IOException {
-        String shortcutDir = targetPath + "/StartMenu";  // Directory where the shortcut will be placed
-        File shortcutFolder = new File(shortcutDir);
-        if (!shortcutFolder.exists()) {
-            shortcutFolder.mkdirs();
-        }
+    private static void createWindowsInstaller(String targetPath, File execFile) throws IOException {
+        String installerDir = targetPath + "/WindowsInstaller";
+        File folder = new File(installerDir);
+        folder.mkdirs();
 
-        String shortcutPath = shortcutDir + "/MyAppShortcut.lnk";
-
-        // Using Windows Script Host to create a shortcut
+        String shortcutPath = installerDir + "/MyAppShortcut.lnk";
         String script = "Set WshShell = WScript.CreateObject(\"WScript.Shell\")\n" +
                 "Set oShellLink = WshShell.CreateShortcut(\"" + shortcutPath + "\")\n" +
                 "oShellLink.TargetPath = \"" + execFile.getAbsolutePath() + "\"\n" +
+                "oShellLink.WorkingDirectory = \"" + execFile.getParent() + "\"\n" +
                 "oShellLink.Save\n";
-        File scriptFile = new File(shortcutDir + "/createShortcut.vbs");
+
+        File scriptFile = new File(installerDir + "/createShortcut.vbs");
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(scriptFile))) {
             writer.write(script);
         }
-        ProcessBuilder scriptProcess = new ProcessBuilder("wscript", scriptFile.getAbsolutePath());
-        scriptProcess.start();
+        new ProcessBuilder("wscript", scriptFile.getAbsolutePath()).start();
+
+        // Add to Startup folder (optional)
+        String startup = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\MyAppShortcut.lnk";
+        Files.copy(Paths.get(shortcutPath), Paths.get(startup), StandardCopyOption.REPLACE_EXISTING);
+
+        JOptionPane.showMessageDialog(null, "Windows installer and shortcut created!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // macOS Alias Creation (Symbolic Link)
-    private static void createMacAlias(String targetPath, File execFile) throws IOException {
-        String shortcutDir = targetPath + "/Applications";  // Directory where the alias will be placed
-        File shortcutFolder = new File(shortcutDir);
-        if (!shortcutFolder.exists()) {
-            shortcutFolder.mkdirs();
-        }
+    private static void createMacInstaller(String targetPath, File execFile) throws IOException {
+        String appDir = targetPath + "/MyApp.app/Contents/MacOS";
+        File appFolder = new File(appDir);
+        appFolder.mkdirs();
 
-        String aliasPath = shortcutDir + "/MyAppShortcut.app";
-        File aliasFile = new File(aliasPath);
+        File launcher = new File(appFolder, "MyApp");
+        String script = "#!/bin/bash\nopen -a Terminal \"java -jar " + execFile.getAbsolutePath() + "\"\n";
 
-        // Using symbolic link for creating alias in macOS
-        if (!aliasFile.exists()) {
-            Files.createSymbolicLink(aliasFile.toPath(), execFile.toPath());
-        } else {
-            JOptionPane.showMessageDialog(null, "Alias already exists at the specified location.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        Files.writeString(launcher.toPath(), script);
+        launcher.setExecutable(true);
+
+        // Add to Dock using AppleScript
+        String appleScript = "tell application \"System Events\" to make new login item at end with properties {path:\"" + targetPath + "/MyApp.app\", hidden:false}";
+        File scriptFile = new File(targetPath, "addToDock.scpt");
+        Files.writeString(scriptFile.toPath(), appleScript);
+        new ProcessBuilder("osascript", scriptFile.getAbsolutePath()).start();
+
+        JOptionPane.showMessageDialog(null, "macOS installer and Dock icon created!", "Success", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private static void createLinuxLauncher(String targetPath, File execFile) throws IOException {
+        File launcher = new File(targetPath, "myapp.desktop");
+        String content = "[Desktop Entry]\n" +
+                "Name=MyApp\n" +
+                "Exec=java -jar " + execFile.getAbsolutePath() + "\n" +
+                "Icon=utilities-terminal\n" +
+                "Terminal=false\n" +
+                "Type=Application\n" +
+                "Categories=Utility;Application;\n";
+
+        Files.writeString(launcher.toPath(), content);
+        launcher.setExecutable(true);
+
+        // Try to copy to autostart
+        String home = System.getProperty("user.home");
+        Path autostart = Paths.get(home, ".config", "autostart", "myapp.desktop");
+        Files.createDirectories(autostart.getParent());
+        Files.copy(launcher.toPath(), autostart, StandardCopyOption.REPLACE_EXISTING);
+
+        JOptionPane.showMessageDialog(null, "Linux launcher and autostart entry created!", "Success", JOptionPane.INFORMATION_MESSAGE);
     }
 }

@@ -10,104 +10,116 @@ import static com.example.maveninstaller.GUI.DisplayProjectInfo.displayProjectIn
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.PomFinder.findPomXml;
 import static com.example.maveninstaller.RepositoryUtils.getRepoName;
-import static com.example.maveninstaller.RunMaven.runMavenBuild;
+import static com.example.maveninstaller.RunMavenBuildJar.runMavenBuildJar;
 import static com.example.maveninstaller.ShortcutManager.createShortcut;
 
 public class CloneRepository {
-     public static void cloneRepository() {
-         String repoUrl = repoUrlField.getText().trim();
-         if (repoUrl.endsWith(".git")) {
-             repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
-         }
-         String targetPath = targetPathField.getText().trim();
-         String branch = "";
-         try {
-             branch = (String) branchSelector.getSelectedItem();
-         } catch (Exception ignored) {
-         }
+    public static void cloneRepository() {
+        String repoUrl = repoUrlField.getText().trim();
+        if (repoUrl.endsWith(".git")) {
+            repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
+        }
+        String targetPath = targetPathField.getText().trim();
+        String branch = "";
+        try {
+            branch = (String) branchSelector.getSelectedItem();
+        } catch (Exception ignored) {
+        }
 
-         if (targetPath.isEmpty()) {
-             outputConsole.setText("❗ Please select a target folder!\n");
-             return;
-         }
+        if (targetPath.isEmpty()) {
+            outputConsole.setText("❗ Please select a target folder!\n");
+            return;
+        }
 
-         if (repoUrl.isEmpty() || !repoUrl.contains("git")) {
-             outputConsole.setText("❗ Invalid repository URL!\n");
-             return;
-         }
+        if (repoUrl.isEmpty() || !repoUrl.contains("git")) {
+            outputConsole.setText("❗ Invalid repository URL!\n");
+            return;
+        }
 
-         outputConsole.setText("⏳ Cloning repository...\n");
-         progressBar.setIndeterminate(true);
-         progressBar.setVisible(true);
-         progressBar.repaint();
+        // Validate custom repo path if selected
+        if (useCustomRepoCheckbox.isSelected()) {
+            String customRepoPath = customRepoPathField.getText().trim();
+            if (customRepoPath.isEmpty()) {
+                outputConsole.setText("❗ Custom Maven repository path is empty!\n");
+                return;
+            }
+            File repoDir = new File(customRepoPath);
+            if (!repoDir.exists() || !repoDir.isDirectory()) {
+                outputConsole.setText("❗ Custom Maven repository path is invalid or not a directory!\n");
+                return;
+            }
+        }
 
-         String finalBranch = branch;
-         String finalRepoUrl = repoUrl;
+        outputConsole.setText("⏳ Cloning repository...\n");
+        progressBar.setIndeterminate(true);
 
-         new SwingWorker<Void, String>() {
-             @Override
-             protected Void doInBackground() {
-                 try {
-                     ProcessBuilder builder;
-                     String actualRepoUrl = finalRepoUrl;
+        String finalBranch = branch;
+        String finalRepoUrl = repoUrl;
 
-                     if (finalRepoUrl.contains("gitlab.")) {
-                         String userName = gitLabUserNameField.getText().trim().replace("@", "%40");
-                         String pwd = gitLabPasswordFieldPassword.getText().trim();
-                         actualRepoUrl = "https://" + userName + ":" + pwd + "@" + finalRepoUrl.substring(8);
-                     }
+        new SwingWorker<Void, String>() {
+            @Override
+            protected Void doInBackground() {
+                try {
+                    ProcessBuilder builder;
+                    String actualRepoUrl = finalRepoUrl;
 
-                     if (finalBranch == null || finalBranch.isEmpty()) {
-                         builder = new ProcessBuilder("git", "clone", actualRepoUrl);
-                     } else {
-                         builder = new ProcessBuilder("git", "clone", "--branch", finalBranch, actualRepoUrl);
-                     }
+                    if (finalRepoUrl.contains("gitlab.")) {
+                        String userName = gitLabUserNameField.getText().trim().replace("@", "%40");
+                        String pwd = gitLabPasswordFieldPassword.getText().trim();
+                        actualRepoUrl = "https://" + userName + ":" + pwd + "@" + finalRepoUrl.substring(8);
+                    }
 
-                     builder.directory(new File(targetPath));
-                     builder.redirectErrorStream(true);
-                     Process process = builder.start();
+                    if (finalBranch == null || finalBranch.isEmpty()) {
+                        builder = new ProcessBuilder("git", "clone", actualRepoUrl);
+                    } else {
+                        builder = new ProcessBuilder("git", "clone", "--branch", finalBranch, actualRepoUrl);
+                    }
 
-                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-                     String line;
-                     while ((line = reader.readLine()) != null) {
-                         publish(line);
-                     }
-                     process.waitFor();
+                    builder.directory(new File(targetPath));
+                    builder.redirectErrorStream(true);
+                    Process process = builder.start();
 
-                     String fullPath = targetPath + "/" + getRepoName(finalRepoUrl);
-                     String pomPath = findPomXml(fullPath);
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        publish(line);
+                    }
+                    process.waitFor();
 
-                     if (pomPath != null) {
-                         publish("✅ Maven project detected.");
-                         publish(pomPath);
-                         runMavenBuild(pomPath);
-                     } else {
-                         publish("⚠️ No Maven project found.");
-                     }
+                    String fullPath = targetPath + "/" + getRepoName(finalRepoUrl);
+                    String pomPath = findPomXml(fullPath);
 
-                     createShortcut(targetPath);
+                    if (pomPath != null) {
+                        publish("✅ Maven project detected.");
+                        publish(pomPath);
+                        runMavenBuildJar(pomPath);
+                    } else {
+                        publish("⚠️ No Maven project found.");
+                    }
 
-                 } catch (Exception e) {
-                     publish("❌ Error cloning repository:\n" + e.getMessage());
-                 }
-                 return null;
-             }
+                    createShortcut(pomPath);
 
-             @Override
-             protected void process(List<String> chunks) {
-                 for (String chunk : chunks) {
-                     outputConsole.append(chunk + "\n");
-                 }
-             }
+                } catch (Exception e) {
+                    publish("❌ Error cloning repository:\n" + e.getMessage());
+                }
+                return null;
+            }
 
-             @Override
-             protected void done() {
-                 SwingUtilities.invokeLater(() -> {
-                     progressBar.setIndeterminate(false);
-                     outputConsole.append("✅ Cloning completed!\n");
-                     displayProjectInfo();
-                 });
-             }
-         }.execute();
-     }
+            @Override
+            protected void process(List<String> chunks) {
+                for (String chunk : chunks) {
+                    outputConsole.append(chunk + "\n");
+                }
+            }
+
+            @Override
+            protected void done() {
+                SwingUtilities.invokeLater(() -> {
+                    progressBar.setIndeterminate(false);
+                    outputConsole.append("✅ Cloning completed!\n");
+                    displayProjectInfo();
+                });
+            }
+        }.execute();
+    }
 }

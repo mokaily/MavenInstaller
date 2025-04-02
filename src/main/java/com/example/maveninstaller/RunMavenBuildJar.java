@@ -7,13 +7,21 @@ import java.io.InputStreamReader;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.OperationSystemChecker.isWindows;
 
-public class RunMaven {
-    public static void runMavenBuild(String targetPath) {
+public class RunMavenBuildJar {
+    public static void runMavenBuildJar(String targetPath) {
         try {
+            ProcessBuilder builder;
+
             // Run Maven to build the project mvn clean package -DskipTests
             String mavenCommand = isWindows() ? "mvn.cmd" : "mvn";
 
-            ProcessBuilder builder = new ProcessBuilder(mavenCommand, "clean", "package", "-DskipTests");
+            if (useCustomRepoCheckbox.isSelected()) {
+                String customRepo = customRepoPathField.getText().trim();
+                builder = new ProcessBuilder(mavenCommand, "clean", "package", "-DskipTests", "-Dmaven.repo.local=" + customRepo);
+            } else {
+                builder = new ProcessBuilder(mavenCommand, "clean", "package", "-DskipTests");
+            }
+
             builder.directory(new File(targetPath + "/"));
             builder.redirectErrorStream(true);
             Process process = builder.start();
@@ -28,5 +36,4 @@ public class RunMaven {
             outputConsole.append("Error running Maven build!\n" + e.getMessage());
         }
     }
-
 }
