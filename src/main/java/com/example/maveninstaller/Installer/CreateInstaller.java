@@ -56,26 +56,6 @@ public class CreateInstaller {
         }.execute();
     }
 
-//    private static void createMacShortcut(File dir) throws IOException {
-//        File launcher = new File(dir, "run-maven-exec.command");
-//        String script = "#!/bin/bash\ncd \"" + dir.getAbsolutePath() + "\"\nmvn exec:exec\n";
-//        Files.writeString(launcher.toPath(), script);
-//        launcher.setExecutable(true);
-//    }
-
-//    private static void createLinuxShortcut(File dir) throws IOException {
-//        File desktopFile = new File(dir, "RunMavenExec.desktop");
-//        String content = "[Desktop Entry]\n" +
-//                "Name=Run Maven Exec\n" +
-//                "Exec=mvn exec:exec\n" +
-//                "Path=" + dir.getAbsolutePath() + "\n" +
-//                "Terminal=true\n" +
-//                "Type=Application\n";
-//
-//        Files.writeString(desktopFile.toPath(), content);
-//        desktopFile.setExecutable(true);
-//    }
-
     public static String getApplicationName(String pomPath) {
         String appName = applicationNameField.getText().trim();
 

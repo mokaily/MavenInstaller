@@ -1,10 +1,6 @@
 package com.example.maveninstaller.Installer;
 
 import mslinks.ShellLink;
-import org.apache.commons.imaging.ImageFormats;
-import org.apache.commons.imaging.Imaging;
-
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;

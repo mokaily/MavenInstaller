@@ -8,7 +8,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
