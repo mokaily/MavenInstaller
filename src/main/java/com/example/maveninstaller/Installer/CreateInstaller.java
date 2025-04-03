@@ -8,6 +8,7 @@ import java.nio.file.*;
 import java.util.List;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
+import static com.example.maveninstaller.Installer.LinuxInstaller.createLinuxShortcut;
 import static com.example.maveninstaller.Installer.MacInstaller.createMacShortcut;
 import static com.example.maveninstaller.Installer.WindowsInstaller.createWindowsShortcut;
 import static com.example.maveninstaller.JarFinder.findJarInTarget;
@@ -29,7 +30,7 @@ public class CreateInstaller {
                     } else if (isMac()) {
                         createMacShortcut(dir, pomPath);
                     } else if (isLinux()) {
-//                createLinuxShortcut(dir);
+                        createLinuxShortcut(dir, pomPath);
                     } else {
                         JOptionPane.showMessageDialog(null, "Unsupported OS!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
@@ -63,18 +64,18 @@ public class CreateInstaller {
 //        launcher.setExecutable(true);
 //    }
 
-    private static void createLinuxShortcut(File dir) throws IOException {
-        File desktopFile = new File(dir, "RunMavenExec.desktop");
-        String content = "[Desktop Entry]\n" +
-                "Name=Run Maven Exec\n" +
-                "Exec=mvn exec:exec\n" +
-                "Path=" + dir.getAbsolutePath() + "\n" +
-                "Terminal=true\n" +
-                "Type=Application\n";
-
-        Files.writeString(desktopFile.toPath(), content);
-        desktopFile.setExecutable(true);
-    }
+//    private static void createLinuxShortcut(File dir) throws IOException {
+//        File desktopFile = new File(dir, "RunMavenExec.desktop");
+//        String content = "[Desktop Entry]\n" +
+//                "Name=Run Maven Exec\n" +
+//                "Exec=mvn exec:exec\n" +
+//                "Path=" + dir.getAbsolutePath() + "\n" +
+//                "Terminal=true\n" +
+//                "Type=Application\n";
+//
+//        Files.writeString(desktopFile.toPath(), content);
+//        desktopFile.setExecutable(true);
+//    }
 
     public static String getApplicationName(String pomPath) {
         String appName = applicationNameField.getText().trim();

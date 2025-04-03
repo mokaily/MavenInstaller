@@ -9,6 +9,8 @@ import static com.example.maveninstaller.BuildRepository.buildRepository;
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
 import static com.example.maveninstaller.CreateInstaller.createInstaller;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBranches;
+import static com.example.maveninstaller.OperationSystemChecker.isMac;
+import static com.example.maveninstaller.OperationSystemChecker.isWindows;
 
 public class GitMavenCloneUI {
     public static JFrame frame;
@@ -134,7 +136,7 @@ public class GitMavenCloneUI {
 
         // --- Shortcut Icon Picker (.ico only) ---
         scGbc.gridx = 0; scGbc.gridy = 2;
-        shortcutConfiguration.add(new JLabel("Shortcut Icon (.ico or .icns for mac):"), scGbc);
+        shortcutConfiguration.add(new JLabel("Shortcut Icon (.ico(windows), .icns(mac), .png(linux)):"), scGbc);
         scGbc.gridx = 1;
         shortcutIconField = new JTextField();
         JButton browseShortcutIconButton = new JButton("Browse");
@@ -143,9 +145,10 @@ public class GitMavenCloneUI {
         iconPickerPanel.add(browseShortcutIconButton, BorderLayout.EAST);
         shortcutConfiguration.add(iconPickerPanel, scGbc);
 
+        String iconExtension = isMac() ? "icns" : isWindows() ? "ico" : "png";
         browseShortcutIconButton.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
-            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Icon files (.ico, .icns)", "ico", "icns"));
+            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(STR.".\{iconExtension}", iconExtension));
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 shortcutIconField.setText(chooser.getSelectedFile().getAbsolutePath());
             }

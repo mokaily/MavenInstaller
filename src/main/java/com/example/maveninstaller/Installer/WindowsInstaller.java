@@ -32,7 +32,7 @@ class WindowsInstaller {
             throw new IOException("Could not find javaw.exe in PATH.");
         }
 
-        outputConsole.append("\n" + "Using javaw: " + javaPath + "\n");
+        outputConsole.append("Using javaw: " + javaPath + "\n");
 
 
         // Prepare common shortcut object
