@@ -87,12 +87,6 @@ public class CreateInstaller {
     }
 
     public static String getDirectoryPath(Path dir) {
-        String dirPath = executionFolderField.getText().trim();
-
-        if (dirPath.isEmpty()) {
-            dirPath = dir.getParent().toString();
-        }
-
-        return dirPath;
+        return dir.getParent().toString();
     }
 }

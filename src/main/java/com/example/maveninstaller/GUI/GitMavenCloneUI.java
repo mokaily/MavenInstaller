@@ -24,7 +24,6 @@ public class GitMavenCloneUI {
     public static JTextField customRepoPathField;
     public static JTextField applicationNameField;
     public static JCheckBox pinToDockCheckbox;
-    public static JTextField executionFolderField;
     public static JTextField shortcutIconField;
 
     public void createAndShowGUI() {

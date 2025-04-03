@@ -3,15 +3,18 @@ package com.example.maveninstaller.Installer;
 import org.apache.commons.imaging.ImageFormats;
 import org.apache.commons.imaging.Imaging;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
@@ -36,22 +39,28 @@ public class MacInstaller {
         Files.writeString(launcher, script);
         launcher.toFile().setExecutable(true);
 
-        // Copy icon if specified and valid (.icns)
+        // Create valid .icns from icon if needed
         String iconPath = shortcutIconField.getText().trim();
         String iconName = null;
-
+        
         if (!iconPath.isEmpty()) {
             File iconFile = new File(iconPath);
             if (iconFile.exists()) {
-                if (iconPath.endsWith(".icns")) {
-                    iconName = iconFile.getName();
-                    Files.copy(iconFile.toPath(), resources.resolve(iconName), StandardCopyOption.REPLACE_EXISTING);
-                } else if (iconPath.endsWith(".png") || iconPath.endsWith(".ico")) {
-                    BufferedImage image = Imaging.getBufferedImage(iconFile);
+                BufferedImage baseImage = ImageIO.read(iconFile);
+                if (baseImage != null) {
                     iconName = appName + ".icns";
                     File icnsFile = resources.resolve(iconName).toFile();
-                    Imaging.writeImage(image, icnsFile, ImageFormats.ICNS);
+
+                    // Write ICNS using Apache Commons Imaging
+                    try {
+                        Imaging.writeImage(baseImage, icnsFile, ImageFormats.ICNS);
+                        outputConsole.append("✅ ICNS icon created at: " + icnsFile.getAbsolutePath() + "\n");
+                    } catch (Exception e) {
+                        outputConsole.append("⚠️ Failed to write ICNS file: " + e.getMessage() + "\n");
+                    }
                 }
+            } else {
+                outputConsole.append("⚠️ Icon file not found: " + iconPath + "\n");
             }
         }
 
@@ -73,27 +82,27 @@ public class MacInstaller {
             writer.write("</dict>\n</plist>\n");
         }
 
-        outputConsole.append("Created macOS .app bundle at: " + appBundle.toString() + "\n");
+        outputConsole.append("✅ Created macOS .app bundle at: " + appBundle.toString() + "\n");
 
-        // Create alias to Desktop via AppleScript
         if (pinToDockCheckbox.isSelected()) {
-            String dockScript = "tell application \"System Events\" to tell dock preferences to set autohide to false"
-                    + "tell application \"Dock\" to quit "
-                    + "delay 1"
-                    + "do shell script \"defaults write com.apple.dock persistent-apps -array-add '{tile-data={file-data={_CFURLString=\"file://" + appBundle.toAbsolutePath().toString() + "\"; _CFURLStringType=15;};};}'\" "
+            String dockScript = "tell application \"System Events\" to tell dock preferences to set autohide to false\n"
+                    + "tell application \"Dock\" to quit\n"
+                    + "delay 1\n"
+                    + "do shell script \"defaults write com.apple.dock persistent-apps -array-add '{tile-data={file-data={_CFURLString=\"file://"
+                    + appBundle.toAbsolutePath().toString() + "\"; _CFURLStringType=15;};};}'\"\n"
                     + "do shell script \"killall Dock\"";
 
             File dockScriptFile = Files.createTempFile("pin_to_dock", ".applescript").toFile();
             Files.writeString(dockScriptFile.toPath(), dockScript);
             new ProcessBuilder("osascript", dockScriptFile.getAbsolutePath()).start();
-            outputConsole.append("Attempted to pin app to Dock");
-                    JOptionPane.showMessageDialog(null,
-                            "The app was added to the Dock. If it doesn't appear immediately, try launching it manually then right-click → Options → Keep in Dock.",
-                            "Dock Pin Notice",
-                            JOptionPane.INFORMATION_MESSAGE);
+            outputConsole.append("📌 Attempted to pin app to Dock\n");
+            JOptionPane.showMessageDialog(null,
+                    "The app was added to the Dock. If it doesn't appear immediately, try launching it manually then right-click → Options → Keep in Dock.",
+                    "Dock Pin Notice",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
 
-        // Create alias to Desktop via AppleScript
+        // Create alias to Desktop
         String[] scriptArgs = new String[] {
                 "-e", "tell application \"Finder\"",
                 "-e", "set theTgt to POSIX file \"" + appBundle.toString() + "\" as alias",
@@ -107,9 +116,9 @@ public class MacInstaller {
         Process pb = new ProcessBuilder(command).start();
         try {
             int code = pb.waitFor();
-            outputConsole.append("Shortcut created on Desktop (exit code: " + code + ")\n");
+            outputConsole.append("📁 Shortcut created on Desktop (exit code: " + code + ")\n");
         } catch (InterruptedException e) {
-            outputConsole.append("AppleScript execution interrupted.\n");
+            outputConsole.append("⚠️ AppleScript execution interrupted.\n");
         }
     }
 }
