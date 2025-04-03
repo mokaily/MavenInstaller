@@ -72,7 +72,7 @@ public class FetchGitLabOwnerInfo {
                     }
 
                     int status = connection.getResponseCode();
-                    outputConsole.append("🔎 TryFetch (" + (token == null ? "No Token" : "With Token") + ") → HTTP " + status + "\n");
+//                    outputConsole.append("🔎 TryFetch (" + (token == null ? "No Token" : "With Token") + ") → HTTP " + status + "\n");
 
                     if (status != HttpURLConnection.HTTP_OK) return null;
 
@@ -84,7 +84,7 @@ public class FetchGitLabOwnerInfo {
                     }
                     return new JSONObject(response.toString());
                 } catch (Exception e) {
-                    outputConsole.append("Error in tryFetch: " + e.getMessage() + "\n");
+//                    outputConsole.append("Error in tryFetch: " + e.getMessage() + "\n");
                     return null;
                 }
             }
@@ -99,7 +99,6 @@ public class FetchGitLabOwnerInfo {
             @Override
             protected void done() {
                 progressBar.setIndeterminate(false);
-                progressBar.setVisible(false);
                 progressBar.repaint();
             }
         }.execute();

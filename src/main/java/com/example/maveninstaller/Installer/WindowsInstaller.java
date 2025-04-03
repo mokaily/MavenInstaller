@@ -1,7 +1,10 @@
 package com.example.maveninstaller.Installer;
 
 import mslinks.ShellLink;
+import org.apache.commons.imaging.ImageFormats;
+import org.apache.commons.imaging.Imaging;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -16,7 +19,6 @@ class WindowsInstaller {
     public static void createWindowsShortcut(Path dir, String pomPath) throws IOException {
         String jarPath = dir.toString();
         String appName = getApplicationName(pomPath);
-        String dirPath = getDirectoryPath(dir);
 
         //Get javaw path
         String javaPath = "";
@@ -26,7 +28,7 @@ class WindowsInstaller {
         }
 
         if (javaPath == null || javaPath.isEmpty()) {
-            outputConsole.append("\n" + "Could not find javaw.exe in PATH." + "\n");
+            outputConsole.append("Could not find javaw.exe in PATH." + "\n");
             throw new IOException("Could not find javaw.exe in PATH.");
         }
 
@@ -37,7 +39,6 @@ class WindowsInstaller {
         ShellLink link = ShellLink.createLink(javaPath)
                 .setCMDArgs("-jar \"" + jarPath + "\"")
                 .setName(STR."\{appName}.lnk")
-                .setWorkingDir(dirPath)
                 .setIconLocation(jarPath);
 
         // Set icon if valid

@@ -8,8 +8,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.tryFetch;
-import static com.example.maveninstaller.FetchGitInfo.FetchGitLabOwnerInfo.fetchGitLabOwnerInfo;
+import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.tryFetch;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
 
@@ -22,7 +21,6 @@ class FetchGitLabBranches {
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
-                fetchGitLabOwnerInfo(repoUrl);
                 try {
                     URI uri = new URI(repoUrl);
                     String host = uri.getHost();

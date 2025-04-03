@@ -5,7 +5,9 @@ import javax.swing.plaf.ProgressBarUI;
 import java.awt.*;
 import java.util.Objects;
 
+import static com.example.maveninstaller.BuildRepository.buildRepository;
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
+import static com.example.maveninstaller.CreateInstaller.createInstaller;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBranches;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
@@ -129,14 +131,14 @@ public class GitMavenCloneUI {
         shortcutConfiguration.add(applicationNameField, scGbc);
 
         scGbc.gridx = 0; scGbc.gridy = 1;
-        shortcutConfiguration.add(new JLabel("Pin to Dock (macOS)/ Start App Shortcut (Windows):"), scGbc);
+        shortcutConfiguration.add(new JLabel("Pin to Dock (macOS)/ Start App Menu (Windows):"), scGbc);
         scGbc.gridx = 1;
         pinToDockCheckbox = new JCheckBox();
         shortcutConfiguration.add(pinToDockCheckbox, scGbc);
 
         // --- Shortcut Icon Picker (.ico only) ---
         scGbc.gridx = 0; scGbc.gridy = 2;
-        shortcutConfiguration.add(new JLabel("Shortcut Icon (.ico):"), scGbc);
+        shortcutConfiguration.add(new JLabel("Shortcut Icon (.ico, .png or .icns for mac):"), scGbc);
         scGbc.gridx = 1;
         shortcutIconField = new JTextField();
         JButton browseShortcutIconButton = new JButton("Browse");
@@ -147,7 +149,7 @@ public class GitMavenCloneUI {
 
         browseShortcutIconButton.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
-            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("ICO files", "ico"));
+            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Icon files (.ico, .png, .icns)", "ico", "png", "icns"));
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 shortcutIconField.setText(chooser.getSelectedFile().getAbsolutePath());
             }
@@ -155,24 +157,9 @@ public class GitMavenCloneUI {
 
         mainPanel.add(shortcutConfiguration);
 
-        // --- Execution Directory Panel ---
-        JPanel execPanel = new JPanel(new BorderLayout(5, 5));
-        execPanel.setBorder(BorderFactory.createTitledBorder("Execution Directory"));
-        executionFolderField = new JTextField();
-        JButton execBrowseButton = new JButton("Browse");
-        JFileChooser execChooser = new JFileChooser();
-        execChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        execBrowseButton.addActionListener(e -> {
-            if (execChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-                executionFolderField.setText(execChooser.getSelectedFile().getAbsolutePath());
-            }
-        });
-        execPanel.add(executionFolderField, BorderLayout.CENTER);
-        execPanel.add(execBrowseButton, BorderLayout.EAST);
-        mainPanel.add(execPanel);
-
         // Custom Maven Repo Options
         JPanel repoOptionPanel = new JPanel(new BorderLayout(5, 5));
+        repoOptionPanel.setBorder(BorderFactory.createTitledBorder("Default/ Custom Maven"));
         useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
         customRepoPathField = new JTextField();
         customRepoPathField.setEnabled(false);
@@ -199,32 +186,25 @@ public class GitMavenCloneUI {
         mainPanel.add(repoOptionPanel);
 
         // Clone + Build Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        cloneButton = new JButton("Clone Repository & Build");
+        JPanel clonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        cloneButton = new JButton("Clone Repository");
         cloneButton.addActionListener(e -> cloneRepository());
-        buttonPanel.add(cloneButton);
+        clonePanel.add(cloneButton);
 
-        JButton buildButton = new JButton("Create Installer");
-        buildButton.addActionListener(e -> {
-            outputConsole.append("Building project into executable JAR...\n");
-            // TODO: implement build logic here
-            String targetPath = targetPathField.getText().trim();
-            String repoUrl = repoUrlField.getText().trim();
-            if (repoUrl.endsWith(".git")) {
-                repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
-            }
-            String fullPath = targetPath + "/" + getRepoName(repoUrl);
-            String pomPath = findPomXml(fullPath);
-            createMavenExecShortcut(pomPath);
-        });
-        buttonPanel.add(buildButton);
+        JButton buildButton = new JButton("Build Jar");
+        buildButton.addActionListener(e -> buildRepository());
+        clonePanel.add(buildButton);
+
+        JButton installButton = new JButton("Create Installer");
+        installButton.addActionListener(e -> createInstaller());
+        clonePanel.add(installButton);
 
         // Action Panel with progress bar
         JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
         progressBar = new JProgressBar(0, 100);
         progressBar.setUI((ProgressBarUI) UIManager.getUI(progressBar));
 
-        actionPanel.add(buttonPanel, BorderLayout.WEST);
+        actionPanel.add(clonePanel, BorderLayout.WEST);
         actionPanel.add(progressBar, BorderLayout.CENTER);
 
         mainPanel.add(actionPanel);

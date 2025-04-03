@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maveninstaller.FetchGitInfo.FetchGitHubOwnerInfo.fetchGitHubOwnerInfo;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.outputConsole;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.progressBar;
 import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
@@ -19,7 +18,6 @@ class FetchGitHubBranches {
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
-                fetchGitHubOwnerInfo(repoUrl);
                 try {
                     ProcessBuilder builder = new ProcessBuilder("git", "ls-remote", "--heads", repoUrl);
                     Process process = builder.start();

@@ -6,13 +6,13 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.DisplayProjectInfo.displayProjectInfo;
+import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.fetchGitOwnerInfo;
+import static com.example.maveninstaller.FetchGitInfo.FetchReadMeInfo.fetchReadMeInfo;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.PomHelper.fetchAppName;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
-import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;
 
 public class CloneRepository {
     public static void cloneRepository() {
@@ -42,6 +42,7 @@ public class CloneRepository {
 
         outputConsole.setText("⏳ Cloning repository...\n");
         progressBar.setIndeterminate(true);
+        progressBar.repaint();
 
         String finalBranch = branch;
         String finalRepoUrl = repoUrl;
@@ -81,15 +82,18 @@ public class CloneRepository {
 
                     if (pomPath != null) {
                         applicationNameField.setText(fetchAppName(pomPath));
+                        fetchGitOwnerInfo();
+                        fetchReadMeInfo();
                     }
 
                     if (pomPath != null) {
                         publish("✅ Maven project detected.");
                         publish(pomPath);
-                        runMavenBuild(pomPath);
                     } else {
                         publish("⚠️ No Maven project found.");
                     }
+
+                    outputConsole.append("✅ Cloning completed!\n");
 
                 } catch (Exception e) {
                     publish("❌ Error cloning repository:\n" + e.getMessage());
@@ -108,8 +112,7 @@ public class CloneRepository {
             protected void done() {
                 SwingUtilities.invokeLater(() -> {
                     progressBar.setIndeterminate(false);
-                    outputConsole.append("✅ Cloning completed!\n");
-                    displayProjectInfo();
+                    progressBar.repaint();
                 });
             }
         }.execute();
