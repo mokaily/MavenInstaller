@@ -28,7 +28,7 @@ public class PomHelper {
         }
     }
 
-    public static String getAppName(String pomPath) {
+    public static String fetchAppName(String pomPath) {
         try {
             File pomFile = new File(pomPath + File.separator + "pom.xml");
             if (!pomFile.exists()) return null;
@@ -39,9 +39,9 @@ public class PomHelper {
             doc.getDocumentElement().normalize();
 
             Element projectElement = doc.getDocumentElement();
-            String name = getTagValue("name", projectElement);
+            String name = fetchTagValue("name", projectElement);
 
-            return name != null ? name : getTagValue("artifactId", projectElement);
+            return name != null ? name : fetchTagValue("artifactId", projectElement);
 
         } catch (Exception e) {
             System.err.println("Error reading pom.xml: " + e.getMessage());
@@ -49,7 +49,7 @@ public class PomHelper {
         }
     }
 
-    private static String getTagValue(String tag, Element element) {
+    private static String fetchTagValue(String tag, Element element) {
         try {
             return element.getElementsByTagName(tag).item(0).getTextContent();
         } catch (Exception e) {

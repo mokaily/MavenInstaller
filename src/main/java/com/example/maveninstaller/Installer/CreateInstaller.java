@@ -10,7 +10,7 @@ import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.WindowsInstaller.createWindowsShortcut;
 import static com.example.maveninstaller.JarFinder.findJarInTarget;
 import static com.example.maveninstaller.OperationSystemChecker.*;
-import static com.example.maveninstaller.PomHelper.getAppName;
+import static com.example.maveninstaller.PomHelper.fetchAppName;
 
 public class CreateInstaller {
     public static void createMavenExecShortcut(String pomPath) {
@@ -56,7 +56,7 @@ public class CreateInstaller {
         String appName = applicationNameField.getText().trim();
 
         if (appName.isEmpty()) {
-            appName = getAppName(pomPath);
+            appName = fetchAppName(pomPath);
         }
 
         return appName;

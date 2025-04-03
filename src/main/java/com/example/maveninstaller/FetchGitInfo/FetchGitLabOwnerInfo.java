@@ -1,4 +1,4 @@
-package com.example.maveninstaller;
+package com.example.maveninstaller.FetchGitInfo;
 
 import org.json.JSONObject;
 
@@ -13,8 +13,8 @@ import java.util.List;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 
-public class GetGitLabOwnerContact {
-    public static void fetchGitLabOwnerContact(String repoUrl) {
+public class FetchGitLabOwnerInfo {
+    public static void fetchGitLabOwnerInfo(String repoUrl) {
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);
         progressBar.repaint();

@@ -7,8 +7,8 @@ import java.io.InputStreamReader;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.OperationSystemChecker.isWindows;
 
-public class RunMavenBuildJar {
-    public static void runMavenBuildJar(String targetPath) {
+public class RunMavenBuild {
+    public static void runMavenBuild(String targetPath) {
         try {
             ProcessBuilder builder;
             String mavenCommand = isWindows() ? "mvn.cmd" : "mvn";

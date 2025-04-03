@@ -6,9 +6,9 @@ import java.awt.*;
 import java.util.Objects;
 
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
-import static com.example.maveninstaller.GetGitBranches.fetchBranches;
+import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBranches;
 import static com.example.maveninstaller.PomHelper.findPomXml;
-import static com.example.maveninstaller.RepositoryUtils.getRepoName;
+import static com.example.maveninstaller.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.Installer.CreateInstaller.createMavenExecShortcut;
 
 public class GitMavenCloneUI {

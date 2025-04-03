@@ -7,7 +7,7 @@ import java.io.IOException;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.repoUrlField;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.targetPathField;
-import static com.example.maveninstaller.RepositoryUtils.getRepoName;
+import static com.example.maveninstaller.RepositoryHelper.getRepoName;
 
 public class DisplayProjectInfo {
     public static void displayProjectInfo() {

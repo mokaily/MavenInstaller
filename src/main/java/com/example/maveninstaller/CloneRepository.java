@@ -9,9 +9,10 @@ import java.util.List;
 import static com.example.maveninstaller.GUI.DisplayProjectInfo.displayProjectInfo;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.PomHelper.findPomXml;
-import static com.example.maveninstaller.PomHelper.getAppName;
-import static com.example.maveninstaller.RepositoryUtils.getRepoName;
-import static com.example.maveninstaller.RunMavenBuildJar.runMavenBuildJar;
+import static com.example.maveninstaller.PomHelper.fetchAppName;
+import static com.example.maveninstaller.RepositoryHelper.getRepoName;
+import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
+import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;
 
 public class CloneRepository {
     public static void cloneRepository() {
@@ -37,18 +38,7 @@ public class CloneRepository {
         }
 
         // Validate custom repo path if selected
-        if (useCustomRepoCheckbox.isSelected()) {
-            String customRepoPath = customRepoPathField.getText().trim();
-            if (customRepoPath.isEmpty()) {
-                outputConsole.setText("❗ Custom Maven repository path is empty!\n");
-                return;
-            }
-            File repoDir = new File(customRepoPath);
-            if (!repoDir.exists() || !repoDir.isDirectory()) {
-                outputConsole.setText("❗ Custom Maven repository path is invalid or not a directory!\n");
-                return;
-            }
-        }
+        validateCustomRepo();
 
         outputConsole.setText("⏳ Cloning repository...\n");
         progressBar.setIndeterminate(true);
@@ -90,13 +80,13 @@ public class CloneRepository {
                     String pomPath = findPomXml(fullPath);
 
                     if (pomPath != null) {
-                        applicationNameField.setText(getAppName(pomPath));
+                        applicationNameField.setText(fetchAppName(pomPath));
                     }
 
                     if (pomPath != null) {
                         publish("✅ Maven project detected.");
                         publish(pomPath);
-                        runMavenBuildJar(pomPath);
+                        runMavenBuild(pomPath);
                     } else {
                         publish("⚠️ No Maven project found.");
                     }
