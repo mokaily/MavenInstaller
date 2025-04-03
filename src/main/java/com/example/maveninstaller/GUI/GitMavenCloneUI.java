@@ -15,7 +15,8 @@ import static com.example.maveninstaller.OperationSystemChecker.isWindows;
 public class GitMavenCloneUI {
     public static JFrame frame;
     public static JTextField repoUrlField, targetPathField;
-    public static JTextField gitLabUserNameField, gitLabPasswordFieldPassword;
+    public static JTextField gitLabUserNameField;
+    public static JTextField gitLabPasswordFieldPassword;
     public static JTextArea outputConsole;
     public static JTextArea ownerInfoArea;
     public static JTextArea readmeArea;
@@ -55,8 +56,42 @@ public class GitMavenCloneUI {
         gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
         userInfoPanel.add(gitLabUserNameField, gbc);
 
+        // Access Token + Link
+        JPanel accessLabelWithHelp = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        JLabel accessTokenLabel = new JLabel("Access Token: ");
+        JLabel helpLink = new JLabel("<html><a href='#'>How to get?</a></html>");
+        helpLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        helpLink.setForeground(Color.BLUE);
+        helpLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                JTextArea stepsArea = new JTextArea(
+                        "💡 How to get your GitLab Access Token:\n\n" +
+                                "1. Go to your GitLab profile.\n" +
+                                "2. Click on 'Edit Profile' > 'Access Tokens'.\n" +
+                                "3. Enter a name, expiry date, and select scopes (e.g., 'api').\n" +
+                                "4. Click 'Create token' and copy the token shown.\n\n" +
+                                "⚠️ Keep it safe! You won't see it again.");
+                stepsArea.setEditable(false);
+                stepsArea.setLineWrap(true);
+                stepsArea.setWrapStyleWord(true);
+
+                JScrollPane scroll = new JScrollPane(stepsArea);
+                scroll.setPreferredSize(new Dimension(500, 300));
+                JOptionPane.showMessageDialog(null, scroll, "Where to Get Access Token", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+        accessLabelWithHelp.add(accessTokenLabel);
+        accessLabelWithHelp.add(helpLink);
+
         gbc.gridx = 0; gbc.gridy = 1;
-        userInfoPanel.add(new JLabel("Access Token:"), gbc);
+        userInfoPanel.add(accessLabelWithHelp, gbc);
+
+        gbc.gridx = 1;
+        gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
+        userInfoPanel.add(gitLabPasswordFieldPassword, gbc);
+
+
         gbc.gridx = 1;
         gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
         userInfoPanel.add(gitLabPasswordFieldPassword, gbc);
@@ -66,7 +101,7 @@ public class GitMavenCloneUI {
 
         // Repo Info
         JPanel repoPanel = new JPanel(new BorderLayout(5, 5));
-        repoPanel.setBorder(BorderFactory.createTitledBorder("Repository Info"));
+        repoPanel.setBorder(BorderFactory.createTitledBorder("Repository URL"));
         repoUrlField = new JTextField("https://gitlab.uni-marburg.de/kertels/erma.git");
         repoUrlField.setToolTipText("Examples:\n:https://gitlab.uni-marburg.de/kertels/erma.git \nhttps://gitlab.com/gnutools/gcc");
         repoPanel.add(repoUrlField, BorderLayout.CENTER);
