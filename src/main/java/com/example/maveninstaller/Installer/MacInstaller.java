@@ -18,7 +18,7 @@ import static com.example.maveninstaller.Installer.CreateInstaller.getApplicatio
 import static com.example.maveninstaller.Installer.CreateInstaller.getDirectoryPath;
 
 public class MacInstaller {
-    public static void createMacShortcut(Path dir, String pomPath, String iconPath) throws IOException {
+    public static void createMacShortcut(Path dir, String pomPath) throws IOException {
         String appName = getApplicationName(pomPath);
         String dirPath = getDirectoryPath(dir);
 
@@ -37,9 +37,10 @@ public class MacInstaller {
         launcher.toFile().setExecutable(true);
 
         // Copy icon if specified and valid (.icns)
+        String iconPath = shortcutIconField.getText().trim();
         String iconName = null;
 
-        if (iconPath != null && !iconPath.isEmpty()) {
+        if (!iconPath.isEmpty()) {
             File iconFile = new File(iconPath);
             if (iconFile.exists()) {
                 if (iconPath.endsWith(".icns")) {
@@ -86,10 +87,10 @@ public class MacInstaller {
             Files.writeString(dockScriptFile.toPath(), dockScript);
             new ProcessBuilder("osascript", dockScriptFile.getAbsolutePath()).start();
             outputConsole.append("Attempted to pin app to Dock");
-            JOptionPane.showMessageDialog(null,
-                    "The app was added to the Dock. If it doesn't appear immediately, try launching it manually then right-click → Options → Keep in Dock.",
-                    "Dock Pin Notice",
-                    JOptionPane.INFORMATION_MESSAGE);
+                    JOptionPane.showMessageDialog(null,
+                            "The app was added to the Dock. If it doesn't appear immediately, try launching it manually then right-click → Options → Keep in Dock.",
+                            "Dock Pin Notice",
+                            JOptionPane.INFORMATION_MESSAGE);
         }
 
         // Create alias to Desktop via AppleScript
