@@ -3,6 +3,7 @@ package com.example.maveninstaller.GUI.CheckRequirments;
 import javax.swing.*;
 import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
+import java.util.Objects;
 
 import static com.example.maveninstaller.GUI.CheckRequirments.CheckerHelper.checkCommand;
 import static com.example.maveninstaller.OperationSystemChecker.isWindows;
@@ -52,6 +53,8 @@ public class RequirementsChecker {
 
             final JOptionPane optionPane = new JOptionPane(message, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
             JDialog dialog = optionPane.createDialog("System Check Results");
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(RequirementsChecker.class.getResource("/GitMavenLogoSmall.png")));
+            dialog.setIconImage(icon.getImage());
 
             JButton continueButton = getButton(optionPane, JOptionPane.OK_OPTION);
             if (continueButton != null) {
