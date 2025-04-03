@@ -91,11 +91,6 @@ public class GitMavenCloneUI {
         gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
         userInfoPanel.add(gitLabPasswordFieldPassword, gbc);
 
-
-        gbc.gridx = 1;
-        gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
-        userInfoPanel.add(gitLabPasswordFieldPassword, gbc);
-
         userInfoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, userInfoPanel.getPreferredSize().height));
         mainPanel.add(userInfoPanel);
 
