@@ -8,10 +8,10 @@ import java.util.List;
 
 import static com.example.maveninstaller.GUI.DisplayProjectInfo.displayProjectInfo;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
-import static com.example.maveninstaller.PomFinder.findPomXml;
+import static com.example.maveninstaller.PomHelper.findPomXml;
+import static com.example.maveninstaller.PomHelper.getAppName;
 import static com.example.maveninstaller.RepositoryUtils.getRepoName;
 import static com.example.maveninstaller.RunMavenBuildJar.runMavenBuildJar;
-import static com.example.maveninstaller.ShortcutManager.createShortcut;
 
 public class CloneRepository {
     public static void cloneRepository() {
@@ -90,14 +90,16 @@ public class CloneRepository {
                     String pomPath = findPomXml(fullPath);
 
                     if (pomPath != null) {
+                        applicationNameField.setText(getAppName(pomPath));
+                    }
+
+                    if (pomPath != null) {
                         publish("✅ Maven project detected.");
                         publish(pomPath);
                         runMavenBuildJar(pomPath);
                     } else {
                         publish("⚠️ No Maven project found.");
                     }
-
-                    createShortcut(pomPath);
 
                 } catch (Exception e) {
                     publish("❌ Error cloning repository:\n" + e.getMessage());

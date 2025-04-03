@@ -17,10 +17,7 @@ public class GetGitHubOwnerContact {
         progressBar.setVisible(true);
         progressBar.repaint();
         SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching Github owner contact info...\n"));
-//        if(repoUrl.startsWith("git@")) {
-//            repoUrl = repoUrl.replace("git@", "https://");
-//            repoUrl = repoUrl.replace(":", "/");
-//        }
+
         if(repoUrl.endsWith(".git")) { repoUrl = repoUrl.substring(0, repoUrl.length() - 4); }
         // Extract the owner and repo name from the GitHub URL
         String[] urlParts = repoUrl.split("/");

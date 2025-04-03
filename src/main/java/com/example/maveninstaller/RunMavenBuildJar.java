@@ -11,15 +11,15 @@ public class RunMavenBuildJar {
     public static void runMavenBuildJar(String targetPath) {
         try {
             ProcessBuilder builder;
-
-            // Run Maven to build the project mvn clean package -DskipTests
             String mavenCommand = isWindows() ? "mvn.cmd" : "mvn";
 
             if (useCustomRepoCheckbox.isSelected()) {
                 String customRepo = customRepoPathField.getText().trim();
-                builder = new ProcessBuilder(mavenCommand, "clean", "package", "-DskipTests", "-Dmaven.repo.local=" + customRepo);
+                builder = new ProcessBuilder( mavenCommand, "clean", "compile", "verify", "install", "-DskipTests","-Dmaven.repo.local=" + customRepo);
+//                builder = new ProcessBuilder(mavenCommand, "clean", "package", "-DskipTests", "-Dmaven.repo.local=" + customRepo);
             } else {
-                builder = new ProcessBuilder(mavenCommand, "clean", "package", "-DskipTests");
+                builder = new ProcessBuilder(mavenCommand, "clean", "compile", "verify", "install", "-DskipTests");
+//                builder = new ProcessBuilder(mavenCommand, "clean", "package", "-DskipTests");
             }
 
             builder.directory(new File(targetPath + "/"));

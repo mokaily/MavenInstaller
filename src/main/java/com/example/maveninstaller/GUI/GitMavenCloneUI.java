@@ -7,6 +7,9 @@ import java.util.Objects;
 
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
 import static com.example.maveninstaller.GetGitBranches.fetchBranches;
+import static com.example.maveninstaller.PomHelper.findPomXml;
+import static com.example.maveninstaller.RepositoryUtils.getRepoName;
+import static com.example.maveninstaller.Installer.CreateInstaller.createMavenExecShortcut;
 
 public class GitMavenCloneUI {
     public static JFrame frame;
@@ -20,6 +23,10 @@ public class GitMavenCloneUI {
     public static JProgressBar progressBar;
     public static JCheckBox useCustomRepoCheckbox;
     public static JTextField customRepoPathField;
+    public static JTextField applicationNameField;
+    public static JCheckBox pinToDockCheckbox;
+    public static JTextField executionFolderField;
+    public static JTextField shortcutIconField;
 
     public void createAndShowGUI() {
         frame = new JFrame("GitMaven Installer");
@@ -106,6 +113,64 @@ public class GitMavenCloneUI {
         targetPanel.add(browseButton, BorderLayout.EAST);
         mainPanel.add(targetPanel);
 
+
+        // --- Shortcut Configuration Panel ---
+        JPanel shortcutConfiguration = new JPanel(new GridBagLayout());
+        shortcutConfiguration.setBorder(BorderFactory.createTitledBorder("Shortcut Configuration"));
+        GridBagConstraints scGbc = new GridBagConstraints();
+        scGbc.insets = new Insets(5, 5, 5, 5);
+        scGbc.fill = GridBagConstraints.HORIZONTAL;
+        scGbc.weightx = 1.0;
+
+        scGbc.gridx = 0; scGbc.gridy = 0;
+        shortcutConfiguration.add(new JLabel("Application Name:"), scGbc);
+        scGbc.gridx = 1;
+        applicationNameField = new JTextField("");
+        shortcutConfiguration.add(applicationNameField, scGbc);
+
+        scGbc.gridx = 0; scGbc.gridy = 1;
+        shortcutConfiguration.add(new JLabel("Pin to Dock (macOS)/ Start App Shortcut (Windows):"), scGbc);
+        scGbc.gridx = 1;
+        pinToDockCheckbox = new JCheckBox();
+        shortcutConfiguration.add(pinToDockCheckbox, scGbc);
+
+        // --- Shortcut Icon Picker (.ico only) ---
+        scGbc.gridx = 0; scGbc.gridy = 2;
+        shortcutConfiguration.add(new JLabel("Shortcut Icon (.ico):"), scGbc);
+        scGbc.gridx = 1;
+        shortcutIconField = new JTextField();
+        JButton browseShortcutIconButton = new JButton("Browse");
+        JPanel iconPickerPanel = new JPanel(new BorderLayout());
+        iconPickerPanel.add(shortcutIconField, BorderLayout.CENTER);
+        iconPickerPanel.add(browseShortcutIconButton, BorderLayout.EAST);
+        shortcutConfiguration.add(iconPickerPanel, scGbc);
+
+        browseShortcutIconButton.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("ICO files", "ico"));
+            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                shortcutIconField.setText(chooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+
+        mainPanel.add(shortcutConfiguration);
+
+        // --- Execution Directory Panel ---
+        JPanel execPanel = new JPanel(new BorderLayout(5, 5));
+        execPanel.setBorder(BorderFactory.createTitledBorder("Execution Directory"));
+        executionFolderField = new JTextField();
+        JButton execBrowseButton = new JButton("Browse");
+        JFileChooser execChooser = new JFileChooser();
+        execChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        execBrowseButton.addActionListener(e -> {
+            if (execChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                executionFolderField.setText(execChooser.getSelectedFile().getAbsolutePath());
+            }
+        });
+        execPanel.add(executionFolderField, BorderLayout.CENTER);
+        execPanel.add(execBrowseButton, BorderLayout.EAST);
+        mainPanel.add(execPanel);
+
         // Custom Maven Repo Options
         JPanel repoOptionPanel = new JPanel(new BorderLayout(5, 5));
         useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
@@ -135,15 +200,22 @@ public class GitMavenCloneUI {
 
         // Clone + Build Buttons
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        cloneButton = new JButton("Clone Repository");
+        cloneButton = new JButton("Clone Repository & Build");
         cloneButton.addActionListener(e -> cloneRepository());
         buttonPanel.add(cloneButton);
 
-        JButton buildButton = new JButton("Build Executable");
-        buildButton.setEnabled(false);
+        JButton buildButton = new JButton("Create Installer");
         buildButton.addActionListener(e -> {
             outputConsole.append("Building project into executable JAR...\n");
             // TODO: implement build logic here
+            String targetPath = targetPathField.getText().trim();
+            String repoUrl = repoUrlField.getText().trim();
+            if (repoUrl.endsWith(".git")) {
+                repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
+            }
+            String fullPath = targetPath + "/" + getRepoName(repoUrl);
+            String pomPath = findPomXml(fullPath);
+            createMavenExecShortcut(pomPath);
         });
         buttonPanel.add(buildButton);
 
@@ -158,14 +230,14 @@ public class GitMavenCloneUI {
         mainPanel.add(actionPanel);
 
         // Owner Info
-        ownerInfoArea = new JTextArea(4, 40);
+        ownerInfoArea = new JTextArea(4, 30);
         ownerInfoArea.setEditable(false);
         ownerInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         ownerInfoArea.setBorder(BorderFactory.createTitledBorder("Project Owner Info"));
         mainPanel.add(ownerInfoArea);
 
         // README Area
-        readmeArea = new JTextArea(8, 40);
+        readmeArea = new JTextArea(4, 60);
         readmeArea.setEditable(false);
         readmeArea.setLineWrap(true);
         readmeArea.setFont(new Font("Monospaced", Font.PLAIN, 12));

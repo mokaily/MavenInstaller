@@ -27,10 +27,8 @@ public class GetGitBranches {
 
         // Check if the URL is a valid GitHub or GitLab repository
         if (repoUrl.contains("github.")) {
-//            fetchGitHubOwnerContact(repoUrl);
             fetchGitHubBranches(repoUrl);
         } else if (repoUrl.contains("gitlab.")) {
-//            fetchGitLabOwnerContact(repoUrl);
             fetchGitLabBranches(repoUrl);
         } else {
             outputConsole.setText("Invalid repository URL!\n");
