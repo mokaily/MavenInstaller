@@ -57,6 +57,21 @@ java -jar target/gitmaven-installer.jar
         - macOS: `.app` bundle in `~/Applications` with Dock pin option
         - Linux: `.desktop` file or Flatpak package
 
+## Architecture
+
+The application is structured into several key components:
+
+- **UI Layer**: Built with Java Swing, managed in `GitMavenCloneUI.java`.
+- **Git Operations**: Classes under `FetchGitInfo` handle cloning, branch fetching, and owner info from GitHub and GitLab.
+- **Build System**: Uses `RunMavenBuild.java` and `PomHelper.java` to locate and compile Maven projects.
+- **Installer Creation**: Platform-specific logic:
+    - `WindowsInstaller.java` using `mslinks`
+    - `MacInstaller.java` using AppleScript and `.app` bundles
+    - `LinuxInstaller.java` supporting both `.desktop` and Flatpak manifests
+- **Helpers**: Utilities like `JarFinder.java`, `OperationSystemChecker.java`, and `RepositoryHelper.java`
+- **Validation**: `RequirementsChecker.java` checks for Java, Git, and Maven and prompts user before continuing
+
+
 ## Screenshots
 ![GitMaven Installer UI](img.png)
 
