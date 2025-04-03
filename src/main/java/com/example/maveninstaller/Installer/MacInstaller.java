@@ -1,8 +1,5 @@
 package com.example.maveninstaller.Installer;
 
-import org.apache.commons.imaging.ImageFormats;
-import org.apache.commons.imaging.Imaging;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -11,10 +8,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+import java.util.Arrays;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
@@ -39,24 +33,48 @@ public class MacInstaller {
         Files.writeString(launcher, script);
         launcher.toFile().setExecutable(true);
 
-        // Create valid .icns from icon if needed
+        // Handle icon file (.icns or convert from image)
         String iconPath = shortcutIconField.getText().trim();
         String iconName = null;
-        
         if (!iconPath.isEmpty()) {
             File iconFile = new File(iconPath);
             if (iconFile.exists()) {
-                BufferedImage baseImage = ImageIO.read(iconFile);
-                if (baseImage != null) {
-                    iconName = appName + ".icns";
-                    File icnsFile = resources.resolve(iconName).toFile();
+                if (iconPath.toLowerCase().endsWith(".icns")) {
+                    iconName = iconFile.getName();
+                    Files.copy(iconFile.toPath(), resources.resolve(iconName), StandardCopyOption.REPLACE_EXISTING);
+                    outputConsole.append("✅ Copied .icns icon to Resources: " + iconName + "\n");
+                } else {
+                    BufferedImage original = ImageIO.read(iconFile);
+                    if (original != null) {
+                        File iconset = Files.createTempDirectory("iconset").toFile();
+                        iconset.deleteOnExit();
+                        int[] sizes = {16, 32, 64, 128, 256, 512, 1024};
+                        for (int size : sizes) {
+                            BufferedImage resized = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+                            Graphics2D g = resized.createGraphics();
+                            g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+                            g.drawImage(original, 0, 0, size, size, null);
+                            g.dispose();
 
-                    // Write ICNS using Apache Commons Imaging
-                    try {
-                        Imaging.writeImage(baseImage, icnsFile, ImageFormats.ICNS);
-                        outputConsole.append("✅ ICNS icon created at: " + icnsFile.getAbsolutePath() + "\n");
-                    } catch (Exception e) {
-                        outputConsole.append("⚠️ Failed to write ICNS file: " + e.getMessage() + "\n");
+                            File pngFile = new File(iconset, "icon_" + size + "x" + size + ".png");
+                            ImageIO.write(resized, "png", pngFile);
+                        }
+
+                        File renamedSet = new File(iconset.getAbsolutePath() + ".iconset");
+                        iconset.renameTo(renamedSet);
+                        File icnsFile = resources.resolve(appName + ".icns").toFile();
+                        Process p = new ProcessBuilder("iconutil", "-c", "icns", renamedSet.getAbsolutePath(), "-o", icnsFile.getAbsolutePath()).start();
+                        try {
+                            int exit = p.waitFor();
+                            if (exit == 0) {
+                                iconName = icnsFile.getName();
+                                outputConsole.append("✅ Created .icns icon at: " + icnsFile.getAbsolutePath() + "\n");
+                            } else {
+                                outputConsole.append("⚠️ iconutil failed.\n");
+                            }
+                        } catch (InterruptedException e) {
+                            outputConsole.append("⚠️ iconutil interrupted.\n");
+                        }
                     }
                 }
             } else {
