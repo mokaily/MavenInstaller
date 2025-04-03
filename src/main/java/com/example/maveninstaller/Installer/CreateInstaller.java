@@ -1,9 +1,6 @@
 package com.example.maveninstaller.Installer;
 
-import java.io.IOException;
-
 import javax.swing.*;
-import java.io.*;
 import java.nio.file.*;
 import java.util.List;
 
@@ -20,6 +17,8 @@ public class CreateInstaller {
         Path dir = findJarInTarget(pomPath);
         outputConsole.setText("⏳ Creating installer...\n");
         progressBar.setIndeterminate(true);
+
+
 
         new SwingWorker<Void, String>() {
             @Override
