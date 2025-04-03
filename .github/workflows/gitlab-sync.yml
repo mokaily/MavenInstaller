@@ -1,0 +1,20 @@
+name: Sync to GitLab
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Push to GitLab
+        run: |
+          git config --global user.name "Mohamed Okaily"
+          git config --global user.email "okaily@uni-marburg.de"
+          git remote add gitlab https://oauth2:7HWB5r-z1kN2yLzk_aJ_@gitlab.uni-marburg.de/okaily/MavenInstaller.git
+          git push gitlab main --force
