@@ -9,25 +9,12 @@ import static com.example.maveninstaller.BuildRepository.buildRepository;
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
 import static com.example.maveninstaller.CreateInstaller.createInstaller;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBranches;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.OperationSystemChecker.isMac;
 import static com.example.maveninstaller.OperationSystemChecker.isWindows;
 
 public class GitMavenCloneUI {
-    public static JFrame frame;
-    public static JTextField repoUrlField, targetPathField;
-    public static JTextField gitLabUserNameField;
-    public static JTextField gitLabPasswordFieldPassword;
-    public static JTextArea outputConsole;
-    public static JTextArea ownerInfoArea;
-    public static JTextArea readmeArea;
-    public static JComboBox<String> branchSelector;
-    public static JButton fetchBranchesButton, cloneButton;
-    public static JProgressBar progressBar;
-    public static JCheckBox useCustomRepoCheckbox;
-    public static JTextField customRepoPathField;
-    public static JTextField applicationNameField;
-    public static JCheckBox pinToDockCheckbox;
-    public static JTextField shortcutIconField;
+
 
     public void createAndShowGUI() {
         frame = new JFrame("GitMaven Installer");
@@ -97,7 +84,6 @@ public class GitMavenCloneUI {
         // Repo Info
         JPanel repoPanel = new JPanel(new BorderLayout(5, 5));
         repoPanel.setBorder(BorderFactory.createTitledBorder("Repository URL"));
-        repoUrlField = new JTextField("https://gitlab.uni-marburg.de/kertels/erma.git");
         repoUrlField.setToolTipText("Examples:\n:https://gitlab.uni-marburg.de/kertels/erma.git \nhttps://gitlab.com/gnutools/gcc");
         repoPanel.add(repoUrlField, BorderLayout.CENTER);
         mainPanel.add(repoPanel);
@@ -130,7 +116,6 @@ public class GitMavenCloneUI {
         // Target Path
         JPanel targetPanel = new JPanel(new BorderLayout(5, 5));
         targetPanel.setBorder(BorderFactory.createTitledBorder("Target Folder"));
-        targetPathField = new JTextField();
         JButton browseButton = new JButton("Browse");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -155,7 +140,6 @@ public class GitMavenCloneUI {
         scGbc.gridx = 0; scGbc.gridy = 0;
         shortcutConfiguration.add(new JLabel("Application Name:"), scGbc);
         scGbc.gridx = 1;
-        applicationNameField = new JTextField("");
         shortcutConfiguration.add(applicationNameField, scGbc);
 
         scGbc.gridx = 0; scGbc.gridy = 1;
@@ -189,7 +173,7 @@ public class GitMavenCloneUI {
         // Custom Maven Repo Options
         JPanel repoOptionPanel = new JPanel(new BorderLayout(5, 5));
         repoOptionPanel.setBorder(BorderFactory.createTitledBorder("Default/ Custom Maven"));
-        useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
+//        useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
         customRepoPathField = new JTextField();
         customRepoPathField.setEnabled(false);
         customRepoPathField.setToolTipText("Examples:\nWindows: C:/Users/Name/custom-m2\nmacOS: /Users/name/maven-repo\nLinux: /home/name/maven-repo");
@@ -217,11 +201,11 @@ public class GitMavenCloneUI {
         // Clone + Build Buttons
         JPanel clonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         cloneButton = new JButton("Clone Repository");
-        cloneButton.addActionListener(e -> cloneRepository());
+        cloneButton.addActionListener(e -> cloneRepository(false));
         clonePanel.add(cloneButton);
 
         JButton buildButton = new JButton("Build Jar");
-        buildButton.addActionListener(e -> buildRepository());
+        buildButton.addActionListener(e -> buildRepository(false));
         clonePanel.add(buildButton);
 
         JButton installButton = new JButton("Create Installer");
@@ -255,7 +239,7 @@ public class GitMavenCloneUI {
         mainPanel.add(readmeScrollPane);
 
         // Output Console
-        outputConsole = new JTextArea(10, 100);
+        outputConsole = new JTextArea(6, 80);
         outputConsole.setEditable(false);
         outputConsole.setAutoscrolls(true);
         outputConsole.setLineWrap(true);
@@ -264,12 +248,35 @@ public class GitMavenCloneUI {
         outputScrollPane.setBorder(BorderFactory.createTitledBorder("Console Output"));
         mainPanel.add(outputScrollPane);
 
-        // Footer
+        // Footer Panel with switch button
+        JPanel footerPanel = new JPanel(new BorderLayout());
+
+        // App Info on the left
         JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
         appInfo.setEditable(false);
         appInfo.setBackground(new Color(240, 240, 240));
         appInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-        mainPanel.add(appInfo);
+        footerPanel.add(appInfo, BorderLayout.CENTER);
+
+        // Switch to Basic UI button on the bottom right
+        JButton switchToBasicButton = new JButton("Switch to Basic UI");
+        switchToBasicButton.addActionListener(e -> {
+            frame.dispose();
+            com.example.maveninstaller.GUI.SimpleUI.showSimpleUI();
+        });
+        JPanel buttonWrapper = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonWrapper.add(switchToBasicButton);
+        footerPanel.add(buttonWrapper, BorderLayout.SOUTH);
+
+        mainPanel.add(footerPanel);
+
+
+//        // Footer
+//        JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
+//        appInfo.setEditable(false);
+//        appInfo.setBackground(new Color(240, 240, 240));
+//        appInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+//        mainPanel.add(appInfo);
 
         frame.add(new JScrollPane(mainPanel));
         frame.setVisible(true);

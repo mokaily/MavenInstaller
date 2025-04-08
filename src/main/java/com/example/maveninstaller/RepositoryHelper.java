@@ -3,7 +3,7 @@ package com.example.maveninstaller;
 import java.io.File;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.outputConsole;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class RepositoryHelper {
     public static String getRepoName(String repoUrl) {

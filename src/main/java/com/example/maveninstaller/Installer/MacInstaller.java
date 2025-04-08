@@ -9,9 +9,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
 import static com.example.maveninstaller.Installer.CreateInstaller.getDirectoryPath;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class MacInstaller {
     public static void createMacShortcut(Path dir, String pomPath) throws IOException {

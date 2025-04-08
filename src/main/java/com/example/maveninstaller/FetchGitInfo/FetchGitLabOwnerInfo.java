@@ -11,7 +11,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class FetchGitLabOwnerInfo {
     public static void fetchGitLabOwnerInfo(String repoUrl) {

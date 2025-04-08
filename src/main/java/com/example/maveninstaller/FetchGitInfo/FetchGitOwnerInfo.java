@@ -7,7 +7,7 @@ import java.net.URL;
 
 import static com.example.maveninstaller.FetchGitInfo.FetchGitHubOwnerInfo.fetchGitHubOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitLabOwnerInfo.fetchGitLabOwnerInfo;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class FetchGitOwnerInfo {
         public static void fetchGitOwnerInfo() {

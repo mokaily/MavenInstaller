@@ -6,9 +6,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.outputConsole;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.progressBar;
 import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 class FetchGitHubBranches {
     public static void fetchGitHubBranches(String repoUrl) {

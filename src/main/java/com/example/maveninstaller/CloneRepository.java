@@ -6,16 +6,18 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 
+import static com.example.maveninstaller.BuildRepository.buildRepository;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.fetchGitOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchReadMeInfo.fetchReadMeInfo;
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.PomHelper.fetchAppName;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
 
 public class CloneRepository {
-    public static void cloneRepository() {
+    public static void cloneRepository(boolean isOneFunction) {
         String repoUrl = repoUrlField.getText().trim();
         if (repoUrl.endsWith(".git")) {
             repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
@@ -114,6 +116,9 @@ public class CloneRepository {
                     progressBar.setIndeterminate(false);
                     progressBar.repaint();
                 });
+                if (isOneFunction) {
+                    buildRepository(isOneFunction);
+                }
             }
         }.execute();
     }

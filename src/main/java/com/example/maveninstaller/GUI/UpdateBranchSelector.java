@@ -2,8 +2,8 @@ package com.example.maveninstaller.GUI;
 
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.branchSelector;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.outputConsole;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
+
 
 public class UpdateBranchSelector{
     public static void updateBranchSelector(List<String> branches) {

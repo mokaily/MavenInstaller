@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.tryFetch;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 class FetchGitLabBranches {
 

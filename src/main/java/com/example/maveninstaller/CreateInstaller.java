@@ -9,6 +9,7 @@ import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
 import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class CreateInstaller {
     public static void createInstaller() {

@@ -4,13 +4,14 @@ import javax.swing.*;
 import java.nio.file.*;
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.LinuxInstaller.createLinuxShortcut;
 import static com.example.maveninstaller.Installer.MacInstaller.createMacShortcut;
 import static com.example.maveninstaller.Installer.WindowsInstaller.createWindowsShortcut;
 import static com.example.maveninstaller.JarFinder.findJarInTarget;
 import static com.example.maveninstaller.OperationSystemChecker.*;
 import static com.example.maveninstaller.PomHelper.fetchAppName;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
+
 
 public class CreateInstaller {
     public static void createMavenExecShortcut(String pomPath) {

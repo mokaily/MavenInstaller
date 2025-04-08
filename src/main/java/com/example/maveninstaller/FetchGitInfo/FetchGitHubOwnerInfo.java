@@ -9,7 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class FetchGitHubOwnerInfo {
     public static void fetchGitHubOwnerInfo(String repoUrl) {

@@ -3,7 +3,7 @@ package com.example.maveninstaller.FetchGitInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitHubBranches.fetchGitHubBranches;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitLabBranches.fetchGitLabBranches;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.convertSshToHttps;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class FetchGitBranches {
         public static void fetchBranches() {

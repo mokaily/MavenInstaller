@@ -1,21 +1,17 @@
 package com.example.maveninstaller;
 
 import javax.swing.*;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.InputStreamReader;
 import java.util.List;
 
-import static com.example.maveninstaller.FetchGitInfo.FetchReadMeInfo.fetchReadMeInfo;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
-import static com.example.maveninstaller.PomHelper.fetchAppName;
+import static com.example.maveninstaller.CreateInstaller.createInstaller;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
-import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;
+import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;import static com.example.maveninstaller.GUI.InitializeDefaults.*;
+
 
 public class BuildRepository {
-    public static void buildRepository() {
+    public static void buildRepository(boolean isOneFunction) {
         String repoUrl = repoUrlField.getText().trim();
         if (repoUrl.endsWith(".git")) {
             repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
@@ -66,6 +62,9 @@ public class BuildRepository {
                     progressBar.setIndeterminate(false);
                     progressBar.repaint();
                 });
+                if (isOneFunction) {
+                    createInstaller();
+                }
             }
         }.execute();
     }

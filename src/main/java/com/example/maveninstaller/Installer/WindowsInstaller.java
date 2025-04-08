@@ -7,9 +7,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Path;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.outputConsole;
 import static com.example.maveninstaller.Installer.CreateInstaller.*;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 class WindowsInstaller {
     public static void createWindowsShortcut(Path dir, String pomPath) throws IOException {

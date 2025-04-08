@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 
 import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.OperationSystemChecker.isWindows;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class RunMavenBuild {
     public static void runMavenBuild(String targetPath) {

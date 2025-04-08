@@ -5,8 +5,8 @@ import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 class LinuxInstaller {
     public static void createLinuxShortcut(Path dir, String pomPath) throws IOException, InterruptedException {
