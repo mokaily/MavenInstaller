@@ -16,11 +16,11 @@ public class RunMavenBuild {
 
             if (useCustomRepoCheckbox.isSelected()) {
                 String customRepo = customRepoPathField.getText().trim();
-//                builder = new ProcessBuilder( mavenCommand, "clean", "compile", "verify", "install", "-DskipTests","-Dmaven.repo.local=" + customRepo);
-                builder = new ProcessBuilder(mavenCommand, "clean", "install", "-DskipTests", "-Dmaven.repo.local=" + customRepo);
+                builder = new ProcessBuilder( mavenCommand, "clean", "compile", "verify", "install", "-DskipTests","-Dmaven.repo.local=" + customRepo);
+//                builder = new ProcessBuilder(mavenCommand, "clean", "install", "-DskipTests", "-Dmaven.repo.local=" + customRepo);
             } else {
-//                builder = new ProcessBuilder(mavenCommand, "clean", "compile", "verify", "install", "-DskipTests");
-                builder = new ProcessBuilder(mavenCommand, "clean", "install", "-DskipTests");
+                builder = new ProcessBuilder(mavenCommand, "clean", "compile", "verify", "install", "-DskipTests");
+//                builder = new ProcessBuilder(mavenCommand, "clean", "install", "-DskipTests");
             }
 
             builder.directory(new File(targetPath + "/"));
