@@ -162,7 +162,7 @@ public class GitMavenCloneUI {
         String iconExtension = isMac() ? "icns" : isWindows() ? "ico" : "png";
         browseShortcutIconButton.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
-            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(STR.".\{iconExtension}", iconExtension));
+            chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("." + iconExtension, iconExtension));
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 shortcutIconField.setText(chooser.getSelectedFile().getAbsolutePath());
             }

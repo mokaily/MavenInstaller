@@ -33,7 +33,9 @@ class WindowsInstaller {
         // Prepare common shortcut object
         ShellLink link = ShellLink.createLink(javaPath)
                 .setCMDArgs("-jar \"" + jarPath + "\"")
-                .setName(STR."\{appName}.lnk")
+                .setName(appName + ".lnk")
+
+//                .setName(STR."\{appName}.lnk")
                 .setIconLocation(jarPath);
 
         // Set icon if valid
@@ -46,7 +48,9 @@ class WindowsInstaller {
         }
 
         // Save to Desktop
-        String desktopShortcut = System.getenv("USERPROFILE") + "\\Desktop\\" + appName + ".lnk";
+        String desktopShortcut = System.getenv("USERPROFILE") + "/Desktop/" + appName + ".lnk";
+
+//        String desktopShortcut = System.getenv("USERPROFILE") + "\\Desktop\\" + appName + ".lnk";
         link.saveTo(desktopShortcut);
         outputConsole.append("Shortcut created on Desktop: " + desktopShortcut + "\n");
 

@@ -156,7 +156,6 @@
                 <configuration>
                     <source>21</source>
                     <target>21</target>
-                    <compilerArgs>--enable-preview</compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -166,7 +165,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>com.example.maveninstaller.GitHubCloneApp</Main-Class> <!-- Your main class -->
+                            <Main-Class>com.example.maveninstaller.Main</Main-Class> <!-- Your main class -->
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -180,7 +179,7 @@
                         <!-- Default configuration for running with: mvn clean javafx:run -->
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>com.example.maveninstaller/com.example.maveninstaller.GitHubCloneApp
+                            <mainClass>com.example.maveninstaller/com.example.maveninstaller.Main
                             </mainClass>
                             <launcher>app</launcher>
                             <jlinkZipName>app</jlinkZipName>
