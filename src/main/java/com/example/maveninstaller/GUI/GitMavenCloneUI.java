@@ -38,7 +38,7 @@ public class GitMavenCloneUI {
         gbc.weightx = 1.0;
 
         gbc.gridx = 0; gbc.gridy = 0;
-        userInfoPanel.add(new JLabel("GitLab Username:"), gbc);
+        userInfoPanel.add(new JLabel("Git Username:"), gbc);
         gbc.gridx = 1;
         gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
         userInfoPanel.add(gitLabUserNameField, gbc);
