@@ -2,6 +2,52 @@
 
 GitMaven Installer is a cross-platform desktop application designed to simplify the process of cloning Maven-based projects from GitHub or GitLab, building them, and creating launchable shortcuts on Windows, macOS, and Linux systems.
 
+## Developer Setup Notes
+
+To ensure the JAR is runnable with all dependencies included:
+
+### ✅ Maven Assembly Plugin
+
+Add the following plugin configuration to your `pom.xml` to bundle all dependencies into a single runnable JAR:
+
+```xml
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <version>3.4.2</version>
+    <configuration>
+        <finalName>your-project-name</finalName>
+        <appendAssemblyId>false</appendAssemblyId>
+        <archive>
+            <manifest>
+                <mainClass>your.package.name.YourMainClass</mainClass>
+            </manifest>
+        </archive>
+        <descriptorRefs>
+            <descriptorRef>jar-with-dependencies</descriptorRef>
+        </descriptorRefs>
+    </configuration>
+    <executions>
+        <execution>
+            <id>make-fat-jar</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
+```
+
+## Notes:
+    Replace your.project.name with your actual project name.
+
+    Replace your.package.name.YourMainClass with the full path to your class that contains public static void main(String[] args).
+
+    appendAssemblyId=false will prevent Maven from appending -jar-with-dependencies to the output JAR file name.
+
+    The jar-with-dependencies descriptor ensures that the JAR includes all external libraries.
+
 ## Features
 
 - ✨ Graphical User Interface (GUI) using Java Swing
