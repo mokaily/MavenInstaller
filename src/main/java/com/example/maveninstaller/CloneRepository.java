@@ -13,28 +13,35 @@ import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.PomHelper.fetchAppName;
 import static com.example.maveninstaller.RepositoryHelper.*;
+import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 public class CloneRepository {
     public static void cloneRepository(boolean isOneFunction) {
+        setButtonsEnabled(false);
         String repoUrl = repoUrlField.getText().trim();
         if (repoUrl.endsWith(".git")) {
             repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
         }
         String targetPath = targetPathField.getText().trim();
-        String branch = "";
-        try {
-            branch = (String) branchSelector.getSelectedItem();
-        } catch (Exception ignored) {
-        }
 
         if (targetPath.isEmpty()) {
+            setButtonsEnabled(true);
             outputConsole.setText("❗ Please select a install path!\n");
             return;
         }
 
         if (repoUrl.isEmpty() || !repoUrl.contains("git")) {
+            setButtonsEnabled(true);
             outputConsole.setText("❗ Invalid repository URL!\n");
             return;
+        }
+
+
+        String branch = "";
+        try {
+            branch = (String) branchSelector.getSelectedItem();
+        } catch (Exception ignored) {
+            setButtonsEnabled(true);
         }
 
         // Validate custom repo path if selected
@@ -105,6 +112,7 @@ public class CloneRepository {
                     outputConsole.append("✅ Cloning completed!\n");
 
                 } catch (Exception e) {
+                    setButtonsEnabled(true);
                     publish("❌ Error cloning repository:\n" + e.getMessage());
                 }
                 return null;
@@ -120,11 +128,14 @@ public class CloneRepository {
             @Override
             protected void done() {
                 SwingUtilities.invokeLater(() -> {
-                    progressBar.setIndeterminate(false);
-                    progressBar.repaint();
                 });
                 if (isOneFunction) {
+                    setButtonsEnabled(false);
                     buildRepository(isOneFunction);
+                }else{
+                    setButtonsEnabled(true);
+                    progressBar.setIndeterminate(false);
+                    progressBar.repaint();
                 }
             }
         }.execute();

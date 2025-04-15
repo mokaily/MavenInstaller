@@ -1,14 +1,27 @@
 package com.example.maveninstaller.GUI;
 
+import com.example.maveninstaller.GUI.CheckRequirments.RequirementsChecker;
+
 import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
 import java.awt.*;
+import java.util.Objects;
 
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class SimpleUI {
     public static void showSimpleUI() {
+        browseButton = new JButton("Browse");
+        useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
+        switchToBasicButton = new JButton("Switch to Basic UI");
+        fetchBranchesButton = new JButton("Fetch Branches");
+        cloneButton = new JButton("Clone Repository");
+        buildButton = new JButton("Build Jar");
+        installButtonAdvanced = new JButton("Create Installer");
+        browseShortcutIconButton = new JButton("Browse");
+
+
         gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
         gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
         pinToDockCheckbox.setSelected(false);
@@ -17,6 +30,9 @@ public class SimpleUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 400);
         frame.setLocationRelativeTo(null);
+
+        ImageIcon icon = new ImageIcon(Objects.requireNonNull(RequirementsChecker.class.getResource("/GitMavenLogoSmall.png")));
+        frame.setIconImage(icon.getImage());
 
         JPanel container = new JPanel();
         container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
@@ -39,8 +55,9 @@ public class SimpleUI {
         JPanel pathPanel = new JPanel(new BorderLayout(5, 5));
         pathPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
         pathPanel.setBorder(BorderFactory.createTitledBorder("Install Path"));
-        JButton browse = new JButton("Browse");
-        browse.addActionListener(e -> {
+
+        browseButtonSimpleUI = new JButton("Browse");
+        browseButtonSimpleUI.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -48,17 +65,16 @@ public class SimpleUI {
             }
         });
         pathPanel.add(targetPathField, BorderLayout.CENTER);
-        pathPanel.add(browse, BorderLayout.EAST);
+        pathPanel.add(browseButtonSimpleUI, BorderLayout.EAST);
         panel.add(pathPanel);
 
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
-
+        installButton = new JButton("Install");
         // === Build Button ===
-        JButton buildButton = new JButton("Install");
-        buildButton.setPreferredSize(new Dimension(0, 40));
-        buildButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        buildButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Important
-        buildButton.addActionListener(e -> {
+        installButton.setPreferredSize(new Dimension(0, 40));
+        installButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        installButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Important
+        installButton.addActionListener(e -> {
                 cloneRepository(true);
         }
         );
@@ -67,9 +83,9 @@ public class SimpleUI {
         JPanel buttonWrapper = new JPanel();
         buttonWrapper.setLayout(new BoxLayout(buttonWrapper, BoxLayout.X_AXIS));
         buttonWrapper.setOpaque(false); // keep it visually flat
-        buttonWrapper.add(buildButton);
+        buttonWrapper.add(installButton);
 
-        panel.add(buildButton);
+        panel.add(installButton);
 
         // Action Panel with progress bar
         JPanel actionPanel = new JPanel(new BorderLayout(1, 10));
@@ -94,7 +110,7 @@ public class SimpleUI {
 
         // === Switch Button ===
         JPanel advancedBtnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        JButton advancedBtn = new JButton("Switch to Advanced UI");
+        advancedBtn = new JButton("Switch to Advanced UI");
         advancedBtn.addActionListener(e -> {
             frame.dispose();
             GitMavenCloneUI ui = new GitMavenCloneUI();

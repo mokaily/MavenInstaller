@@ -10,6 +10,8 @@ import java.nio.file.*;
 import java.util.stream.Stream;
 import java.util.Optional;
 
+import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
+
 public class PomHelper {
     public static String findPomXml(String rootDir) {
         try (Stream<Path> paths = Files.walk(Paths.get(rootDir))) {
@@ -23,6 +25,7 @@ public class PomHelper {
                     .orElse(null);
 
         } catch (IOException e) {
+            setButtonsEnabled(true);
             System.err.println("Error: " + e.getMessage());
             return null;
         }

@@ -45,7 +45,6 @@ class FetchGitHubBranches {
             @Override
             protected void done() {
                 progressBar.setIndeterminate(false);
-                progressBar.setVisible(true);
                 progressBar.repaint();
             }
         }.execute();

@@ -5,14 +5,13 @@ import com.example.maveninstaller.GUI.SimpleUI;
 
 import javax.swing.*;
 
-import static com.example.maveninstaller.GUI.InitializeDefaults.inializeUIDefaults;
+import static com.example.maveninstaller.GUI.InitializeDefaults.initializeUIDefaults;
 
 public class Main {
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             //set defaults
-            inializeUIDefaults();
-
+            initializeUIDefaults();
 
             RequirementsChecker.checkAndDisplay();
             SimpleUI.showSimpleUI();

@@ -4,8 +4,7 @@ import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
-import static com.example.maveninstaller.GUI.InitializeDefaults.outputConsole;
-import static com.example.maveninstaller.GUI.InitializeDefaults.progressBar;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class Cleaner {
 
@@ -23,11 +22,25 @@ public class Cleaner {
                     return null;
                 }
 
+                File targetDir = new File(directory, "target");
+
                 for (File file : files) {
                     if (file.getName().equals("target")) {
                         publish("➡️ Skipped: " + file.getName());
                         continue;
                     }
+
+                    if (file.getName().toLowerCase().endsWith(".yaml")) {
+                        File destination = new File(targetDir, file.getName());
+                        boolean success = file.renameTo(destination);
+                        if (success) {
+                            publish("📦 Moved: " + file.getName() + " → target/");
+                        } else {
+                            publish("⚠️ Failed to move: " + file.getName());
+                        }
+                        continue;
+                    }
+
                     deleteRecursively(file);
                     publish("🗑️ Deleted: " + file.getName());
                 }

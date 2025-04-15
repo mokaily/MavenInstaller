@@ -101,8 +101,6 @@ public class GitMavenCloneUI {
         branchPanel.add(new JLabel("Branch:"), branchGbc);
 
         branchGbc.gridx = 1;
-        branchSelector = new JComboBox<>();
-        branchSelector.setEnabled(false);
         branchPanel.add(branchSelector, branchGbc);
 
         branchGbc.gridx = 2;
@@ -116,7 +114,8 @@ public class GitMavenCloneUI {
         // Target Path
         JPanel targetPanel = new JPanel(new BorderLayout(5, 5));
         targetPanel.setBorder(BorderFactory.createTitledBorder("Install Path"));
-        JButton browseButton = new JButton("Browse");
+
+        browseButton = new JButton("Browse");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         browseButton.addActionListener(e -> {
@@ -153,7 +152,7 @@ public class GitMavenCloneUI {
         shortcutConfiguration.add(new JLabel("Shortcut Icon (.ico(windows), .icns(mac), .png(linux)):"), scGbc);
         scGbc.gridx = 1;
         shortcutIconField = new JTextField();
-        JButton browseShortcutIconButton = new JButton("Browse");
+        browseShortcutIconButton = new JButton("Browse");
         JPanel iconPickerPanel = new JPanel(new BorderLayout());
         iconPickerPanel.add(shortcutIconField, BorderLayout.CENTER);
         iconPickerPanel.add(browseShortcutIconButton, BorderLayout.EAST);
@@ -173,7 +172,6 @@ public class GitMavenCloneUI {
         // Custom Maven Repo Options
         JPanel repoOptionPanel = new JPanel(new BorderLayout(5, 5));
         repoOptionPanel.setBorder(BorderFactory.createTitledBorder("Default/ Custom Maven"));
-//        useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
         customRepoPathField = new JTextField();
         customRepoPathField.setEnabled(false);
         customRepoPathField.setToolTipText("Examples:\nWindows: C:/Users/Name/custom-m2\nmacOS: /Users/name/maven-repo\nLinux: /home/name/maven-repo");
@@ -186,7 +184,7 @@ public class GitMavenCloneUI {
                 customRepoPathField.setText(repoChooser.getSelectedFile().getAbsolutePath());
             }
         });
-
+        useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
         useCustomRepoCheckbox.addActionListener(e -> {
             boolean enabled = useCustomRepoCheckbox.isSelected();
             customRepoPathField.setEnabled(enabled);
@@ -204,13 +202,13 @@ public class GitMavenCloneUI {
         cloneButton.addActionListener(e -> cloneRepository(false));
         clonePanel.add(cloneButton);
 
-        JButton buildButton = new JButton("Build Jar");
+        buildButton = new JButton("Build Jar");
         buildButton.addActionListener(e -> buildRepository(false));
         clonePanel.add(buildButton);
 
-        JButton installButton = new JButton("Create Installer");
-        installButton.addActionListener(e -> createInstaller());
-        clonePanel.add(installButton);
+        installButtonAdvanced = new JButton("Create Installer");
+        installButtonAdvanced.addActionListener(e -> createInstaller());
+        clonePanel.add(installButtonAdvanced);
 
         // Action Panel with progress bar
         JPanel actionPanel = new JPanel(new BorderLayout(10, 10));
@@ -223,14 +221,12 @@ public class GitMavenCloneUI {
         mainPanel.add(actionPanel);
 
         // Owner Info
-        ownerInfoArea = new JTextArea(4, 30);
         ownerInfoArea.setEditable(false);
         ownerInfoArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
         ownerInfoArea.setBorder(BorderFactory.createTitledBorder("Project Owner Info"));
         mainPanel.add(ownerInfoArea);
 
         // README Area
-        readmeArea = new JTextArea(4, 60);
         readmeArea.setEditable(false);
         readmeArea.setLineWrap(true);
         readmeArea.setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -239,7 +235,6 @@ public class GitMavenCloneUI {
         mainPanel.add(readmeScrollPane);
 
         // Output Console
-        outputConsole = new JTextArea(6, 80);
         outputConsole.setEditable(false);
         outputConsole.setAutoscrolls(true);
         outputConsole.setLineWrap(true);
@@ -259,7 +254,7 @@ public class GitMavenCloneUI {
         footerPanel.add(appInfo, BorderLayout.CENTER);
 
         // Switch to Basic UI button on the bottom right
-        JButton switchToBasicButton = new JButton("Switch to Basic UI");
+        switchToBasicButton = new JButton("Switch to Basic UI");
         switchToBasicButton.addActionListener(e -> {
             frame.dispose();
             com.example.maveninstaller.GUI.SimpleUI.showSimpleUI();
@@ -269,14 +264,6 @@ public class GitMavenCloneUI {
         footerPanel.add(buttonWrapper, BorderLayout.SOUTH);
 
         mainPanel.add(footerPanel);
-
-
-//        // Footer
-//        JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
-//        appInfo.setEditable(false);
-//        appInfo.setBackground(new Color(240, 240, 240));
-//        appInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
-//        mainPanel.add(appInfo);
 
         frame.add(new JScrollPane(mainPanel));
         frame.setVisible(true);

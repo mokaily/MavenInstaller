@@ -8,10 +8,12 @@ import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
 import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;import static com.example.maveninstaller.GUI.InitializeDefaults.*;
+import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 
 public class BuildRepository {
     public static void buildRepository(boolean isOneFunction) {
+        setButtonsEnabled(false);
         String repoUrl = repoUrlField.getText().trim();
         if (repoUrl.endsWith(".git")) {
             repoUrl = repoUrl.substring(0, repoUrl.length() - 4);
@@ -24,6 +26,7 @@ public class BuildRepository {
 
         outputConsole.setText("⏳ Cloning repository...\n");
         progressBar.setIndeterminate(true);
+        progressBar.repaint();
 
         String finalRepoUrl = repoUrl;
 
@@ -44,6 +47,7 @@ public class BuildRepository {
 
                     outputConsole.append("✅ Building completed!\n");
                 } catch (Exception e) {
+                    setButtonsEnabled(true);
                     publish("❌ Error building repository:\n" + e.getMessage());
                 }
                 return null;
@@ -59,11 +63,14 @@ public class BuildRepository {
             @Override
             protected void done() {
                 SwingUtilities.invokeLater(() -> {
-                    progressBar.setIndeterminate(false);
-                    progressBar.repaint();
                 });
                 if (isOneFunction) {
+                    setButtonsEnabled(false);
                     createInstaller();
+                }else{
+                    setButtonsEnabled(true);
+                    progressBar.setIndeterminate(false);
+                    progressBar.repaint();
                 }
             }
         }.execute();

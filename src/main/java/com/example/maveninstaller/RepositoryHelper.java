@@ -2,8 +2,8 @@ package com.example.maveninstaller;
 
 import java.io.File;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
+import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 public class RepositoryHelper {
     public static String getRepoName(String repoUrl) {
@@ -22,11 +22,13 @@ public class RepositoryHelper {
         if (useCustomRepoCheckbox.isSelected()) {
             String customRepoPath = customRepoPathField.getText().trim();
             if (customRepoPath.isEmpty()) {
+//                setButtonsEnabled(true);
                 outputConsole.setText("❗ Custom Maven repository path is empty!\n");
                 return;
             }
             File repoDir = new File(customRepoPath);
             if (!repoDir.exists() || !repoDir.isDirectory()) {
+//                setButtonsEnabled(true);
                 outputConsole.setText("❗ Custom Maven repository path is invalid or not a directory!\n");
                 return;
             }

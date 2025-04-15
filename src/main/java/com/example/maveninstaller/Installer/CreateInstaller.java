@@ -13,14 +13,16 @@ import static com.example.maveninstaller.JarFinder.findJarInTarget;
 import static com.example.maveninstaller.OperationSystemChecker.*;
 import static com.example.maveninstaller.PomHelper.fetchAppName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
+import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 
 public class CreateInstaller {
     public static void createMavenExecShortcut(String pomPath) {
+        setButtonsEnabled(false);
         Path dir = findJarInTarget(pomPath);
         outputConsole.setText("⏳ Creating installer...\n");
         progressBar.setIndeterminate(true);
-
+        progressBar.repaint();
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
@@ -35,6 +37,7 @@ public class CreateInstaller {
                         JOptionPane.showMessageDialog(null, "Unsupported OS!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception e) {
+                    setButtonsEnabled(true);
                     JOptionPane.showMessageDialog(null, "Error creating shortcut: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 return null;
@@ -49,6 +52,7 @@ public class CreateInstaller {
 
             @Override
             protected void done() {
+                setButtonsEnabled(true);
                 deleteAllExceptTarget(new File(pomPath));
                 SwingUtilities.invokeLater(() -> {
                     progressBar.setIndeterminate(false);

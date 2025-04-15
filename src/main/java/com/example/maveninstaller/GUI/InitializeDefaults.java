@@ -12,21 +12,30 @@ public class InitializeDefaults{
     public static JTextArea readmeArea;
     public static JComboBox<String> branchSelector;
     public static JButton fetchBranchesButton, cloneButton;
+    public static JButton buildButton, installButtonAdvanced;
     public static JProgressBar progressBar;
     public static JCheckBox useCustomRepoCheckbox;
     public static JTextField customRepoPathField;
     public static JTextField applicationNameField;
     public static JCheckBox pinToDockCheckbox;
     public static JTextField shortcutIconField;
+    public static JButton installButton;
+    public static JButton browseButton;
+    public static JButton browseButtonSimpleUI;
+    public static JButton switchToBasicButton;
+    public static JButton advancedBtn;
+    public static JButton browseShortcutIconButton;
 
-    public static void inializeUIDefaults() {
+    public static void initializeUIDefaults() {
+
         gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
         gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
         shortcutIconField = new JTextField();
-        repoUrlField = new JTextField("https://gitlab.uni-marburg.de/kertels/erma.git");
+        repoUrlField = new JTextField("https://gitlab.uni-marburg.de/okaily/erma");
         targetPathField = new JTextField();
-        useCustomRepoCheckbox = new JCheckBox("Use custom local Maven repository");
-        useCustomRepoCheckbox.setSelected(false);
+
+        branchSelector = new JComboBox<>();
+        branchSelector.setEnabled(false);
         applicationNameField = new JTextField("");
         pinToDockCheckbox = new JCheckBox();
         pinToDockCheckbox.setSelected(false);
@@ -34,5 +43,7 @@ public class InitializeDefaults{
         readmeArea.append("");
         ownerInfoArea = new JTextArea(4, 60);
         ownerInfoArea.append("");
+        outputConsole = new JTextArea(6, 80);
+        outputConsole.append("");
     }
 }

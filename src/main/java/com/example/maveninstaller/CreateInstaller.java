@@ -1,14 +1,8 @@
 package com.example.maveninstaller;
 
-import javax.swing.*;
-import java.util.List;
-
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.createMavenExecShortcut;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
-import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
-import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class CreateInstaller {
