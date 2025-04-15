@@ -61,13 +61,13 @@ public class CloneRepository {
                     String fullPath = targetPath + "/" + getRepoName(finalRepoUrl);
                     String pomPath = findPomXml(fullPath);
 
-                    // Check if the project directory already exists
-                    File projectDir = new File(fullPath);
-                    if (projectDir.exists()) {
-                        publish("⚠️ Project already exists. Deleting old version...");
-                        deleteDirectory(projectDir);
-                        publish("🗑️ Old project deleted.");
-                    }
+//                    // Check if the project directory already exists
+//                    File projectDir = new File(fullPath);
+//                    if (projectDir.exists()) {
+//                        publish("⚠️ Project already exists. Deleting old version...");
+//                        deleteDirectory(projectDir);
+//                        publish("🗑️ Old project deleted.");
+//                    }
 
                     ProcessBuilder builder;
                     String actualRepoUrl = finalRepoUrl;
