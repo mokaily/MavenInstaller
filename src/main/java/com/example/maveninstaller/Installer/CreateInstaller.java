@@ -1,9 +1,11 @@
 package com.example.maveninstaller.Installer;
 
 import javax.swing.*;
+import java.io.File;
 import java.nio.file.*;
 import java.util.List;
 
+import static com.example.maveninstaller.Cleaner.deleteAllExceptTarget;
 import static com.example.maveninstaller.Installer.LinuxInstaller.createLinuxShortcut;
 import static com.example.maveninstaller.Installer.MacInstaller.createMacShortcut;
 import static com.example.maveninstaller.Installer.WindowsInstaller.createWindowsShortcut;
@@ -18,8 +20,6 @@ public class CreateInstaller {
         Path dir = findJarInTarget(pomPath);
         outputConsole.setText("⏳ Creating installer...\n");
         progressBar.setIndeterminate(true);
-
-
 
         new SwingWorker<Void, String>() {
             @Override
@@ -49,6 +49,7 @@ public class CreateInstaller {
 
             @Override
             protected void done() {
+                deleteAllExceptTarget(new File(pomPath));
                 SwingUtilities.invokeLater(() -> {
                     progressBar.setIndeterminate(false);
                     progressBar.repaint();

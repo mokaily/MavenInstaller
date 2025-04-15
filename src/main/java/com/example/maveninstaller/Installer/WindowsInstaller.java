@@ -1,11 +1,11 @@
 package com.example.maveninstaller.Installer;
 
 import mslinks.ShellLink;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
+import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.example.maveninstaller.Installer.CreateInstaller.*;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
@@ -14,52 +14,41 @@ class WindowsInstaller {
     public static void createWindowsShortcut(Path dir, String pomPath) throws IOException {
         String jarPath = dir.toString();
         String appName = getApplicationName(pomPath);
+        String userHome = System.getenv("USERPROFILE");
+        String desktopPath = userHome + "\\Desktop";
+        String batFilePath = desktopPath + "\\" + appName + ".bat";
+        String workingDir = new File(jarPath).getParent();
 
-        //Get javaw path
-        String javaPath = "";
-        Process process = new ProcessBuilder("where", "javaw").start();
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()))) {
-            javaPath = reader.readLine();
+        // ✅ 1. Create .bat file to run the jar
+        String batContent = "cd /d \"" + workingDir + "\"\n" +
+                "java -jar \"" + jarPath + "\"\n" +
+                "pause";
+
+        try (BufferedWriter writer = Files.newBufferedWriter(Paths.get(batFilePath))) {
+            writer.write(batContent);
         }
 
-        if (javaPath == null || javaPath.isEmpty()) {
-            outputConsole.append("Could not find javaw.exe in PATH." + "\n");
-            throw new IOException("Could not find javaw.exe in PATH.");
-        }
+        outputConsole.append("✅ Created .bat launcher on Desktop: " + batFilePath + "\n");
 
-        outputConsole.append("Using javaw: " + javaPath + "\n");
+        // 📌 2. Create Start Menu shortcut (.lnk) for the .bat if checkbox is selected
+        if (pinToDockCheckbox.isSelected()) {
+            String startMenuDir = userHome + "\\AppData\\Roaming\\Microsoft\\Windows\\Start Menu\\Programs\\";
+            String startMenuShortcut = startMenuDir + appName + ".lnk";
 
+            ShellLink link = ShellLink.createLink("cmd.exe")
+                    .setCMDArgs("/c \"" + batFilePath + "\"");
 
-        // Prepare common shortcut object
-        ShellLink link = ShellLink.createLink(javaPath)
-                .setCMDArgs("-jar \"" + jarPath + "\"")
-                .setName(appName + ".lnk")
-
-//                .setName(STR."\{appName}.lnk")
-                .setIconLocation(jarPath);
-
-        // Set icon if valid
-        String iconPath = shortcutIconField.getText().trim();
-        if (!iconPath.isEmpty() && iconPath.endsWith(".ico")) {
-            File iconFile = new File(iconPath);
-            if (iconFile.exists()) {
-                link.setIconLocation(iconPath);
+            // 🎨 Set icon if available
+            String iconPath = shortcutIconField.getText().trim();
+            if (!iconPath.isEmpty() && iconPath.endsWith(".ico")) {
+                File iconFile = new File(iconPath);
+                if (iconFile.exists()) {
+                    link.setIconLocation(iconPath);
+                }
             }
-        }
 
-        // Save to Desktop
-        String desktopShortcut = System.getenv("USERPROFILE") + "/Desktop/" + appName + ".lnk";
-
-//        String desktopShortcut = System.getenv("USERPROFILE") + "\\Desktop\\" + appName + ".lnk";
-        link.saveTo(desktopShortcut);
-        outputConsole.append("Shortcut created on Desktop: " + desktopShortcut + "\n");
-
-        if(pinToDockCheckbox.isSelected()){
-            // Save to Start Menu
-            String startMenuDir = System.getenv("APPDATA") + "\\Microsoft\\Windows\\Start Menu\\Programs\\";
-            String startMenuShortcut = startMenuDir +  appName + ".lnk";
             link.saveTo(startMenuShortcut);
-            outputConsole.append("Shortcut created in Start Menu: " + startMenuShortcut + "\n");
+            outputConsole.append("📌 Shortcut added to Start Menu: " + startMenuShortcut + "\n");
         }
     }
 }

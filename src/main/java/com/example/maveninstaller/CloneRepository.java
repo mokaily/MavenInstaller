@@ -6,15 +6,13 @@ import java.io.File;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import static com.example.maveninstaller.BuildRepository.buildRepository;
+import static com.example.maveninstaller.BuildRepository.*;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.fetchGitOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchReadMeInfo.fetchReadMeInfo;
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.PomHelper.fetchAppName;
-import static com.example.maveninstaller.RepositoryHelper.getRepoName;
-import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
+import static com.example.maveninstaller.RepositoryHelper.*;
 
 public class CloneRepository {
     public static void cloneRepository(boolean isOneFunction) {
@@ -30,7 +28,7 @@ public class CloneRepository {
         }
 
         if (targetPath.isEmpty()) {
-            outputConsole.setText("❗ Please select a target folder!\n");
+            outputConsole.setText("❗ Please select a install path!\n");
             return;
         }
 
@@ -53,6 +51,17 @@ public class CloneRepository {
             @Override
             protected Void doInBackground() {
                 try {
+                    String fullPath = targetPath + "/" + getRepoName(finalRepoUrl);
+                    String pomPath = findPomXml(fullPath);
+
+                    // Check if the project directory already exists
+                    File projectDir = new File(fullPath);
+                    if (projectDir.exists()) {
+                        publish("⚠️ Project already exists. Deleting old version...");
+                        deleteDirectory(projectDir);
+                        publish("🗑️ Old project deleted.");
+                    }
+
                     ProcessBuilder builder;
                     String actualRepoUrl = finalRepoUrl;
 
@@ -79,8 +88,6 @@ public class CloneRepository {
                     }
                     process.waitFor();
 
-                    String fullPath = targetPath + "/" + getRepoName(finalRepoUrl);
-                    String pomPath = findPomXml(fullPath);
 
                     if (pomPath != null) {
                         applicationNameField.setText(fetchAppName(pomPath));

@@ -33,4 +33,14 @@ public class RepositoryHelper {
         }
     }
 
+    public static void deleteDirectory(File directory) {
+        File[] allContents = directory.listFiles();
+        if (allContents != null) {
+            for (File file : allContents) {
+                deleteDirectory(file);
+            }
+        }
+        directory.delete();
+    }
+
 }

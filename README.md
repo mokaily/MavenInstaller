@@ -45,7 +45,7 @@ java -jar target/gitmaven-installer.jar
 2. **Check Requirements**: The application checks for Java, Git, and Maven installations.
 3. **Enter Repository URL**: Paste the GitHub/GitLab repository URL.
 4. **Fetch Branches**: Click to fetch available branches.
-5. **Set Target Folder**: Choose where the repo should be cloned.
+5. **Set Install Path**: Choose where the installer should be install.
 6. **Custom Maven Repo (Optional)**: Specify a local repository path.
 7. **Clone & Build**:
     - Clone the repository.

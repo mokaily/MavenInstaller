@@ -115,7 +115,7 @@ public class GitMavenCloneUI {
 
         // Target Path
         JPanel targetPanel = new JPanel(new BorderLayout(5, 5));
-        targetPanel.setBorder(BorderFactory.createTitledBorder("Target Folder"));
+        targetPanel.setBorder(BorderFactory.createTitledBorder("Install Path"));
         JButton browseButton = new JButton("Browse");
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);

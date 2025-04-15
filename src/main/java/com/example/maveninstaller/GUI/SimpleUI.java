@@ -35,10 +35,10 @@ public class SimpleUI {
 
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        // === Target Folder ===
+        // === Install Path ===
         JPanel pathPanel = new JPanel(new BorderLayout(5, 5));
         pathPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 50));
-        pathPanel.setBorder(BorderFactory.createTitledBorder("Target Folder"));
+        pathPanel.setBorder(BorderFactory.createTitledBorder("Install Path"));
         JButton browse = new JButton("Browse");
         browse.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
