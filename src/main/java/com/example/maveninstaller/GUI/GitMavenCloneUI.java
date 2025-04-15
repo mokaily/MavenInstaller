@@ -247,7 +247,7 @@ public class GitMavenCloneUI {
         JPanel footerPanel = new JPanel(new BorderLayout());
 
         // App Info on the left
-        JTextArea appInfo = new JTextArea("GitMaven Installer v1.0\nDeveloped to simplify managing, cloning and compiling Maven projects from GitHub and GitLab.");
+        JTextArea appInfo = new JTextArea("GitMaven Installer v2.0\nDeveloped to simplify testing and building maven projects from GitHub and GitLab.");
         appInfo.setEditable(false);
         appInfo.setBackground(new Color(240, 240, 240));
         appInfo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
