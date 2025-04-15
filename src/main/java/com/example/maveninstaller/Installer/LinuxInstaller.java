@@ -1,121 +1,60 @@
 package com.example.maveninstaller.Installer;
 
 import java.io.*;
-import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
-class LinuxInstaller {
-    public static void createLinuxShortcut(Path dir, String pomPath) throws IOException, InterruptedException {
-        String jarPath = dir.toString();
+public class LinuxInstaller {
+
+    public static void createLinuxShortcut(Path jarPath, String pomPath) throws IOException, InterruptedException {
         String appName = getApplicationName(pomPath);
-        String iconPath = shortcutIconField.getText().trim();
-        String appId = appName.toLowerCase().replaceAll("\\s+", "");
         String userHome = System.getProperty("user.home");
 
-        // Prepare manifest file for Flatpak
-        Path buildDir = dir.resolve("flatpak_build");
-        Path manifestFile = buildDir.resolve(appId + ".yml");
-        Files.createDirectories(buildDir);
+        String desktopPath = userHome + "/Desktop";
+        String shPath = desktopPath + "/" + appName + ".sh";
+        String desktopFilePath = desktopPath + "/" + appName + ".desktop";
+        String workingDir = jarPath.getParent().toString();
 
-        // Collect project files
-        List<Path> files = new ArrayList<>();
-        Files.walk(dir).filter(Files::isRegularFile).forEach(files::add);
+        // ✅ 1. Create .sh launcher script
+        String shContent = "#!/bin/bash\n" +
+                "cd \"" + workingDir + "\"\n" +
+                "java -jar \"" + jarPath.toString() + "\"\n";
 
-        boolean useFlatpak = false;
-        try (BufferedWriter writer = Files.newBufferedWriter(manifestFile)) {
-            writer.write("id: com.example." + appId + "\n");
-            writer.write("runtime: org.freedesktop.Platform\n");
-            writer.write("runtime-version: '23.08'\n");
-            writer.write("sdk: org.freedesktop.Sdk\n");
-            writer.write("sdk-extensions:\n  - org.freedesktop.Sdk.Extension.openjdk21\n");
-            writer.write("modules:\n");
-            writer.write("  - name: application\n");
-            writer.write("    buildsystem: simple\n");
-            writer.write("    build-commands:\n");
-            writer.write("      - install -Dm755 -t /app/bin run.sh\n");
-            writer.write("    sources:\n");
-            for (Path file : files) {
-                writer.write("      - type: file\n");
-                writer.write("        path: '" + dir.relativize(file).toString() + "'\n");
+        Files.writeString(Paths.get(shPath), shContent);
+        new ProcessBuilder("chmod", "+x", shPath).start().waitFor();
+        outputConsole.append("✅ Created .sh launcher on Desktop: " + shPath + "\n");
+
+        // 🎯 2. Create .desktop file
+        String iconPath = shortcutIconField.getText().trim();
+        StringBuilder desktopEntry = new StringBuilder();
+        desktopEntry.append("[Desktop Entry]\n");
+        desktopEntry.append("Type=Application\n");
+        desktopEntry.append("Name=").append(appName).append("\n");
+        desktopEntry.append("Exec=").append(shPath).append("\n");
+        desktopEntry.append("Terminal=false\n");
+
+        if (!iconPath.isEmpty() && iconPath.endsWith(".png")) {
+            File iconFile = new File(iconPath);
+            if (iconFile.exists()) {
+                desktopEntry.append("Icon=").append(iconPath).append("\n");
             }
-            writer.write("      - type: script\n");
-            writer.write("        dest-filename: run.sh\n");
-            writer.write("        commands:\n");
-            writer.write("          - \"cd /app/share/com.example." + appId + "\"\n");
-            writer.write("          - \"java -jar app.jar\"\n");
-            writer.write("command: run.sh\n");
-            writer.write("finish-args:\n");
-            writer.write("  - \"--env=PATH=/app/bin:/usr/bin\"\n");
-            writer.write("  - --share=network\n  - --socket=fallback-x11\n  - --socket=wayland\n  - --device=dri\n");
         }
 
-        try {
-            String[] command = {
-                    "flatpak-builder", "--user", "--force-clean",
-                    "--install-deps-from=flathub", "--repo=repo", "--install",
-                    "--state-dir=" + buildDir.resolve("state"),
-                    buildDir.resolve("build").toString(), manifestFile.toString()
-            };
+        desktopEntry.append("Categories=Utility;Application;\n");
 
-            Process process = new ProcessBuilder(command).directory(dir.toFile()).redirectErrorStream(true).start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                outputConsole.append(line + "\n");
-            }
+        Files.writeString(Paths.get(desktopFilePath), desktopEntry.toString());
+        new ProcessBuilder("chmod", "+x", desktopFilePath).start().waitFor();
+        outputConsole.append("📄 Created .desktop shortcut on Desktop: " + desktopFilePath + "\n");
 
-            int exitCode = process.waitFor();
-            if (exitCode == 0) {
-                outputConsole.append("✅ Flatpak package built and installed successfully.\n");
-                useFlatpak = true;
-            } else {
-                outputConsole.append("❌ Flatpak build failed with code: " + exitCode + "\n");
-            }
-        } catch (Exception e) {
-            outputConsole.append("⚠️ Flatpak not available: " + e.getMessage() + "\n");
-        }
-
-        if (!useFlatpak) {
-            outputConsole.append("⏳ Falling back to .desktop shortcut creation...\n");
-
-            StringBuilder content = new StringBuilder();
-            content.append("[Desktop Entry]\n");
-            content.append("Type=Application\n");
-            content.append("Name=").append(appName).append("\n");
-            content.append("Exec=java -jar \"").append(jarPath).append("\"\n");
-            content.append("Terminal=false\n");
-
-            if (!iconPath.isEmpty() && iconPath.endsWith(".png")) {
-                File iconFile = new File(iconPath);
-                if (iconFile.exists()) {
-                    content.append("Icon=").append(iconPath).append("\n");
-                }
-            }
-
-            content.append("Categories=Utility;Application;\n");
-
-            File desktopFile = new File(userHome + "/Desktop/" + appName + ".desktop");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(desktopFile))) {
-                writer.write(content.toString());
-            }
-
-            Process chmod = new ProcessBuilder("chmod", "+x", desktopFile.getAbsolutePath()).start();
-            chmod.waitFor();
-
-            outputConsole.append("✅ Shortcut created on Desktop: " + desktopFile.getAbsolutePath() + "\n");
-
-            File localAppDir = new File(userHome + "/.local/share/applications");
-            if (!localAppDir.exists()) localAppDir.mkdirs();
-
-            File appMenuShortcut = new File(localAppDir, appName + ".desktop");
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(appMenuShortcut))) {
-                writer.write(content.toString());
-            }
-            outputConsole.append("✅ Added to Applications menu: " + appMenuShortcut.getAbsolutePath() + "\n");
+        // 📥 3. Add to Applications menu if selected
+        if (pinToDockCheckbox.isSelected()) {
+            String localAppPath = userHome + "/.local/share/applications/" + appName + ".desktop";
+            Files.copy(Paths.get(desktopFilePath), Paths.get(localAppPath), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            outputConsole.append("📌 Added to Applications Menu: " + localAppPath + "\n");
         }
     }
 }
