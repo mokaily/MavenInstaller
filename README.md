@@ -119,7 +119,13 @@ The application is structured into several key components:
 
 
 ## Screenshots
-![GitMaven Installer UI](img.png)
+<p float="left">
+  <img src="screenshots/screenshot_1.png" width="50.5%" />
+  <img src="screenshots/screenshot_2.png" width="47.3%" />
+</p>
+
+![GitMaven Installer UI](screenshots/screenshot_3.png)
+
 
 ## Supported Repository Hosts
 
