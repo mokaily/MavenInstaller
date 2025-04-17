@@ -13,7 +13,6 @@ import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 class FetchGitHubBranches {
     public static void fetchGitHubBranches(String repoUrl) {
         progressBar.setIndeterminate(true);
-        progressBar.setVisible(true);
         progressBar.repaint();
         new SwingWorker<Void, String>() {
             @Override

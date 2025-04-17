@@ -37,6 +37,10 @@ public class MacInstaller {
         String iconPath = shortcutIconField.getText().trim();
         String iconName = null;
         if (!iconPath.isEmpty()) {
+            if (iconPath.startsWith("src") && pomPath != null) {
+                iconPath = pomPath + iconPath.replace("/", File.separator).replace("\\", File.separator);
+                shortcutIconField.setText(iconPath);
+            }
             File iconFile = new File(iconPath);
             if (iconFile.exists()) {
                 if (iconPath.toLowerCase().endsWith(".icns")) {

@@ -11,7 +11,7 @@ import static com.example.maveninstaller.Installer.LinuxInstaller.createLinuxSho
 import static com.example.maveninstaller.Installer.MacInstaller.createMacShortcut;
 import static com.example.maveninstaller.Installer.WindowsInstaller.createWindowsShortcut;
 import static com.example.maveninstaller.Helpers.JarFinder.findJarInTarget;
-import static com.example.maveninstaller.Helpers.OperationSystemChecker.*;
+import static com.example.maveninstaller.Helpers.OSChecker.*;
 import static com.example.maveninstaller.Helpers.PomHelper.fetchAppName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
@@ -54,7 +54,11 @@ public class CreateInstaller {
             @Override
             protected void done() {
                 setButtonsEnabled(true);
-                deleteAllExceptTarget(new File(pomPath));
+                try{
+                    deleteAllExceptTarget(new File(pomPath));
+                }catch(Exception e){
+
+                }
                 SwingUtilities.invokeLater(() -> {
                     progressBar.setIndeterminate(false);
                     progressBar.repaint();

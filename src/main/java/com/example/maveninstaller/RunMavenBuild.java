@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.InputStreamReader;
 
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
-import static com.example.maveninstaller.Helpers.OperationSystemChecker.isWindows;
+import static com.example.maveninstaller.Helpers.OSChecker.isWindows;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class RunMavenBuild {

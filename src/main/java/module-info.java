@@ -9,6 +9,7 @@ module com.example.maveninstaller {
     requires mslinks;
     requires java.desktop;
     requires maven.model;
+    requires org.apache.commons.io;
 
 
     opens com.example.maveninstaller to javafx.fxml;

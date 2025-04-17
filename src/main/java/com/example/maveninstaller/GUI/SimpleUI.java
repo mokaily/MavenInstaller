@@ -1,6 +1,7 @@
 package com.example.maveninstaller.GUI;
 
 import com.example.maveninstaller.GUI.CheckRequirments.RequirementsChecker;
+import com.example.maveninstaller.Helpers.ConfigImporter;
 
 import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
@@ -74,6 +75,21 @@ public class SimpleUI {
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // === Install + Links in one row ===
+        JLabel importConfigLink = new JLabel("<html><u><font color='blue'>Import Config File</font></u></html>");
+        importConfigLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        importConfigLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("JSON Files", "json"));
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    ConfigImporter.importConfig(selectedFile);
+                }
+            }
+        });
+
         JLabel exportLogLink = new JLabel("<html><u><font color='blue'>Export Log to File</font></u></html>");
         exportLogLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         exportLogLink.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -96,30 +112,9 @@ public class SimpleUI {
             }
         });
 
-        JLabel importConfigLink = new JLabel("<html><u><font color='blue'>Import Config File</font></u></html>");
-        importConfigLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        importConfigLink.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("JSON Files", "json"));
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    File selectedFile = fileChooser.getSelectedFile();
-                    try {
-                        String content = new String(java.nio.file.Files.readAllBytes(selectedFile.toPath()));
-                        appendToConsole("📥 Loaded config from: " + selectedFile.getAbsolutePath() + "\n", false);
-                        // parse and use if needed
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Error reading config file: " + ex.getMessage());
-                    }
-                }
-            }
-        });
-
         JPanel leftLinksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        leftLinksPanel.add(exportLogLink);
         leftLinksPanel.add(importConfigLink);
+        leftLinksPanel.add(exportLogLink);
 
         installButton = new JButton("Install");
         installButton.setPreferredSize(new Dimension(200, 40));

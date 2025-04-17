@@ -39,6 +39,10 @@ public class LinuxInstaller {
         desktopEntry.append("Terminal=false\n");
 
         if (!iconPath.isEmpty() && iconPath.endsWith(".png")) {
+            if (iconPath.startsWith("src") && pomPath != null) {
+                iconPath = pomPath + iconPath.replace("/", File.separator).replace("\\", File.separator);
+                shortcutIconField.setText(iconPath);
+            }
             File iconFile = new File(iconPath);
             if (iconFile.exists()) {
                 desktopEntry.append("Icon=").append(iconPath).append("\n");

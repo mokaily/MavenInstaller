@@ -1,8 +1,11 @@
 package com.example.maveninstaller;
 
+import org.apache.commons.io.FileUtils;
+
 import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
 
@@ -62,13 +65,18 @@ public class CloneRepository {
                     String fullPath = targetPath + "/" + getRepoName(finalRepoUrl);
                     String pomPath = findPomXml(fullPath);
 
-//                    // Check if the project directory already exists
-//                    File projectDir = new File(fullPath);
-//                    if (projectDir.exists()) {
-//                        publish("⚠️ Project already exists. Deleting old version...");
-//                        deleteDirectory(projectDir);
-//                        publish("🗑️ Old project deleted.");
-//                    }
+                    // Check if the project directory already exists
+                    File projectDir = new File(fullPath);
+                    if (projectDir.exists()) {
+                        publish("⚠️ Project already exists. Deleting...");
+                        try {
+                            FileUtils.deleteDirectory(projectDir);
+                            publish("🗑️ Project folder deleted successfully.");
+                        } catch (IOException e) {
+                            publish("❌ Deletion failed: " + e.getMessage());
+                            return null;
+                        }
+                    }
 
                     ProcessBuilder builder;
                     String actualRepoUrl = finalRepoUrl;

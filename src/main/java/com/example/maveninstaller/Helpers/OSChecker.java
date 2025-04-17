@@ -1,6 +1,6 @@
 package com.example.maveninstaller.Helpers;
 
-public class OperationSystemChecker {
+public class OSChecker {
 
     public enum OSType {
         WINDOWS, MAC, LINUX, OTHER

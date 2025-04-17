@@ -17,35 +17,40 @@ public class Cleaner {
         new SwingWorker<Void, String>() {
             @Override
             protected Void doInBackground() {
-                File[] files = directory.listFiles();
-                if (files == null) {
-                    publish("⚠️ Directory is empty or inaccessible.");
-                    return null;
-                }
-
-                File targetDir = new File(directory, "target");
-
-                for (File file : files) {
-                    if (file.getName().equals("target")) {
-                        publish("➡️ Skipped: " + file.getName());
-                        continue;
+                try{
+                    File[] files = directory.listFiles();
+                    if (files == null) {
+                        publish("⚠️ Directory is empty or inaccessible.");
+                        return null;
                     }
 
-                    if (file.getName().toLowerCase().endsWith(".yaml")) {
-                        File destination = new File(targetDir, file.getName());
-                        boolean success = file.renameTo(destination);
-                        if (success) {
-                            publish("📦 Moved: " + file.getName() + " → target/");
-                        } else {
-                            publish("⚠️ Failed to move: " + file.getName());
+                    File targetDir = new File(directory, "target");
+
+                    for (File file : files) {
+                        if (file.getName().equals("target")) {
+                            publish("➡️ Skipped: " + file.getName());
+                            continue;
                         }
-                        continue;
+
+                        if (file.getName().toLowerCase().endsWith(".yaml")) {
+                            File destination = new File(targetDir, file.getName());
+                            boolean success = file.renameTo(destination);
+                            if (success) {
+                                publish("📦 Moved: " + file.getName() + " → target/");
+                            } else {
+                                publish("⚠️ Failed to move: " + file.getName());
+                            }
+                            continue;
+                        }
+
+                        deleteRecursively(file);
+                        publish("🗑️ Deleted: " + file.getName());
                     }
-
-                    deleteRecursively(file);
-                    publish("🗑️ Deleted: " + file.getName());
+                }catch (Exception e){
+                    progressBar.setIndeterminate(false);
+                    progressBar.repaint();
+                    e.printStackTrace();
                 }
-
                 return null;
             }
 

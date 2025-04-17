@@ -1,6 +1,6 @@
 package com.example.maveninstaller.GUI;
 
-import org.json.JSONObject;
+import com.example.maveninstaller.Helpers.ConfigImporter;
 
 import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
@@ -15,16 +15,14 @@ import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToCons
 import static com.example.maveninstaller.Helpers.CreateInstallerHelper.createInstallerHelper;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBranches;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
-import static com.example.maveninstaller.Helpers.OperationSystemChecker.isMac;
-import static com.example.maveninstaller.Helpers.OperationSystemChecker.isWindows;
+import static com.example.maveninstaller.Helpers.OSChecker.isMac;
+import static com.example.maveninstaller.Helpers.OSChecker.isWindows;
 
 public class GitMavenCloneUI {
-
-
     public void createAndShowGUI() {
         frame = new JFrame("GitMaven Installer");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(900, 900);
+        frame.setSize(910, 910);
         frame.setLocationRelativeTo(null);
 
         ImageIcon icon = new ImageIcon(Objects.requireNonNull(getClass().getResource("/GitMavenLogoSmall.png")));
@@ -259,18 +257,7 @@ public class GitMavenCloneUI {
                 int result = fileChooser.showOpenDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     File selectedFile = fileChooser.getSelectedFile();
-                    try {
-                        String content = new String(java.nio.file.Files.readAllBytes(selectedFile.toPath()));
-                        // Do something with the content
-                        appendToConsole("📥 Loaded config from: " + selectedFile.getAbsolutePath() + "\n", false);
-
-                        // Example: parse JSON if needed
-                        JSONObject json = new JSONObject(content);
-                        appendToConsole("✔ Config: " + json.toString(2) + "\n", false);
-
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Error reading config file: " + ex.getMessage());
-                    }
+                    ConfigImporter.importConfig(selectedFile);
                 }
             }
         });
@@ -300,7 +287,7 @@ public class GitMavenCloneUI {
         });
 
         JPanel linksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
-        linksPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        linksPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 10));
         linksPanel.add(importConfigLink);
         linksPanel.add(exportLogLink);
 

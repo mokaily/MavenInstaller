@@ -42,6 +42,10 @@ class WindowsInstaller {
             // 🎨 Set icon if available
             String iconPath = shortcutIconField.getText().trim();
             if (!iconPath.isEmpty() && iconPath.endsWith(".ico")) {
+                if (iconPath.startsWith("src") && pomPath != null) {
+                    iconPath = pomPath + iconPath.replace("/", File.separator).replace("\\", File.separator);
+                    shortcutIconField.setText(iconPath);
+                }
                 File iconFile = new File(iconPath);
                 if (iconFile.exists()) {
                     link.setIconLocation(iconPath);
