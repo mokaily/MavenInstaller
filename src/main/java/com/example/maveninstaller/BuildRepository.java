@@ -3,6 +3,7 @@ package com.example.maveninstaller;
 import javax.swing.*;
 import java.util.List;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.CreateInstaller.createInstaller;
 import static com.example.maveninstaller.PomHelper.findPomXml;
 import static com.example.maveninstaller.RepositoryHelper.getRepoName;
@@ -24,7 +25,7 @@ public class BuildRepository {
         // Validate custom repo path if selected
         validateCustomRepo();
 
-        outputConsole.setText("⏳ Cloning repository...\n");
+        appendToConsole("⏳ Cloning repository...\n", true);
         progressBar.setIndeterminate(true);
         progressBar.repaint();
 
@@ -45,7 +46,7 @@ public class BuildRepository {
                         publish("⚠️ No Maven project found.");
                     }
 
-                    outputConsole.append("✅ Building completed!\n");
+                    appendToConsole("✅ Building completed!\n", false);
                 } catch (Exception e) {
                     setButtonsEnabled(true);
                     publish("❌ Error building repository:\n" + e.getMessage());
@@ -56,7 +57,7 @@ public class BuildRepository {
             @Override
             protected void process(List<String> chunks) {
                 for (String chunk : chunks) {
-                    outputConsole.append(chunk + "\n");
+                    appendToConsole(chunk + "\n", false);
                 }
             }
 

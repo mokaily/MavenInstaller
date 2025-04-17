@@ -1,13 +1,17 @@
 package com.example.maveninstaller.GUI;
 
 import com.example.maveninstaller.GUI.CheckRequirments.RequirementsChecker;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
 import java.awt.*;
+import java.io.File;
+import java.io.PrintStream;
 import java.util.Objects;
 
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class SimpleUI {
@@ -69,23 +73,66 @@ public class SimpleUI {
         panel.add(pathPanel);
 
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
+
+        // === Install + Links in one row ===
+        JLabel exportLogLink = new JLabel("<html><u><font color='blue'>Export Log to File</font></u></html>");
+        exportLogLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        exportLogLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setSelectedFile(new File("gitmaven-log.txt"));
+                int result = fileChooser.showSaveDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        if (logFileStream != null) {
+                            logFileStream.close();
+                        }
+                        logFileStream = new PrintStream(fileChooser.getSelectedFile(), "UTF-8");
+                        appendToConsole("📁 Logging to file: " + fileChooser.getSelectedFile().getAbsolutePath() + "\n", false);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error saving log file: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+
+        JLabel importConfigLink = new JLabel("<html><u><font color='blue'>Import Config File</font></u></html>");
+        importConfigLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        importConfigLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("JSON Files", "json"));
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    try {
+                        String content = new String(java.nio.file.Files.readAllBytes(selectedFile.toPath()));
+                        appendToConsole("📥 Loaded config from: " + selectedFile.getAbsolutePath() + "\n", false);
+                        // parse and use if needed
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error reading config file: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+
+        JPanel leftLinksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        leftLinksPanel.add(exportLogLink);
+        leftLinksPanel.add(importConfigLink);
+
         installButton = new JButton("Install");
-        // === Build Button ===
-        installButton.setPreferredSize(new Dimension(0, 40));
-        installButton.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
-        installButton.setAlignmentX(Component.LEFT_ALIGNMENT); // Important
-        installButton.addActionListener(e -> {
-                cloneRepository(true);
-        }
-        );
+        installButton.setPreferredSize(new Dimension(200, 40));
+        installButton.addActionListener(e -> cloneRepository(true));
 
-        // Wrap the button in a transparent panel that forces full width
-        JPanel buttonWrapper = new JPanel();
-        buttonWrapper.setLayout(new BoxLayout(buttonWrapper, BoxLayout.X_AXIS));
-        buttonWrapper.setOpaque(false); // keep it visually flat
-        buttonWrapper.add(installButton);
+        JPanel topRowPanel = new JPanel(new BorderLayout());
+        topRowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
+        topRowPanel.add(leftLinksPanel, BorderLayout.WEST);
+        topRowPanel.add(installButton, BorderLayout.EAST);
 
-        panel.add(installButton);
+        panel.add(topRowPanel);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Action Panel with progress bar
         JPanel actionPanel = new JPanel(new BorderLayout(1, 10));
@@ -105,7 +152,6 @@ public class SimpleUI {
         outputScrollPane.setBorder(BorderFactory.createTitledBorder("Console Output"));
         outputScrollPane.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
         panel.add(outputScrollPane);
-
         panel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // === Switch Button ===

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import static com.example.maveninstaller.BuildRepository.*;
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.fetchGitOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchReadMeInfo.fetchReadMeInfo;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
@@ -26,13 +27,13 @@ public class CloneRepository {
 
         if (targetPath.isEmpty()) {
             setButtonsEnabled(true);
-            outputConsole.setText("❗ Please select a install path!\n");
+            appendToConsole("❗ Please select a install path!\n", true);
             return;
         }
 
         if (repoUrl.isEmpty() || !repoUrl.contains("git")) {
             setButtonsEnabled(true);
-            outputConsole.setText("❗ Invalid repository URL!\n");
+            appendToConsole("❗ Invalid repository URL!\n", true);
             return;
         }
 
@@ -47,7 +48,7 @@ public class CloneRepository {
         // Validate custom repo path if selected
         validateCustomRepo();
 
-        outputConsole.setText("⏳ Cloning repository...\n");
+        appendToConsole("⏳ Cloning repository...\n", true);
         progressBar.setIndeterminate(true);
         progressBar.repaint();
 
@@ -109,7 +110,7 @@ public class CloneRepository {
                         publish("⚠️ No Maven project found.");
                     }
 
-                    outputConsole.append("✅ Cloning completed!\n");
+                    appendToConsole("✅ Cloning completed!\n", false);
 
                 } catch (Exception e) {
                     setButtonsEnabled(true);
@@ -121,7 +122,7 @@ public class CloneRepository {
             @Override
             protected void process(List<String> chunks) {
                 for (String chunk : chunks) {
-                    outputConsole.append(chunk + "\n");
+                    appendToConsole(chunk + "\n", false);
                 }
             }
 

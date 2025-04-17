@@ -1,8 +1,12 @@
 package com.example.maveninstaller.GUI;
 
 import javax.swing.*;
+import java.io.PrintStream;
+
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 
 public class InitializeDefaults{
+    public static PrintStream logFileStream;
     public static JFrame frame;
     public static JTextField repoUrlField, targetPathField;
     public static JTextField gitLabUserNameField;
@@ -44,6 +48,6 @@ public class InitializeDefaults{
         ownerInfoArea = new JTextArea(4, 60);
         ownerInfoArea.append("");
         outputConsole = new JTextArea(6, 80);
-        outputConsole.append("");
+        appendToConsole("", false);
     }
 }

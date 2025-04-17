@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
@@ -26,7 +27,7 @@ public class LinuxInstaller {
 
         Files.writeString(Paths.get(shPath), shContent);
         new ProcessBuilder("chmod", "+x", shPath).start().waitFor();
-        outputConsole.append("✅ Created .sh launcher on Desktop: " + shPath + "\n");
+        appendToConsole("✅ Created .sh launcher on Desktop: " + shPath + "\n", false);
 
         // 🎯 2. Create .desktop file
         String iconPath = shortcutIconField.getText().trim();
@@ -48,13 +49,13 @@ public class LinuxInstaller {
 
         Files.writeString(Paths.get(desktopFilePath), desktopEntry.toString());
         new ProcessBuilder("chmod", "+x", desktopFilePath).start().waitFor();
-        outputConsole.append("📄 Created .desktop shortcut on Desktop: " + desktopFilePath + "\n");
+        appendToConsole("📄 Created .desktop shortcut on Desktop: " + desktopFilePath + "\n", false);
 
         // 📥 3. Add to Applications menu if selected
         if (pinToDockCheckbox.isSelected()) {
             String localAppPath = userHome + "/.local/share/applications/" + appName + ".desktop";
             Files.copy(Paths.get(desktopFilePath), Paths.get(localAppPath), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
-            outputConsole.append("📌 Added to Applications Menu: " + localAppPath + "\n");
+            appendToConsole("📌 Added to Applications Menu: " + localAppPath + "\n", false);
         }
     }
 }

@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitHubOwnerInfo.fetchGitHubOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitLabOwnerInfo.fetchGitLabOwnerInfo;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
@@ -21,7 +22,7 @@ public class FetchGitOwnerInfo {
         } else if (repoUrl.contains("gitlab.")) {
             fetchGitLabOwnerInfo(repoUrl);
         } else {
-            outputConsole.setText("Invalid repository URL!\n");
+            appendToConsole("Invalid repository URL!\n", true);
         }
     }
 
@@ -55,7 +56,7 @@ public class FetchGitOwnerInfo {
             }
 
             int status = connection.getResponseCode();
-//            outputConsole.append("🔎 TryFetch (" + (token == null ? "No Token" : "With Token") + ") → HTTP " + status + "\n");
+//            appendToConsole("🔎 TryFetch (" + (token == null ? "No Token" : "With Token") + ") → HTTP " + status + "\n", false);
 
             if (status != 200) return null;
 
@@ -69,7 +70,7 @@ public class FetchGitOwnerInfo {
             return response.toString();
 
         } catch (Exception e) {
-//            outputConsole.append("Error in tryFetch: " + e.getMessage() + "\n");
+//            appendToConsole("Error in tryFetch: " + e.getMessage() + "\n", false);
             return null;
         }
     }

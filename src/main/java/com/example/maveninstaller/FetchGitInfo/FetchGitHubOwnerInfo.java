@@ -9,6 +9,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class FetchGitHubOwnerInfo {
@@ -74,7 +75,7 @@ public class FetchGitHubOwnerInfo {
             @Override
             protected void process(List<String> chunks) {
                 for (String chunk : chunks) {
-                    outputConsole.append(chunk + "\n");
+                    appendToConsole(chunk + "\n", false);
                 }
             }
 

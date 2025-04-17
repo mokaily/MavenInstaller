@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class FetchGitLabOwnerInfo {
@@ -72,7 +73,7 @@ public class FetchGitLabOwnerInfo {
                     }
 
                     int status = connection.getResponseCode();
-//                    outputConsole.append("🔎 TryFetch (" + (token == null ? "No Token" : "With Token") + ") → HTTP " + status + "\n");
+//                    appendToConsole("🔎 TryFetch (" + (token == null ? "No Token" : "With Token") + ") → HTTP " + status + "\n");
 
                     if (status != HttpURLConnection.HTTP_OK) return null;
 
@@ -84,7 +85,7 @@ public class FetchGitLabOwnerInfo {
                     }
                     return new JSONObject(response.toString());
                 } catch (Exception e) {
-//                    outputConsole.append("Error in tryFetch: " + e.getMessage() + "\n");
+//                    appendToConsole("Error in tryFetch: " + e.getMessage() + "\n");
                     return null;
                 }
             }
@@ -92,7 +93,7 @@ public class FetchGitLabOwnerInfo {
             @Override
             protected void process(List<String> chunks) {
                 for (String chunk : chunks) {
-                    outputConsole.append(chunk + "\n");
+                    appendToConsole(chunk + "\n", false);
                 }
             }
 

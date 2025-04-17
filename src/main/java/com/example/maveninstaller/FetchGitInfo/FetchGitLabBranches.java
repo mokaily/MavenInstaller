@@ -8,6 +8,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.tryFetch;
 import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
@@ -29,7 +30,7 @@ class FetchGitLabBranches {
                     String projectId = getGitLabProjectId(repoUrl, accessToken);
 
                     if (projectId == null) {
-                        outputConsole.append("❌ Could not get project ID for GitLab repository!\n");
+                        appendToConsole("❌ Could not get project ID for GitLab repository!\n", false);
                         return null;
                     }
 
@@ -43,7 +44,7 @@ class FetchGitLabBranches {
                     }
 
                     if (response == null) {
-                        outputConsole.append("❌ Failed to fetch branches from GitLab repository!\n");
+                        appendToConsole("❌ Failed to fetch branches from GitLab repository!\n", false);
                         return null;
                     }
 
@@ -59,7 +60,7 @@ class FetchGitLabBranches {
                     updateBranchSelector(branches);
 
                 } catch (Exception e) {
-                    outputConsole.append("❌ Failed to fetch GitLab branches!\n" + e.getMessage() + "\n");
+                    appendToConsole("❌ Failed to fetch GitLab branches!\n" + e.getMessage() + "\n", false);
                 }
 
                 return null;
@@ -68,7 +69,7 @@ class FetchGitLabBranches {
             @Override
             protected void process(List<String> chunks) {
                 for (String chunk : chunks) {
-                    outputConsole.append(chunk + "\n");
+                    appendToConsole(chunk + "\n", false);
                 }
             }
 
@@ -102,7 +103,7 @@ class FetchGitLabBranches {
             }
 
             if (response == null) {
-                outputConsole.append("❌ Failed to fetch project ID.\n");
+                appendToConsole("❌ Failed to fetch project ID.\n", false);
                 return null;
             }
 
@@ -112,14 +113,14 @@ class FetchGitLabBranches {
 
             if (rootNode.has("id")) {
                 String id = rootNode.get("id").asText();
-                outputConsole.append("✅ Project ID: " + id + "\n");
+                appendToConsole("✅ Project ID: " + id + "\n", false);
                 return id;
             } else {
-                outputConsole.append("⚠️ 'id' field not found.\n");
+                appendToConsole("⚠️ 'id' field not found.\n", false);
             }
 
         } catch (Exception e) {
-            outputConsole.append("Exception: " + e.getMessage() + "\n");
+            appendToConsole("Exception: " + e.getMessage() + "\n", false);
         }
 
         return null;

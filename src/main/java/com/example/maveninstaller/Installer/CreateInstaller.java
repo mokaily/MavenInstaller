@@ -6,6 +6,7 @@ import java.nio.file.*;
 import java.util.List;
 
 import static com.example.maveninstaller.Cleaner.deleteAllExceptTarget;
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Installer.LinuxInstaller.createLinuxShortcut;
 import static com.example.maveninstaller.Installer.MacInstaller.createMacShortcut;
 import static com.example.maveninstaller.Installer.WindowsInstaller.createWindowsShortcut;
@@ -20,7 +21,7 @@ public class CreateInstaller {
     public static void createMavenExecShortcut(String pomPath) {
         setButtonsEnabled(false);
         Path dir = findJarInTarget(pomPath);
-        outputConsole.setText("⏳ Creating installer...\n");
+        appendToConsole("⏳ Creating installer...\n", true);
         progressBar.setIndeterminate(true);
         progressBar.repaint();
         new SwingWorker<Void, String>() {
@@ -46,7 +47,7 @@ public class CreateInstaller {
             @Override
             protected void process(List<String> chunks) {
                 for (String chunk : chunks) {
-                    outputConsole.append(chunk + "\n");
+                    appendToConsole(chunk + "\n", false);
                 }
             }
 

@@ -4,7 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
-import static com.example.maveninstaller.GUI.GitMavenCloneUI.*;
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.OperationSystemChecker.isWindows;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
@@ -17,10 +17,8 @@ public class RunMavenBuild {
             if (useCustomRepoCheckbox.isSelected()) {
                 String customRepo = customRepoPathField.getText().trim();
                 builder = new ProcessBuilder( mavenCommand, "clean", "compile", "verify", "install", "-DskipTests","-Dmaven.repo.local=" + customRepo);
-//                builder = new ProcessBuilder(mavenCommand, "clean", "install", "-DskipTests", "-Dmaven.repo.local=" + customRepo);
             } else {
                 builder = new ProcessBuilder(mavenCommand, "clean", "compile", "verify", "install", "-DskipTests");
-//                builder = new ProcessBuilder(mavenCommand, "clean", "install", "-DskipTests");
             }
 
             builder.directory(new File(targetPath + "/"));
@@ -30,11 +28,11 @@ public class RunMavenBuild {
             BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
-                outputConsole.append(line + "\n");
+                appendToConsole(line + "\n", false);
             }
             process.waitFor();
         } catch (Exception e) {
-            outputConsole.append("Error running Maven build!\n" + e.getMessage());
+            appendToConsole("Error running Maven build!\n" + e.getMessage(), false);
         }
     }
 }

@@ -6,6 +6,7 @@ import com.example.maveninstaller.GUI.SimpleUI;
 import javax.swing.*;
 
 import static com.example.maveninstaller.GUI.InitializeDefaults.initializeUIDefaults;
+import static com.example.maveninstaller.GUI.InitializeDefaults.logFileStream;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,5 +17,8 @@ public class Main {
             RequirementsChecker.checkAndDisplay();
             SimpleUI.showSimpleUI();
         });
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            if (logFileStream != null) logFileStream.close();
+        }));
     }
 }

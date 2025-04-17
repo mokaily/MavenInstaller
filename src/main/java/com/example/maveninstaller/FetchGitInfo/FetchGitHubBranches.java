@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
@@ -29,7 +30,7 @@ class FetchGitHubBranches {
                     }
                     updateBranchSelector(branches);
                 } catch (Exception e) {
-                    outputConsole.append("Failed to fetch GitHub branches!\n" + e.getMessage());
+                    appendToConsole("Failed to fetch GitHub branches!\n" + e.getMessage(), false);
                 }
 
                 return null;
@@ -38,7 +39,7 @@ class FetchGitHubBranches {
             @Override
             protected void process(List<String> chunks) {
                 for (String chunk : chunks) {
-                    outputConsole.append(chunk + "\n");
+                    appendToConsole(chunk + "\n", false);
                 }
             }
 

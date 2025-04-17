@@ -1,12 +1,17 @@
 package com.example.maveninstaller.GUI;
 
+import org.json.JSONObject;
+
 import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
 import java.awt.*;
+import java.io.File;
+import java.io.PrintStream;
 import java.util.Objects;
 
 import static com.example.maveninstaller.BuildRepository.buildRepository;
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.CreateInstaller.createInstaller;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBranches;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
@@ -242,6 +247,65 @@ public class GitMavenCloneUI {
         JScrollPane outputScrollPane = new JScrollPane(outputConsole);
         outputScrollPane.setBorder(BorderFactory.createTitledBorder("Console Output"));
         mainPanel.add(outputScrollPane);
+
+        // === import config file ===
+        JLabel importConfigLink = new JLabel("<html><u><font color='blue'>Import Config File</font></u></html>");
+        importConfigLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        importConfigLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("JSON Files", "json"));
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    File selectedFile = fileChooser.getSelectedFile();
+                    try {
+                        String content = new String(java.nio.file.Files.readAllBytes(selectedFile.toPath()));
+                        // Do something with the content
+                        appendToConsole("📥 Loaded config from: " + selectedFile.getAbsolutePath() + "\n", false);
+
+                        // Example: parse JSON if needed
+                        JSONObject json = new JSONObject(content);
+                        appendToConsole("✔ Config: " + json.toString(2) + "\n", false);
+
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error reading config file: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+
+        // === export log file ===
+        JLabel exportLogLink = new JLabel("<html><u><font color='blue'>Export Log to File</font></u></html>");
+        exportLogLink.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        exportLogLink.setAlignmentX(Component.LEFT_ALIGNMENT);
+        exportLogLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setSelectedFile(new File("gitmaven-log.txt"));
+                int result = fileChooser.showSaveDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    try {
+                        if (logFileStream != null) {
+                            logFileStream.close();
+                        }
+                        logFileStream = new PrintStream(fileChooser.getSelectedFile(), "UTF-8");
+                        appendToConsole("📁 Logging to file: " + fileChooser.getSelectedFile().getAbsolutePath() + "\n", false);
+                    } catch (Exception ex) {
+                        JOptionPane.showMessageDialog(null, "Error saving log file: " + ex.getMessage());
+                    }
+                }
+            }
+        });
+
+        JPanel linksPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        linksPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 30));
+        linksPanel.add(importConfigLink);
+        linksPanel.add(exportLogLink);
+
+        mainPanel.add(linksPanel);
+        mainPanel.add(Box.createRigidArea(new Dimension(0, 10)));
 
         // Footer Panel with switch button
         JPanel footerPanel = new JPanel(new BorderLayout());

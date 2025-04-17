@@ -1,5 +1,6 @@
 package com.example.maveninstaller.FetchGitInfo;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitHubBranches.fetchGitHubBranches;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitLabBranches.fetchGitLabBranches;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.convertSshToHttps;
@@ -8,7 +9,7 @@ import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 public class FetchGitBranches {
         public static void fetchBranches() {
         branchSelector.removeAllItems();
-        outputConsole.setText("");
+        appendToConsole("", true);
         String repoUrl = repoUrlField.getText().trim();
 
         repoUrl= convertSshToHttps(repoUrl);
@@ -19,7 +20,7 @@ public class FetchGitBranches {
         } else if (repoUrl.contains("gitlab.")) {
             fetchGitLabBranches(repoUrl);
         } else {
-            outputConsole.setText("Invalid repository URL!\n");
+            appendToConsole("Invalid repository URL!\n", true);
         }
     }
 }

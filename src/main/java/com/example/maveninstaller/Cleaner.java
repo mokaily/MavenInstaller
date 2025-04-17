@@ -4,12 +4,13 @@ import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
+import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class Cleaner {
 
     public static void deleteAllExceptTarget(File directory) {
-        outputConsole.append("🧹 Cleaning project folder...\n");
+        appendToConsole("🧹 Cleaning project folder...\n", false);
         progressBar.setIndeterminate(true);
         progressBar.repaint();
 
@@ -63,7 +64,7 @@ public class Cleaner {
             @Override
             protected void process(List<String> chunks) {
                 for (String message : chunks) {
-                    outputConsole.append(message + "\n");
+                    appendToConsole(message + "\n", false);
                 }
             }
 
@@ -71,7 +72,7 @@ public class Cleaner {
             protected void done() {
                 progressBar.setIndeterminate(false);
                 progressBar.repaint();
-                outputConsole.append("✅ Cleaning completed.\n");
+                appendToConsole("✅ Cleaning completed.\n", false);
             }
         }.execute();
     }
