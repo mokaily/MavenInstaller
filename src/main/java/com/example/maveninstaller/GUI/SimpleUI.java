@@ -1,7 +1,6 @@
 package com.example.maveninstaller.GUI;
 
 import com.example.maveninstaller.GUI.CheckRequirments.RequirementsChecker;
-import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
@@ -11,7 +10,7 @@ import java.io.PrintStream;
 import java.util.Objects;
 
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class SimpleUI {

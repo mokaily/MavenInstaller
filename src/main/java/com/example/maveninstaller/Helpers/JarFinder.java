@@ -1,8 +1,7 @@
-package com.example.maveninstaller;
+package com.example.maveninstaller.Helpers;
 
 import java.io.File;
 import java.nio.file.Path;
-import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class JarFinder {
 

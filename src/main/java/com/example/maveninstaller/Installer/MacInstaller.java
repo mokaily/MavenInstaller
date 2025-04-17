@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
 import static com.example.maveninstaller.Installer.CreateInstaller.getDirectoryPath;

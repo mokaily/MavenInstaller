@@ -1,12 +1,12 @@
-package com.example.maveninstaller;
+package com.example.maveninstaller.Helpers;
 
 import static com.example.maveninstaller.Installer.CreateInstaller.createMavenExecShortcut;
-import static com.example.maveninstaller.PomHelper.findPomXml;
-import static com.example.maveninstaller.RepositoryHelper.getRepoName;
+import static com.example.maveninstaller.Helpers.PomHelper.findPomXml;
+import static com.example.maveninstaller.Helpers.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
-public class CreateInstaller {
-    public static void createInstaller() {
+public class CreateInstallerHelper {
+    public static void createInstallerHelper() {
         String targetPath = targetPathField.getText().trim();
         String repoUrl = repoUrlField.getText().trim();
         if (repoUrl.endsWith(".git")) {

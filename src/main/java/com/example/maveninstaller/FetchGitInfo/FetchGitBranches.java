@@ -1,6 +1,6 @@
 package com.example.maveninstaller.FetchGitInfo;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitHubBranches.fetchGitHubBranches;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitLabBranches.fetchGitLabBranches;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.convertSshToHttps;

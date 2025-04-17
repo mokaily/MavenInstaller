@@ -7,7 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Installer.CreateInstaller.*;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 

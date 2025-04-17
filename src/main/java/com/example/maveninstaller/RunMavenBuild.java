@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
-import static com.example.maveninstaller.OperationSystemChecker.isWindows;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.OperationSystemChecker.isWindows;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class RunMavenBuild {

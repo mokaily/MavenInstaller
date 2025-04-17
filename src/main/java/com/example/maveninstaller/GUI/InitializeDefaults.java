@@ -3,7 +3,7 @@ package com.example.maveninstaller.GUI;
 import javax.swing.*;
 import java.io.PrintStream;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 
 public class InitializeDefaults{
     public static PrintStream logFileStream;

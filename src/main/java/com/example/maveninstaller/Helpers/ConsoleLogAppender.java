@@ -1,4 +1,4 @@
-package com.example.maveninstaller;
+package com.example.maveninstaller.Helpers;
 
 import static com.example.maveninstaller.GUI.InitializeDefaults.logFileStream;
 import static com.example.maveninstaller.GUI.InitializeDefaults.outputConsole;

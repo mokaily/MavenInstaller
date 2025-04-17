@@ -8,7 +8,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.tryFetch;
 import static com.example.maveninstaller.GUI.UpdateBranchSelector.updateBranchSelector;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;

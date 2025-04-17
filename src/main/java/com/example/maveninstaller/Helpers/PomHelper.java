@@ -1,4 +1,4 @@
-package com.example.maveninstaller;
+package com.example.maveninstaller.Helpers;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 

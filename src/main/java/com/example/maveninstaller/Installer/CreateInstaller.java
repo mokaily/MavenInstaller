@@ -5,14 +5,14 @@ import java.io.File;
 import java.nio.file.*;
 import java.util.List;
 
-import static com.example.maveninstaller.Cleaner.deleteAllExceptTarget;
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.Cleaner.deleteAllExceptTarget;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Installer.LinuxInstaller.createLinuxShortcut;
 import static com.example.maveninstaller.Installer.MacInstaller.createMacShortcut;
 import static com.example.maveninstaller.Installer.WindowsInstaller.createWindowsShortcut;
-import static com.example.maveninstaller.JarFinder.findJarInTarget;
-import static com.example.maveninstaller.OperationSystemChecker.*;
-import static com.example.maveninstaller.PomHelper.fetchAppName;
+import static com.example.maveninstaller.Helpers.JarFinder.findJarInTarget;
+import static com.example.maveninstaller.Helpers.OperationSystemChecker.*;
+import static com.example.maveninstaller.Helpers.PomHelper.fetchAppName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 

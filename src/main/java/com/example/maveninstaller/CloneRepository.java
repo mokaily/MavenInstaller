@@ -7,13 +7,13 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import static com.example.maveninstaller.BuildRepository.*;
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.fetchGitOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchReadMeInfo.fetchReadMeInfo;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
-import static com.example.maveninstaller.PomHelper.findPomXml;
-import static com.example.maveninstaller.PomHelper.fetchAppName;
-import static com.example.maveninstaller.RepositoryHelper.*;
+import static com.example.maveninstaller.Helpers.PomHelper.findPomXml;
+import static com.example.maveninstaller.Helpers.PomHelper.fetchAppName;
+import static com.example.maveninstaller.Helpers.RepositoryHelper.*;
 import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 public class CloneRepository {

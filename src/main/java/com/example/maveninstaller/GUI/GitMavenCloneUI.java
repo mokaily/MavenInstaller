@@ -11,12 +11,12 @@ import java.util.Objects;
 
 import static com.example.maveninstaller.BuildRepository.buildRepository;
 import static com.example.maveninstaller.CloneRepository.cloneRepository;
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
-import static com.example.maveninstaller.CreateInstaller.createInstaller;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.CreateInstallerHelper.createInstallerHelper;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBranches;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
-import static com.example.maveninstaller.OperationSystemChecker.isMac;
-import static com.example.maveninstaller.OperationSystemChecker.isWindows;
+import static com.example.maveninstaller.Helpers.OperationSystemChecker.isMac;
+import static com.example.maveninstaller.Helpers.OperationSystemChecker.isWindows;
 
 public class GitMavenCloneUI {
 
@@ -212,7 +212,7 @@ public class GitMavenCloneUI {
         clonePanel.add(buildButton);
 
         installButtonAdvanced = new JButton("Create Installer");
-        installButtonAdvanced.addActionListener(e -> createInstaller());
+        installButtonAdvanced.addActionListener(e -> createInstallerHelper());
         clonePanel.add(installButtonAdvanced);
 
         // Action Panel with progress bar

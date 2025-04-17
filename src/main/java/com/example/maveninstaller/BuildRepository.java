@@ -3,11 +3,11 @@ package com.example.maveninstaller;
 import javax.swing.*;
 import java.util.List;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
-import static com.example.maveninstaller.CreateInstaller.createInstaller;
-import static com.example.maveninstaller.PomHelper.findPomXml;
-import static com.example.maveninstaller.RepositoryHelper.getRepoName;
-import static com.example.maveninstaller.RepositoryHelper.validateCustomRepo;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.CreateInstallerHelper.createInstallerHelper;
+import static com.example.maveninstaller.Helpers.PomHelper.findPomXml;
+import static com.example.maveninstaller.Helpers.RepositoryHelper.getRepoName;
+import static com.example.maveninstaller.Helpers.RepositoryHelper.validateCustomRepo;
 import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
@@ -67,7 +67,7 @@ public class BuildRepository {
                 });
                 if (isOneFunction) {
                     setButtonsEnabled(false);
-                    createInstaller();
+                    createInstallerHelper();
                 }else{
                     setButtonsEnabled(true);
                     progressBar.setIndeterminate(false);

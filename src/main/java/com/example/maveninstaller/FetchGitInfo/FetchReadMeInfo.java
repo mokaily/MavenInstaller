@@ -5,7 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
-import static com.example.maveninstaller.RepositoryHelper.getRepoName;
+import static com.example.maveninstaller.Helpers.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class FetchReadMeInfo {

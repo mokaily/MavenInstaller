@@ -1,8 +1,8 @@
-package com.example.maveninstaller;
+package com.example.maveninstaller.Helpers;
 
 import java.io.File;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class RepositoryHelper {

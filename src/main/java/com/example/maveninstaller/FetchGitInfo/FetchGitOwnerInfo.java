@@ -5,7 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import static com.example.maveninstaller.ConsoleLogAppender.appendToConsole;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitHubOwnerInfo.fetchGitHubOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitLabOwnerInfo.fetchGitLabOwnerInfo;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;

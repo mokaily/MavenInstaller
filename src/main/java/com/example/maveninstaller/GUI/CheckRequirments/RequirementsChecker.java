@@ -6,7 +6,7 @@ import java.awt.*;
 import java.util.Objects;
 
 import static com.example.maveninstaller.GUI.CheckRequirments.CheckerHelper.checkCommand;
-import static com.example.maveninstaller.OperationSystemChecker.isWindows;
+import static com.example.maveninstaller.Helpers.OperationSystemChecker.isWindows;
 
 public class RequirementsChecker {
     public static void checkAndDisplay() {
