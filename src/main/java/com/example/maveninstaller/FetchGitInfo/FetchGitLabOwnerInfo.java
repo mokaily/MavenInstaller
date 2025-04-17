@@ -17,6 +17,7 @@ import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 public class FetchGitLabOwnerInfo {
     public static void fetchGitLabOwnerInfo(String repoUrl) {
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
         progressBar.repaint();
         SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching GitLab owner contact info...\n"));
 

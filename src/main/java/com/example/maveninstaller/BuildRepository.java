@@ -27,6 +27,7 @@ public class BuildRepository {
 
         appendToConsole("⏳ Cloning repository...\n", true);
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
         progressBar.repaint();
 
         String finalRepoUrl = repoUrl;
@@ -39,17 +40,17 @@ public class BuildRepository {
                     String pomPath = findPomXml(fullPath);
 
                     if (pomPath != null) {
-                        publish("✅ Maven project detected.");
-                        publish(pomPath);
+                        appendToConsole("✅ Maven project detected.", false);
+                        appendToConsole(pomPath, false);
                         runMavenBuild(pomPath);
                     } else {
-                        publish("⚠️ No Maven project found.");
+                        appendToConsole("⚠️ No Maven project found.", false);
                     }
 
                     appendToConsole("✅ Building completed!\n", false);
                 } catch (Exception e) {
                     setButtonsEnabled(true);
-                    publish("❌ Error building repository:\n" + e.getMessage());
+                    appendToConsole("❌ Error building repository:\n" + e.getMessage(), false);
                 }
                 return null;
             }

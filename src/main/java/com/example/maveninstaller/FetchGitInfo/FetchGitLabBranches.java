@@ -17,6 +17,7 @@ class FetchGitLabBranches {
 
     public static void fetchGitLabBranches(String repoUrl) {
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
         progressBar.repaint();
         new SwingWorker<Void, String>() {
             @Override

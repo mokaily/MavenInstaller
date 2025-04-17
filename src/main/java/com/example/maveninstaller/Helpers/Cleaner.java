@@ -12,6 +12,7 @@ public class Cleaner {
     public static void deleteAllExceptTarget(File directory) {
         appendToConsole("🧹 Cleaning project folder...\n", false);
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
         progressBar.repaint();
 
         new SwingWorker<Void, String>() {
@@ -20,7 +21,7 @@ public class Cleaner {
                 try{
                     File[] files = directory.listFiles();
                     if (files == null) {
-                        publish("⚠️ Directory is empty or inaccessible.");
+                        appendToConsole("⚠️ Directory is empty or inaccessible.", false);
                         return null;
                     }
 
@@ -28,7 +29,7 @@ public class Cleaner {
 
                     for (File file : files) {
                         if (file.getName().equals("target")) {
-                            publish("➡️ Skipped: " + file.getName());
+                            appendToConsole("➡️ Skipped: " + file.getName(), false);
                             continue;
                         }
 
@@ -36,15 +37,15 @@ public class Cleaner {
                             File destination = new File(targetDir, file.getName());
                             boolean success = file.renameTo(destination);
                             if (success) {
-                                publish("📦 Moved: " + file.getName() + " → target/");
+                                appendToConsole("📦 Moved: " + file.getName() + " → target/", false);
                             } else {
-                                publish("⚠️ Failed to move: " + file.getName());
+                                appendToConsole("⚠️ Failed to move: " + file.getName(), false);
                             }
                             continue;
                         }
 
                         deleteRecursively(file);
-                        publish("🗑️ Deleted: " + file.getName());
+                        appendToConsole("🗑️ Deleted: " + file.getName(), false);
                     }
                 }catch (Exception e){
                     progressBar.setIndeterminate(false);

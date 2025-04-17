@@ -9,6 +9,8 @@ import static com.example.maveninstaller.GUI.InitializeDefaults.initializeUIDefa
 import static com.example.maveninstaller.GUI.InitializeDefaults.logFileStream;
 
 public class Main {
+    public static StringBuilder logBuffer = new StringBuilder();
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             //set defaults

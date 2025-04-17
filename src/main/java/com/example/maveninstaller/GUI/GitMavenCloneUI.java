@@ -6,7 +6,8 @@ import javax.swing.*;
 import javax.swing.plaf.ProgressBarUI;
 import java.awt.*;
 import java.io.File;
-import java.io.PrintStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Objects;
 
 import static com.example.maveninstaller.BuildRepository.buildRepository;
@@ -17,6 +18,7 @@ import static com.example.maveninstaller.FetchGitInfo.FetchGitBranches.fetchBran
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.Helpers.OSChecker.isMac;
 import static com.example.maveninstaller.Helpers.OSChecker.isWindows;
+import static com.example.maveninstaller.Main.logBuffer;
 
 public class GitMavenCloneUI {
     public void createAndShowGUI() {
@@ -274,13 +276,12 @@ public class GitMavenCloneUI {
                 int result = fileChooser.showSaveDialog(null);
                 if (result == JFileChooser.APPROVE_OPTION) {
                     try {
-                        if (logFileStream != null) {
-                            logFileStream.close();
-                        }
-                        logFileStream = new PrintStream(fileChooser.getSelectedFile(), "UTF-8");
-                        appendToConsole("📁 Logging to file: " + fileChooser.getSelectedFile().getAbsolutePath() + "\n", false);
-                    } catch (Exception ex) {
-                        JOptionPane.showMessageDialog(null, "Error saving log file: " + ex.getMessage());
+                        FileWriter writer = new FileWriter(fileChooser.getSelectedFile(), false);
+                        writer.write(logBuffer.toString());
+                        writer.close();
+                        appendToConsole("📁 Log saved to: " + fileChooser.getSelectedFile().getAbsolutePath() + "\n", false);
+                    } catch (IOException ex) {
+                        JOptionPane.showMessageDialog(null, "❌ Failed to save log: " + ex.getMessage());
                     }
                 }
             }

@@ -23,6 +23,7 @@ public class CreateInstaller {
         Path dir = findJarInTarget(pomPath);
         appendToConsole("⏳ Creating installer...\n", true);
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
         progressBar.repaint();
         new SwingWorker<Void, String>() {
             @Override

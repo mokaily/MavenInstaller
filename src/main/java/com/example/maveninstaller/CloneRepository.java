@@ -20,7 +20,9 @@ import static com.example.maveninstaller.Helpers.RepositoryHelper.*;
 import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 public class CloneRepository {
+    private static boolean cloneSuccess = false;
     public static void cloneRepository(boolean isOneFunction) {
+        cloneSuccess = false;
         setButtonsEnabled(false);
         String repoUrl = repoUrlField.getText().trim();
         if (repoUrl.endsWith(".git")) {
@@ -53,6 +55,7 @@ public class CloneRepository {
 
         appendToConsole("⏳ Cloning repository...\n", true);
         progressBar.setIndeterminate(true);
+        progressBar.setVisible(true);
         progressBar.repaint();
 
         String finalBranch = branch;
@@ -68,12 +71,12 @@ public class CloneRepository {
                     // Check if the project directory already exists
                     File projectDir = new File(fullPath);
                     if (projectDir.exists()) {
-                        publish("⚠️ Project already exists. Deleting...");
+                        appendToConsole("⚠️ Project already exists. Deleting...", false);
                         try {
                             FileUtils.deleteDirectory(projectDir);
-                            publish("🗑️ Project folder deleted successfully.");
+                            appendToConsole("🗑️ Project folder deleted successfully.", false);
                         } catch (IOException e) {
-                            publish("❌ Deletion failed: " + e.getMessage());
+                            appendToConsole("❌ Deletion failed: " + e.getMessage(), false);
                             return null;
                         }
                     }
@@ -100,10 +103,15 @@ public class CloneRepository {
                     BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
                     String line;
                     while ((line = reader.readLine()) != null) {
-                        publish(line);
+                        appendToConsole(line, false);
                     }
-                    process.waitFor();
-
+                    int exitCode = process.waitFor();
+                    if (exitCode == 0) {
+                        cloneSuccess = true;
+                    } else {
+                        cloneSuccess = false;
+                        appendToConsole("❌ Git clone failed with exit code: " + exitCode, false);
+                    }
 
                     if (pomPath != null) {
                         applicationNameField.setText(fetchAppName(pomPath));
@@ -112,17 +120,18 @@ public class CloneRepository {
                     }
 
                     if (pomPath != null) {
-                        publish("✅ Maven project detected.");
-                        publish(pomPath);
+                        appendToConsole("✅ Maven project detected.", false);
+                        appendToConsole(pomPath, false);
                     } else {
-                        publish("⚠️ No Maven project found.");
+                        appendToConsole("⚠️ No Maven project found.", false);
                     }
 
                     appendToConsole("✅ Cloning completed!\n", false);
 
                 } catch (Exception e) {
+                    cloneSuccess = false;
                     setButtonsEnabled(true);
-                    publish("❌ Error cloning repository:\n" + e.getMessage());
+                    appendToConsole("❌ Error cloning repository:\n" + e.getMessage(), false);
                 }
                 return null;
             }
@@ -138,7 +147,7 @@ public class CloneRepository {
             protected void done() {
                 SwingUtilities.invokeLater(() -> {
                 });
-                if (isOneFunction) {
+                if (isOneFunction && cloneSuccess) {
                     setButtonsEnabled(false);
                     buildRepository(isOneFunction);
                 }else{
