@@ -11,6 +11,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
@@ -19,7 +20,7 @@ public class FetchGitLabOwnerInfo {
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);
         progressBar.repaint();
-        SwingUtilities.invokeLater(() -> ownerInfoArea.setText("Fetching GitLab owner contact info...\n"));
+        SwingUtilities.invokeLater(() -> ownerInfoArea.setText(Fetch_Contact_Start));
 
         final JSONObject[] jsonResponse = {null};
         new SwingWorker<Void, String>() {
@@ -49,11 +50,11 @@ public class FetchGitLabOwnerInfo {
                         SwingUtilities.invokeLater(() -> ownerInfoArea.append("Username: " + ownerUsername + "\n"));
                         SwingUtilities.invokeLater(() -> ownerInfoArea.append("URL: " + ownerUrl + "\n"));
                     } else {
-                        SwingUtilities.invokeLater(() -> ownerInfoArea.append("❌ Failed to fetch GitLab owner info.\n"));
+                        SwingUtilities.invokeLater(() -> ownerInfoArea.append(Fetch_Contact_Failed));
                     }
 
                 } catch (Exception e) {
-                    SwingUtilities.invokeLater(() -> ownerInfoArea.append("Error fetching GitLab owner contact info.\n"));
+                    SwingUtilities.invokeLater(() -> ownerInfoArea.append(Fetch_Contact_Error));
                 }
                 return null;
             }

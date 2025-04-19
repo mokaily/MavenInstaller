@@ -5,6 +5,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import static com.example.maveninstaller.Constants.Invalid_URL;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitHubOwnerInfo.fetchGitHubOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitLabOwnerInfo.fetchGitLabOwnerInfo;
@@ -22,7 +23,7 @@ public class FetchGitOwnerInfo {
         } else if (repoUrl.contains("gitlab.")) {
             fetchGitLabOwnerInfo(repoUrl);
         } else {
-            appendToConsole("Invalid repository URL!\n", true);
+            appendToConsole(Invalid_URL, true);
         }
     }
 

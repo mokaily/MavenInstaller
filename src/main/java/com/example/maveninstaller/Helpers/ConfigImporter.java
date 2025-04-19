@@ -6,6 +6,8 @@ import javax.swing.*;
 import java.io.File;
 import java.nio.file.Files;
 
+import static com.example.maveninstaller.Constants.Config_Imported;
+import static com.example.maveninstaller.Constants.Config_Not_Imported;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Helpers.OSChecker.isLinux;
@@ -51,10 +53,10 @@ public class ConfigImporter {
                 }
             }
 
-            appendToConsole("✅ Config imported successfully from: " + jsonFile.getAbsolutePath() + "\n", false);
+            appendToConsole(Config_Imported + jsonFile.getAbsolutePath() + "\n", false);
 
         } catch (Exception ex) {
-            JOptionPane.showMessageDialog(null, "❌ Failed to import config: " + ex.getMessage());
+            JOptionPane.showMessageDialog(null, Config_Not_Imported + ex.getMessage());
         }
     }
 }

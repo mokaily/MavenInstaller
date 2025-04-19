@@ -4,13 +4,14 @@ import javax.swing.*;
 import java.io.File;
 import java.util.List;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
 public class Cleaner {
 
     public static void deleteAllExceptTarget(File directory) {
-        appendToConsole("🧹 Cleaning project folder...\n", false);
+        appendToConsole(Clean_Start, false);
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);
         progressBar.repaint();
@@ -21,7 +22,7 @@ public class Cleaner {
                 try{
                     File[] files = directory.listFiles();
                     if (files == null) {
-                        appendToConsole("⚠️ Directory is empty or inaccessible.", false);
+                        appendToConsole(Dir_Is_Empty, false);
                         return null;
                     }
 
@@ -29,7 +30,7 @@ public class Cleaner {
 
                     for (File file : files) {
                         if (file.getName().equals("target")) {
-                            appendToConsole("➡️ Skipped: " + file.getName(), false);
+                            appendToConsole(Skipped + file.getName(), false);
                             continue;
                         }
 
@@ -37,15 +38,15 @@ public class Cleaner {
                             File destination = new File(targetDir, file.getName());
                             boolean success = file.renameTo(destination);
                             if (success) {
-                                appendToConsole("📦 Moved: " + file.getName() + " → target/", false);
+                                appendToConsole(Moved + file.getName() + " → target/", false);
                             } else {
-                                appendToConsole("⚠️ Failed to move: " + file.getName(), false);
+                                appendToConsole(Failed_To_Move + file.getName(), false);
                             }
                             continue;
                         }
 
                         deleteRecursively(file);
-                        appendToConsole("🗑️ Deleted: " + file.getName(), false);
+                        appendToConsole(Deleted + file.getName(), false);
                     }
                 }catch (Exception e){
                     progressBar.setIndeterminate(false);
@@ -78,7 +79,7 @@ public class Cleaner {
             protected void done() {
                 progressBar.setIndeterminate(false);
                 progressBar.repaint();
-                appendToConsole("✅ Cleaning completed.\n", false);
+                appendToConsole(Clean_Completed, false);
             }
         }.execute();
     }

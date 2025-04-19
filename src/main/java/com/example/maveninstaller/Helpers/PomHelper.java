@@ -10,6 +10,9 @@ import java.nio.file.*;
 import java.util.stream.Stream;
 import java.util.Optional;
 
+import static com.example.maveninstaller.Constants.Error_Title;
+import static com.example.maveninstaller.Constants.Pom_Error;
+import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 public class PomHelper {
@@ -26,7 +29,7 @@ public class PomHelper {
 
         } catch (IOException e) {
             setButtonsEnabled(true);
-            System.err.println("Error: " + e.getMessage());
+            appendToConsole(Error_Title + ": " + e.getMessage(), false);
             return null;
         }
     }
@@ -47,7 +50,7 @@ public class PomHelper {
             return name != null ? name : fetchTagValue("artifactId", projectElement);
 
         } catch (Exception e) {
-            System.err.println("Error reading pom.xml: " + e.getMessage());
+            appendToConsole(Pom_Error + e.getMessage(), false);
             return null;
         }
     }

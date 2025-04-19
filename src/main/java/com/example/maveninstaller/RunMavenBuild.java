@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
+import static com.example.maveninstaller.Constants.Error_Maven_Build;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Helpers.OSChecker.isWindows;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
@@ -32,7 +33,7 @@ public class RunMavenBuild {
             }
             process.waitFor();
         } catch (Exception e) {
-            appendToConsole("Error running Maven build!\n" + e.getMessage(), false);
+            appendToConsole(Error_Maven_Build + e.getMessage(), false);
         }
     }
 }

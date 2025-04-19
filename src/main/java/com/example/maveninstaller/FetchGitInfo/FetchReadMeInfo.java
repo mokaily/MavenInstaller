@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
@@ -15,7 +16,7 @@ public class FetchReadMeInfo {
             projectPath = projectPath.substring(0, projectPath.length() - 4);
         }
 
-        StringBuilder projectInfo = new StringBuilder("Project Information:\n");
+        StringBuilder projectInfo = new StringBuilder(Project_Info);
         projectInfo.append(projectPath);
 
         // Display the README content if it exists
@@ -28,10 +29,10 @@ public class FetchReadMeInfo {
                 }
                 readmeArea.append(String.valueOf(projectInfo));
             } catch (IOException e) {
-                readmeArea.append("Could not read README.md\n");
+                readmeArea.append(ReadMe_Read_Failed);
             }
         } else {
-            readmeArea.append("README.md not found.\n");
+            readmeArea.append(ReadMe_Not_Found);
         }
     }
 
@@ -46,7 +47,7 @@ public class FetchReadMeInfo {
         if (files == null) return null;
 
         for (File file : files) {
-            if (file.isFile() && file.getName().equalsIgnoreCase("README.md")) {
+            if (file.isFile() && file.getName().equalsIgnoreCase(ReadMe)) {
                 return file;
             }
         }

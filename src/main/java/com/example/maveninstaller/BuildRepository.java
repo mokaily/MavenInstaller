@@ -3,12 +3,14 @@ package com.example.maveninstaller;
 import javax.swing.*;
 import java.util.List;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Helpers.CreateInstallerHelper.createInstallerHelper;
 import static com.example.maveninstaller.Helpers.PomHelper.findPomXml;
 import static com.example.maveninstaller.Helpers.RepositoryHelper.getRepoName;
 import static com.example.maveninstaller.Helpers.RepositoryHelper.validateCustomRepo;
-import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;import static com.example.maveninstaller.GUI.InitializeDefaults.*;
+import static com.example.maveninstaller.RunMavenBuild.runMavenBuild;
+import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.UXEnhancer.setButtonsEnabled;
 
 
@@ -40,17 +42,17 @@ public class BuildRepository {
                     String pomPath = findPomXml(fullPath);
 
                     if (pomPath != null) {
-                        appendToConsole("✅ Maven project detected.", false);
+                        appendToConsole(Maven_Detected, false);
                         appendToConsole(pomPath, false);
                         runMavenBuild(pomPath);
                     } else {
-                        appendToConsole("⚠️ No Maven project found.", false);
+                        appendToConsole(Maven_Not_Found, false);
                     }
 
-                    appendToConsole("✅ Building completed!\n", false);
+                    appendToConsole(Build_Completed, false);
                 } catch (Exception e) {
                     setButtonsEnabled(true);
-                    appendToConsole("❌ Error building repository:\n" + e.getMessage(), false);
+                    appendToConsole(Build_Error + e.getMessage(), false);
                 }
                 return null;
             }

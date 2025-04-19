@@ -37,11 +37,11 @@ public class CreateInstaller {
                     } else if (isLinux()) {
                         createLinuxShortcut(dir, pomPath);
                     } else {
-                        JOptionPane.showMessageDialog(null, Unsupported_OS, Error, JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, Unsupported_OS, Error_Title, JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception e) {
                     setButtonsEnabled(true);
-                    JOptionPane.showMessageDialog(null, Error_Creating_Shortcut + e.getMessage(), Error, JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, Error_Creating_Shortcut + e.getMessage(), Error_Title, JOptionPane.ERROR_MESSAGE);
                 }
                 return null;
             }

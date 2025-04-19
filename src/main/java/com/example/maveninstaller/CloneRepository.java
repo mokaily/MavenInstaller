@@ -10,6 +10,7 @@ import java.io.InputStreamReader;
 import java.util.List;
 
 import static com.example.maveninstaller.BuildRepository.*;
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.FetchGitInfo.FetchGitOwnerInfo.fetchGitOwnerInfo;
 import static com.example.maveninstaller.FetchGitInfo.FetchReadMeInfo.fetchReadMeInfo;
@@ -32,13 +33,13 @@ public class CloneRepository {
 
         if (targetPath.isEmpty()) {
             setButtonsEnabled(true);
-            appendToConsole("❗ Please select a install path!\n", true);
+            appendToConsole(Select_Install_Path, true);
             return;
         }
 
         if (repoUrl.isEmpty() || !repoUrl.contains("git")) {
             setButtonsEnabled(true);
-            appendToConsole("❗ Invalid repository URL!\n", true);
+            appendToConsole(Invalid_Repository, true);
             return;
         }
 
@@ -53,7 +54,7 @@ public class CloneRepository {
         // Validate custom repo path if selected
         validateCustomRepo();
 
-        appendToConsole("⏳ Cloning repository...\n", true);
+        appendToConsole(Cloning_Repository, true);
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);
         progressBar.repaint();
@@ -71,12 +72,12 @@ public class CloneRepository {
                     // Check if the project directory already exists
                     File projectDir = new File(fullPath);
                     if (projectDir.exists()) {
-                        appendToConsole("⚠️ Project already exists. Deleting...", false);
+                        appendToConsole(Project_Exist, false);
                         try {
                             FileUtils.deleteDirectory(projectDir);
-                            appendToConsole("🗑️ Project folder deleted successfully.", false);
+                            appendToConsole(Project_Deleted, false);
                         } catch (IOException e) {
-                            appendToConsole("❌ Deletion failed: " + e.getMessage(), false);
+                            appendToConsole(Project_Deleted_Failed + e.getMessage(), false);
                             return null;
                         }
                     }
@@ -110,7 +111,7 @@ public class CloneRepository {
                         cloneSuccess = true;
                     } else {
                         cloneSuccess = false;
-                        appendToConsole("❌ Git clone failed with exit code: " + exitCode, false);
+                        appendToConsole(Clone_Failed + exitCode, false);
                     }
 
                     if (pomPath != null) {
@@ -120,18 +121,18 @@ public class CloneRepository {
                     }
 
                     if (pomPath != null) {
-                        appendToConsole("✅ Maven project detected.", false);
+                        appendToConsole(Maven_Detected, false);
                         appendToConsole(pomPath, false);
                     } else {
-                        appendToConsole("⚠️ No Maven project found.", false);
+                        appendToConsole(Maven_Not_Found, false);
                     }
 
-                    appendToConsole("✅ Cloning completed!\n", false);
+                    appendToConsole(Clone_Completed, false);
 
                 } catch (Exception e) {
                     cloneSuccess = false;
                     setButtonsEnabled(true);
-                    appendToConsole("❌ Error cloning repository:\n" + e.getMessage(), false);
+                    appendToConsole(Clone_Error + e.getMessage(), false);
                 }
                 return null;
             }
