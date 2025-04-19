@@ -4,11 +4,11 @@ GitMaven Installer is a cross-platform desktop application designed to simplify 
 
 ## Developer Setup Notes
 
-To ensure the JAR is runnable with all dependencies included:
+If the **Maven project you are cloning** does not already package its dependencies into a single runnable JAR, you’ll need to add the following plugin to its `pom.xml`. This ensures the output is a "fat JAR" that includes all required libraries, making shortcut execution possible on the target system.
 
 ### ✅ Maven Assembly Plugin
 
-Add the following plugin configuration to your `pom.xml` to bundle all dependencies into a single runnable JAR:
+Add this configuration inside the cloned project's `pom.xml` to bundle all dependencies into a single JAR:
 
 ```xml
 <plugin>
@@ -60,7 +60,14 @@ Add the following plugin configuration to your `pom.xml` to bundle all dependenc
 - 📄 Fetch and display project owner info (GitHub/GitLab)
 - 🔹 Optional custom Maven repository path
 - ⚙ Create OS-specific desktop shortcuts for the built JAR
+    - **Windows**: `.lnk` file on Desktop and optionally Start Menu
+    - **macOS**: `.app` bundle with optional Dock pinning
+    - **Linux**: `.desktop` file or Flatpak manifest for Applications menu
 - 🌟 Custom icon and application name support
+- 🧩 **Import Configuration Files** to quickly restore previously saved setup
+- 🧾 **Export Console Logs** for debugging or sharing build/install output
+- 🧠 User-friendly and guided UI to simplify setup for non-technical users
+
 
 ## Requirements
 
@@ -82,26 +89,49 @@ mvn clean install
 3. Run the application:
 
 ```bash
-java -jar target/gitmaven-installer.jar
+java -jar target/MavenInstaller-2.0-SNAPSHOT.jar
 ```
 
 ## Usage
 
-1. **Launch the Application**: Run the built JAR file.
-2. **Check Requirements**: The application checks for Java, Git, and Maven installations.
-3. **Enter Repository URL**: Paste the GitHub/GitLab repository URL.
-4. **Fetch Branches**: Click to fetch available branches.
-5. **Set Install Path**: Choose where the installer should be install.
-6. **Custom Maven Repo (Optional)**: Specify a local repository path.
-7. **Clone & Build**:
-    - Clone the repository.
-    - Automatically detect Maven project and build it.
-8. **Create Shortcut**:
-    - Set application name and icon.
-    - Create a shortcut:
-        - Windows: `.lnk` in Desktop and optionally Start Menu
-        - macOS: `.app` bundle in `~/Applications` with Dock pin option
-        - Linux: `.desktop` file or Flatpak package
+1. **Launch the Application**  
+   Run the built JAR file to start the graphical interface.
+
+2. **Check Requirements**  
+   The application verifies if Java, Git, and Maven are installed, and provides version info with helpful download links if anything is missing.
+
+3. **Simple and Interactive UI**  
+   GitMaven Installer provides a clean and intuitive Java Swing-based interface that guides you through each step without needing command-line experience.
+
+4. **Enter Repository URL**  
+   Paste the GitHub or GitLab repository URL (supports HTTPS and SSH formats).
+
+5. **Fetch Branches**  
+   Click "Fetch Branches" to retrieve and select from available Git branches.
+
+6. **Set Install Path**  
+   Select the folder where you want to clone and build the project.
+
+7. **Custom Maven Repo (Optional)**  
+   Specify a custom local Maven repository path if you prefer not to use the default `~/.m2`.
+
+8. **Clone & Build**
+    - Clone the selected branch of the repository.
+    - Automatically detect if it's a Maven project and build it using `mvn install`.
+    - Extracts and displays the `README.md` content and project owner info.
+
+9. **Create Shortcut**
+    - Define the application name and optional icon.
+    - OS-specific shortcut creation:
+        - **Windows**: `.lnk` file on Desktop and optionally Start Menu (via `mslinks`)
+        - **macOS**: `.app` bundle in `~/Applications` with optional Dock pinning (via AppleScript)
+        - **Linux**: `.desktop` launcher or Flatpak package in `~/.local/share/applications`
+
+10. **Export Logs**  
+    Save the build and execution logs from the console output panel for debugging or reference.
+
+11. **Import Configuration Files**  
+    Load previously saved configuration values to pre-fill input fields and streamline repetitive setup.
 
 ## Architecture
 
