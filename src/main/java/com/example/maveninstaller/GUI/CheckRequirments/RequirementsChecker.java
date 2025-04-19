@@ -5,6 +5,7 @@ import javax.swing.event.HyperlinkEvent;
 import java.awt.*;
 import java.util.Objects;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.GUI.CheckRequirments.CheckerHelper.checkCommand;
 import static com.example.maveninstaller.Helpers.OSChecker.isWindows;
 
@@ -13,8 +14,8 @@ public class RequirementsChecker {
         JEditorPane outputPane = new JEditorPane();
         outputPane.setContentType("text/html");
         outputPane.setEditable(false);
-        outputPane.setFont(new Font("Consolas", Font.PLAIN, 13));
-        outputPane.setText("<html><body><p>\uD83D\uDD27 Checking system requirements...</p></body></html>");
+        outputPane.setFont(new Font(Consolas, Font.PLAIN, 13));
+        outputPane.setText("<html><body><p>\uD83D\uDD27 " + Checking_System_Requirements + "</p></body></html>");
 
         outputPane.addHyperlinkListener(e -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
@@ -28,15 +29,15 @@ public class RequirementsChecker {
 
         StringBuilder result = new StringBuilder();
         result.append("<html><body style='font-family:consolas;font-size:12pt;'>");
-        result.append("<h3>\ud83d\udd27 System Requirements Check</h3><hr><br>");
+        result.append("<h3>\ud83d\udd27 " + System_Requirements_Check + "</h3><hr><br>");
 
         boolean allToolsAvailable = true;
 
         String mavenCommand = isWindows() ? "mvn.cmd" : "mvn";
 
-        boolean javaOk = checkCommand(new String[]{"java", "-version"}, "Java", result, "24", "https://www.oracle.com/de/java/technologies/downloads/#java" + "24");
-        boolean mavenOk = checkCommand(new String[]{mavenCommand, "-version"}, "Maven", result, "3.10", "https://maven.apache.org/download.cgi");
-        boolean gitOk = checkCommand(new String[]{"git", "--version"}, "Git", result, "2.49.0", "https://git-scm.com/downloads");
+        boolean javaOk = checkCommand(new String[]{"java", "-version"}, Java, result, LatestJavaVersion, JavaDownloadAddress + LatestJavaVersion);
+        boolean mavenOk = checkCommand(new String[]{mavenCommand, "-version"}, Maven, result, LatestMavenVersion, MavenDownloadAddress);
+        boolean gitOk = checkCommand(new String[]{"git", "--version"}, Git, result, LatestGitVersion, GitDownloadAddress);
 
         allToolsAvailable = javaOk && mavenOk && gitOk;
 
@@ -47,33 +48,33 @@ public class RequirementsChecker {
         scrollPane.setPreferredSize(new Dimension(700, 400));
 
         if (allToolsAvailable) {
-            JCheckBox agreeCheckBox = new JCheckBox("I agree to the Terms and Conditions");
-            JButton viewTermsButton = new JButton("View Terms");
+            JCheckBox agreeCheckBox = new JCheckBox(TermsAgree);
+            JButton viewTermsButton = new JButton(View_Terms);
             Object[] message = {scrollPane, viewTermsButton, agreeCheckBox};
 
             final JOptionPane optionPane = new JOptionPane(message, JOptionPane.PLAIN_MESSAGE, JOptionPane.OK_CANCEL_OPTION);
-            JDialog dialog = optionPane.createDialog("System Check Results");
-            ImageIcon icon = new ImageIcon(Objects.requireNonNull(RequirementsChecker.class.getResource("/GitMavenLogoSmall.png")));
+            JDialog dialog = optionPane.createDialog(System_Check_Results);
+            ImageIcon icon = new ImageIcon(Objects.requireNonNull(RequirementsChecker.class.getResource(Icon_Path)));
             dialog.setIconImage(icon.getImage());
 
             JButton continueButton = getButton(optionPane, JOptionPane.OK_OPTION);
             if (continueButton != null) {
                 continueButton.setEnabled(false);
-                continueButton.setText("Continue");
+                continueButton.setText(Continue);
             }
 
-            agreeCheckBox.addActionListener(e -> {
+            agreeCheckBox.addActionListener(_ -> {
                 if (continueButton != null) continueButton.setEnabled(agreeCheckBox.isSelected());
             });
 
-            viewTermsButton.addActionListener(e -> {
-                JTextArea termsArea = new JTextArea("TERMS AND CONDITIONS\n\n1. Usage is at your own risk.\n2. No warranty provided.\n3. Do not redistribute without permission.");
+            viewTermsButton.addActionListener(_ -> {
+                JTextArea termsArea = new JTextArea(Terms_And_Conditions_Body);
                 termsArea.setEditable(false);
                 termsArea.setLineWrap(true);
                 termsArea.setWrapStyleWord(true);
                 JScrollPane termsScroll = new JScrollPane(termsArea);
                 termsScroll.setPreferredSize(new Dimension(500, 300));
-                JOptionPane.showMessageDialog(null, termsScroll, "Terms and Conditions", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(null, termsScroll, Terms_And_Conditions, JOptionPane.INFORMATION_MESSAGE);
             });
 
             dialog.setVisible(true);
@@ -86,12 +87,12 @@ public class RequirementsChecker {
             int option = JOptionPane.showOptionDialog(
                     null,
                     scrollPane,
-                    "Missing Requirements",
+                    Missing_Requirements,
                     JOptionPane.DEFAULT_OPTION,
                     JOptionPane.ERROR_MESSAGE,
                     null,
-                    new Object[]{"Exit Application"},
-                    "Exit Application"
+                    new Object[]{Exit_Application},
+                    Exit_Application
             );
             System.exit(0);
         }
@@ -101,7 +102,7 @@ public class RequirementsChecker {
         for (Component c : optionPane.getComponents()) {
             if (c instanceof JPanel) {
                 for (Component b : ((JPanel) c).getComponents()) {
-                    if (b instanceof JButton && ((JButton) b).getText().equals("OK")) {
+                    if (b instanceof JButton && ((JButton) b).getText().equals(OK)) {
                         return (JButton) b;
                     }
                 }

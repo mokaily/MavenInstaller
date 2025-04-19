@@ -5,6 +5,7 @@ import java.io.File;
 import java.nio.file.*;
 import java.util.List;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.Cleaner.deleteAllExceptTarget;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Installer.LinuxInstaller.createLinuxShortcut;
@@ -21,7 +22,7 @@ public class CreateInstaller {
     public static void createMavenExecShortcut(String pomPath) {
         setButtonsEnabled(false);
         Path dir = findJarInTarget(pomPath);
-        appendToConsole("⏳ Creating installer...\n", true);
+        appendToConsole(Creating_Installer, true);
         progressBar.setIndeterminate(true);
         progressBar.setVisible(true);
         progressBar.repaint();
@@ -36,11 +37,11 @@ public class CreateInstaller {
                     } else if (isLinux()) {
                         createLinuxShortcut(dir, pomPath);
                     } else {
-                        JOptionPane.showMessageDialog(null, "Unsupported OS!", "Error", JOptionPane.ERROR_MESSAGE);
+                        JOptionPane.showMessageDialog(null, Unsupported_OS, Error, JOptionPane.ERROR_MESSAGE);
                     }
                 } catch (Exception e) {
                     setButtonsEnabled(true);
-                    JOptionPane.showMessageDialog(null, "Error creating shortcut: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(null, Error_Creating_Shortcut + e.getMessage(), Error, JOptionPane.ERROR_MESSAGE);
                 }
                 return null;
             }

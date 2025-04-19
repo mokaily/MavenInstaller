@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.Installer.CreateInstaller.*;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
@@ -29,7 +30,7 @@ class WindowsInstaller {
             writer.write(batContent);
         }
 
-        appendToConsole("✅ Created .bat launcher on Desktop: " + batFilePath + "\n", false);
+        appendToConsole(Windows_Created_Bat + batFilePath + "\n", false);
 
         // 📌 2. Create Start Menu shortcut (.lnk) for the .bat if checkbox is selected
         if (pinToDockCheckbox.isSelected()) {
@@ -53,7 +54,7 @@ class WindowsInstaller {
             }
 
             link.saveTo(startMenuShortcut);
-            appendToConsole("📌 Shortcut added to Start Menu: " + startMenuShortcut + "\n", false);
+            appendToConsole(Windows_Shortcut_Added + startMenuShortcut + "\n", false);
         }
     }
 }

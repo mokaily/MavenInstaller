@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 import static com.example.maveninstaller.Installer.CreateInstaller.getApplicationName;
@@ -46,7 +47,7 @@ public class MacInstaller {
                 if (iconPath.toLowerCase().endsWith(".icns")) {
                     iconName = iconFile.getName();
                     Files.copy(iconFile.toPath(), resources.resolve(iconName), StandardCopyOption.REPLACE_EXISTING);
-                    appendToConsole("✅ Copied .icns icon to Resources: " + iconName + "\n", false);
+                    appendToConsole(Mac_Icon_Copied + iconName + "\n", false);
                 } else {
                     BufferedImage original = ImageIO.read(iconFile);
                     if (original != null) {
@@ -72,17 +73,17 @@ public class MacInstaller {
                             int exit = p.waitFor();
                             if (exit == 0) {
                                 iconName = icnsFile.getName();
-                                appendToConsole("✅ Created .icns icon at: " + icnsFile.getAbsolutePath() + "\n", false);
+                                appendToConsole(Mac_Icon_Created + icnsFile.getAbsolutePath() + "\n", false);
                             } else {
-                                appendToConsole("⚠️ iconutil failed.\n", false);
+                                appendToConsole(Mac_Icon_Failed, false);
                             }
                         } catch (InterruptedException e) {
-                            appendToConsole("⚠️ iconutil interrupted.\n", false);
+                            appendToConsole(Mac_Icon_Interrupted, false);
                         }
                     }
                 }
             } else {
-                appendToConsole("⚠️ Icon file not found: " + iconPath + "\n", false);
+                appendToConsole(Mac_Icon_Found + iconPath + "\n", false);
             }
         }
 
@@ -104,7 +105,7 @@ public class MacInstaller {
             writer.write("</dict>\n</plist>\n");
         }
 
-        appendToConsole("✅ Created macOS .app bundle at: " + appBundle.toString() + "\n", false);
+        appendToConsole(Mac_Icon_Done + appBundle.toString() + "\n", false);
 
         if (pinToDockCheckbox.isSelected()) {
             String dockScript = "tell application \"System Events\" to tell dock preferences to set autohide to false\n"
@@ -117,10 +118,10 @@ public class MacInstaller {
             File dockScriptFile = Files.createTempFile("pin_to_dock", ".applescript").toFile();
             Files.writeString(dockScriptFile.toPath(), dockScript);
             new ProcessBuilder("osascript", dockScriptFile.getAbsolutePath()).start();
-            appendToConsole("📌 Attempted to pin app to Dock\n", false);
+            appendToConsole(Mac_Pin_Attempt, false);
             JOptionPane.showMessageDialog(null,
-                    "The app was added to the Dock. If it doesn't appear immediately, try launching it manually then right-click → Options → Keep in Dock.",
-                    "Dock Pin Notice",
+                    Mac_Shortcut_Notice,
+                    Mac_Shortcut_Notice_Title,
                     JOptionPane.INFORMATION_MESSAGE);
         }
 
@@ -138,9 +139,9 @@ public class MacInstaller {
         Process pb = new ProcessBuilder(command).start();
         try {
             int code = pb.waitFor();
-            appendToConsole("📁 Shortcut created on Desktop (exit code: " + code + ")\n", false);
+            appendToConsole(Mac_Shortcut_Created + code + ")\n", false);
         } catch (InterruptedException e) {
-            appendToConsole("⚠️ AppleScript execution interrupted.\n", false);
+            appendToConsole(Mac_Shortcut_Interrupted, false);
         }
     }
 }

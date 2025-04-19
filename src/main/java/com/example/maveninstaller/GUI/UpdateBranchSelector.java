@@ -2,6 +2,7 @@ package com.example.maveninstaller.GUI;
 
 import java.util.List;
 
+import static com.example.maveninstaller.Constants.Branches_Fetched_Successfully;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 import static com.example.maveninstaller.GUI.InitializeDefaults.*;
 
@@ -11,6 +12,6 @@ public class UpdateBranchSelector{
         branchSelector.removeAllItems();
         branches.forEach(branchSelector::addItem);
         branchSelector.setEnabled(true);
-        appendToConsole("Branches fetched successfully!\n", false);
+        appendToConsole(Branches_Fetched_Successfully, false);
     }
 }

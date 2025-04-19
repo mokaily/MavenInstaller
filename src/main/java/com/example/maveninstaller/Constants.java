@@ -1,0 +1,93 @@
+package com.example.maveninstaller;
+
+public class Constants {
+    public static final String Monospaced = "Monospaced";
+    public static final String Segoe_UI = "Segoe UI";
+    public static final String Consolas = "Consolas";
+    public static final String Icon_Path = "/GitMavenLogoSmall.png";
+    public static final String Java = "Java";
+    public static final String LatestJavaVersion = "24";
+    public static final String JavaDownloadAddress = "https://www.oracle.com/de/java/technologies/downloads/#java";
+    public static final String Maven = "Maven";
+    public static final String LatestMavenVersion = "3.10";
+    public static final String MavenDownloadAddress = "https://maven.apache.org/download.cgi";
+    public static final String Git = "Git";
+    public static final String LatestGitVersion = "2.49.0";
+    public static final String GitDownloadAddress = "https://git-scm.com/downloads";
+    public static final String TermsAgree = "I agree to the Terms and Conditions";
+    public static final String View_Terms = "View Terms";
+    public static final String System_Check_Results = "System Check Results";
+    public static final String Continue = "Continue";
+    public static final String Terms_And_Conditions = "Terms and Conditions";
+    public static final String Terms_And_Conditions_Body = "TERMS AND CONDITIONS\n\n1. Usage is at your own risk.\n2. No warranty provided.\n3. Do not redistribute without permission.";
+    public static final String Missing_Requirements = "Missing Requirements";
+    public static final String Exit_Application = "Exit Application";
+    public static final String OK = "OK";
+    public static final String Checking_System_Requirements = "Checking system requirements...";
+    public static final String System_Requirements_Check = "System Requirements Check";
+    public static final String Git_Maven_Installer = "GitMaven Installer";
+    public static final String User_Information = "User Information";
+    public static final String Git_Username = "Git Username:";
+    public static final String Access_Token = "Access Token:";
+    public static final String How_To_Get = "How to get?";
+    public static final String How_To_Get_Instructions = "💡 How to get your GitLab Access Token:\n\n" +
+            "1. Go to your GitLab profile.\n" +
+            "2. Click on 'Edit Profile' > 'Access Tokens'.\n" +
+            "3. Enter a name, expiry date, and select scopes (e.g., 'api').\n" +
+            "4. Click 'Create token' and copy the token shown.\n\n" +
+            "⚠️ Keep it safe! You won't see it again.";
+    public static final String Repository_URL = "Repository URL";
+    public static final String Repository_URL_Examples = "Examples:\n:https://gitlab.uni-marburg.de/kertels/erma.git \nhttps://gitlab.com/gnutools/gcc";
+    public static final String Branch_Selection = "Branch Selection";
+    public static final String Branch = "Branch:";
+    public static final String Fetch_Branches = "Fetch Branches:";
+    public static final String Install_Path = "Install Path";
+    public static final String Browse = "Browse";
+    public static final String Shortcut_Configuration = "Shortcut Configuration";
+    public static final String Application_Name = "Application Name:";
+    public static final String Pin_To_Dock = "Pin to Dock (macOS)/ Start App Menu (Windows):";
+    public static final String Shortcut_Icon = "Shortcut Icon (.ico(windows), .icns(mac), .png(linux)):";
+    public static final String Icns = "icns";
+    public static final String Ico = "ico";
+    public static final String Png = "png";
+    public static final String Default_Custom_Maven = "Default/ Custom Maven";
+    public static final String Default_Custom_Maven_Examples = "Examples:\nWindows: C:/Users/Name/custom-m2\nmacOS: /Users/name/maven-repo\nLinux: /home/name/maven-repo";
+    public static final String Use_Custom_Local_Maven_Repository = "Use custom local Maven repository";
+    public static final String Clone_Repository = "Clone Repository";
+    public static final String Build_Jar = "Build Jar";
+    public static final String Create_Installer = "Create Installer";
+    public static final String Project_Owner_Info = "Project Owner Info";
+    public static final String README_Content = "README.md Content";
+    public static final String Console_Output = "Console Output";
+    public static final String Import_Config_File = "Import Config File";
+    public static final String Export_Log_To_File = "Export Log to File";
+    public static final String Footer_Info = "GitMaven Installer v2.0\nDeveloped to simplify testing and building maven projects from GitHub and GitLab.";
+    public static final String Switch_To_Basic_UI = "Switch to Basic UI";
+    public static final String Switch_To_Advanced_UI = "Switch to Advanced UI";
+    public static final String GitMaven_Simple_UI = "GitMaven Simple UI";
+    public static final String Install = "Install";
+    public static final String Error = "Error";
+    public static final String Branches_Fetched_Successfully = "Branches fetched successfully!\n";
+    public static final String Download_Here = "Download here";
+    public static final String Log_Saved_To = "📁 Log saved to: ";
+    public static final String Failed_To_Save_Log = "❌ Failed to save log: ";
+    public static final String Installed = "✅ Installed";
+    public static final String Path_Not_Found = "❌ Not found or not in PATH";
+    public static final String Newer_Version_Available = "⚠️ A newer version is available: v";
+    public static final String Creating_Installer = "⏳ Creating installer...\n";
+    public static final String Error_Creating_Shortcut = "❌ Error creating shortcut: ";
+    public static final String Unsupported_OS = "⚠️ Unsupported OS!";
+    public static final String Windows_Created_Bat = "✅📁 Created .bat launcher on Desktop: ";
+    public static final String Windows_Shortcut_Added = "📌 Shortcut added to Start Menu: ";
+    public static final String Mac_Icon_Copied = "✅ Copied .icns icon to Resources: ";
+    public static final String Mac_Icon_Created = "✅ Created .icns icon at: ";
+    public static final String Mac_Icon_Failed = "❌ iconutil failed.\n";
+    public static final String Mac_Icon_Interrupted = "⚠️ iconutil interrupted.\n";
+    public static final String Mac_Icon_Found = "⚠️ Icon file not found: ";
+    public static final String Mac_Icon_Done = "✅ Created macOS .app bundle at: ";
+    public static final String Mac_Pin_Attempt = "📌 Attempted to pin app to Dock\n";
+    public static final String Mac_Shortcut_Created = "✅📁 Shortcut created on Desktop (exit code: ";
+    public static final String Mac_Shortcut_Interrupted = "⚠️ AppleScript execution interrupted.\n";
+    public static final String Mac_Shortcut_Notice = "The app was added to the Dock. If it doesn't appear immediately, try launching it manually then right-click → Options → Keep in Dock.";
+    public static final String Mac_Shortcut_Notice_Title = "Dock Pin Notice";
+}
