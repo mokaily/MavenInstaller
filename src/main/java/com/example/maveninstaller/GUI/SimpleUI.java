@@ -64,7 +64,7 @@ public class SimpleUI {
         pathPanel.setBorder(BorderFactory.createTitledBorder(Install_Path));
 
         browseButtonSimpleUI = new JButton(Browse);
-        browseButtonSimpleUI.addActionListener(_ -> {
+        browseButtonSimpleUI.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -120,7 +120,7 @@ public class SimpleUI {
 
         installButton = new JButton(Install);
         installButton.setPreferredSize(new Dimension(200, 40));
-        installButton.addActionListener(_ -> cloneRepository(true));
+        installButton.addActionListener(e -> cloneRepository(true));
 
         JPanel topRowPanel = new JPanel(new BorderLayout());
         topRowPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
@@ -164,7 +164,7 @@ public class SimpleUI {
         // === Switch Button ===
         JPanel advancedBtnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         advancedBtn = new JButton(Switch_To_Advanced_UI);
-        advancedBtn.addActionListener(_ -> {
+        advancedBtn.addActionListener(e -> {
             frame.dispose();
             GitMavenCloneUI ui = new GitMavenCloneUI();
             ui.createAndShowGUI();

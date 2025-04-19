@@ -105,7 +105,7 @@ public class GitMavenCloneUI {
 
         branchGbc.gridx = 2;
         fetchBranchesButton = new JButton(Fetch_Branches);
-        fetchBranchesButton.addActionListener(_ -> fetchBranches());
+        fetchBranchesButton.addActionListener(e -> fetchBranches());
         branchPanel.add(fetchBranchesButton, branchGbc);
 
         branchPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, branchPanel.getPreferredSize().height));
@@ -118,7 +118,7 @@ public class GitMavenCloneUI {
         browseButton = new JButton(Browse);
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        browseButton.addActionListener(_ -> {
+        browseButton.addActionListener(e -> {
             if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
                 targetPathField.setText(fileChooser.getSelectedFile().getAbsolutePath());
             }
@@ -159,7 +159,7 @@ public class GitMavenCloneUI {
         shortcutConfiguration.add(iconPickerPanel, scGbc);
 
         String iconExtension = isMac() ? Icns : isWindows() ? Ico : Png;
-        browseShortcutIconButton.addActionListener(_ -> {
+        browseShortcutIconButton.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("." + iconExtension, iconExtension));
             if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -177,7 +177,7 @@ public class GitMavenCloneUI {
         customRepoPathField.setToolTipText(Default_Custom_Maven_Examples);
         JButton browseRepoButton = new JButton(Browse);
 
-        browseRepoButton.addActionListener(_ -> {
+        browseRepoButton.addActionListener(e -> {
             JFileChooser repoChooser = new JFileChooser();
             repoChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
             if (repoChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -185,7 +185,7 @@ public class GitMavenCloneUI {
             }
         });
         useCustomRepoCheckbox = new JCheckBox(Use_Custom_Local_Maven_Repository);
-        useCustomRepoCheckbox.addActionListener(_ -> {
+        useCustomRepoCheckbox.addActionListener(e -> {
             boolean enabled = useCustomRepoCheckbox.isSelected();
             customRepoPathField.setEnabled(enabled);
             browseRepoButton.setEnabled(enabled);
@@ -199,15 +199,15 @@ public class GitMavenCloneUI {
         // Clone + Build Buttons
         JPanel clonePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         cloneButton = new JButton(Clone_Repository);
-        cloneButton.addActionListener(_ -> cloneRepository(false));
+        cloneButton.addActionListener(e -> cloneRepository(false));
         clonePanel.add(cloneButton);
 
         buildButton = new JButton(Build_Jar);
-        buildButton.addActionListener(_ -> buildRepository(false));
+        buildButton.addActionListener(e -> buildRepository(false));
         clonePanel.add(buildButton);
 
         installButtonAdvanced = new JButton(Create_Installer);
-        installButtonAdvanced.addActionListener(_ -> createInstallerHelper());
+        installButtonAdvanced.addActionListener(e -> createInstallerHelper());
         clonePanel.add(installButtonAdvanced);
 
         // Action Panel with progress bar
@@ -302,7 +302,7 @@ public class GitMavenCloneUI {
 
         // Switch to Basic UI button on the bottom right
         switchToBasicButton = new JButton(Switch_To_Basic_UI);
-        switchToBasicButton.addActionListener(_ -> {
+        switchToBasicButton.addActionListener(e -> {
             frame.dispose();
             com.example.maveninstaller.GUI.SimpleUI.showSimpleUI();
         });

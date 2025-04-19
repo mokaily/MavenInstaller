@@ -63,11 +63,11 @@ public class RequirementsChecker {
                 continueButton.setText(Continue);
             }
 
-            agreeCheckBox.addActionListener(_ -> {
+            agreeCheckBox.addActionListener(e -> {
                 if (continueButton != null) continueButton.setEnabled(agreeCheckBox.isSelected());
             });
 
-            viewTermsButton.addActionListener(_ -> {
+            viewTermsButton.addActionListener(e -> {
                 JTextArea termsArea = new JTextArea(Terms_And_Conditions_Body);
                 termsArea.setEditable(false);
                 termsArea.setLineWrap(true);
