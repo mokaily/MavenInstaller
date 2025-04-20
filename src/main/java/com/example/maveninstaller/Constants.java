@@ -1,6 +1,9 @@
 package com.example.maveninstaller;
 
 public class Constants {
+    public static final String Access_Token_Default = "";
+    public static final String User_Name_Default = "";
+    public static final String Repo_Url_Default = "";
     public static final String Monospaced = "Monospaced";
     public static final String Segoe_UI = "Segoe UI";
     public static final String Consolas = "Consolas";

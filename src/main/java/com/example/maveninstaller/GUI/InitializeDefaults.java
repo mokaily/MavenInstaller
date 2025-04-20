@@ -3,6 +3,7 @@ package com.example.maveninstaller.GUI;
 import javax.swing.*;
 import java.io.PrintStream;
 
+import static com.example.maveninstaller.Constants.*;
 import static com.example.maveninstaller.Helpers.ConsoleLogAppender.appendToConsole;
 
 public class InitializeDefaults{
@@ -32,10 +33,10 @@ public class InitializeDefaults{
 
     public static void initializeUIDefaults() {
 
-        gitLabPasswordFieldPassword = new JPasswordField("");
-        gitLabUserNameField = new JTextField("");
+        gitLabPasswordFieldPassword = new JPasswordField(Access_Token_Default);
+        gitLabUserNameField = new JTextField(User_Name_Default);
         shortcutIconField = new JTextField();
-        repoUrlField = new JTextField("");
+        repoUrlField = new JTextField(Repo_Url_Default);
         targetPathField = new JTextField();
 
         branchSelector = new JComboBox<>();
