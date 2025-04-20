@@ -150,8 +150,8 @@ The application is structured into several key components:
 
 ## Screenshots
 <p float="left">
-  <img src="screenshots/screenshot_1.png" width="50.5%" />
-  <img src="screenshots/screenshot_2.png" width="47.3%" />
+  <img src="screenshots/screenshot_1.png" width="49%" />
+  <img src="screenshots/screenshot_2.png" width="47%" />
 </p>
 
 ![GitMaven Installer UI](screenshots/screenshot_3.png)
