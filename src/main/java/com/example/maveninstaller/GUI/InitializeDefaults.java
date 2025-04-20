@@ -32,10 +32,10 @@ public class InitializeDefaults{
 
     public static void initializeUIDefaults() {
 
-        gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
-        gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
+        gitLabPasswordFieldPassword = new JPasswordField("");
+        gitLabUserNameField = new JTextField("");
         shortcutIconField = new JTextField();
-        repoUrlField = new JTextField("https://gitlab.uni-marburg.de/okaily/erma");
+        repoUrlField = new JTextField("");
         targetPathField = new JTextField();
 
         branchSelector = new JComboBox<>();
