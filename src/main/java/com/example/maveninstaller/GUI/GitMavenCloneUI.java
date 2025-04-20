@@ -46,7 +46,7 @@ public class GitMavenCloneUI {
         gbc.gridx = 0; gbc.gridy = 0;
         userInfoPanel.add(new JLabel(Git_Username), gbc);
         gbc.gridx = 1;
-        gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
+        gitLabUserNameField = new JTextField("");
         userInfoPanel.add(gitLabUserNameField, gbc);
 
         // Access Token + Link
@@ -75,7 +75,7 @@ public class GitMavenCloneUI {
         userInfoPanel.add(accessLabelWithHelp, gbc);
 
         gbc.gridx = 1;
-        gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
+        gitLabPasswordFieldPassword = new JPasswordField("");
         userInfoPanel.add(gitLabPasswordFieldPassword, gbc);
 
         userInfoPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, userInfoPanel.getPreferredSize().height));
