@@ -67,7 +67,6 @@ public class CloneRepository {
             protected Void doInBackground() {
                 try {
                     String fullPath = targetPath + "/" + getRepoName(finalRepoUrl);
-                    String pomPath = findPomXml(fullPath);
 
                     // Check if the project directory already exists
                     File projectDir = new File(fullPath);
@@ -114,6 +113,7 @@ public class CloneRepository {
                         appendToConsole(Clone_Failed + exitCode, false);
                     }
 
+                    String pomPath = findPomXml(fullPath);
                     if (pomPath != null) {
                         applicationNameField.setText(fetchAppName(pomPath));
                         fetchGitOwnerInfo();
