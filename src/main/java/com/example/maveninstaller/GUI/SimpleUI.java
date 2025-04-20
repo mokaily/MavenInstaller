@@ -29,8 +29,8 @@ public class SimpleUI {
         browseShortcutIconButton = new JButton(Browse);
 
 
-        gitLabUserNameField = new JTextField("");
-        gitLabPasswordFieldPassword = new JPasswordField("");
+        gitLabUserNameField = new JTextField("okaily@uni-marburg.de");
+        gitLabPasswordFieldPassword = new JPasswordField("7HWB5r-z1kN2yLzk_aJ_");
         pinToDockCheckbox.setSelected(false);
 
         JFrame frame = new JFrame(GitMaven_Simple_UI);
