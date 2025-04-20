@@ -50,6 +50,8 @@ class WindowsInstaller {
                 File iconFile = new File(iconPath);
                 if (iconFile.exists()) {
                     link.setIconLocation(iconPath);
+                }else{
+                    link.setIconLocation("/GitMavenLogoSmall.png");
                 }
             }
 
